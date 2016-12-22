@@ -13,7 +13,7 @@
 	exit;
  }
  $filename=date('ymdHIs').$file["name"];
- $folder=ROOT."/".$CONFIG['fileupload']['upload_path']."/$module/";
+ $folder=USER_ROOT."/".$CONFIG['fileupload']['upload_path']."/$module/";
  if(!file_exists($folder)){
 	mkdir($folder,0777);
  }

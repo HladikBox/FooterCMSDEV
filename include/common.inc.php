@@ -9,7 +9,12 @@
 
 
 define('ROOT', str_replace("\\", '/', substr(dirname(__FILE__), 0, -8)));	// -9 = 0-strlen('includes')-1;
-require ROOT.'/config/config.inc.php';
+
+define(USER_ROOT, ROOT."/Users".$_SERVER["REDIRECT_URL"]."/");
+if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没有进行初始化");}
+require USER_ROOT.'config.inc.php';
+
+
 define('PEAR_HOME',ROOT."/libs/PEAR/");
 define('SESSIONNAME',$CONFIG["SessionName"]);
 
@@ -25,9 +30,9 @@ session_start();
 
 //log start
 require ROOT.'/classes/mgr/logger_mgr.cls.php';
-define('LOGGER_INFO_FILE', ROOT."/".$CONFIG['logsavedir'] . "info/log_%y%m%d.txt");
-define('LOGGER_ERROR_FILE', ROOT."/".$CONFIG['logsavedir'] . "error/log_%y%m%d.txt");
-define('LOGGER_DEBUG_FILE', ROOT."/".$CONFIG['logsavedir'] . "debug/log_%y%m%d.txt");
+define('LOGGER_INFO_FILE', USER_ROOT."/".$CONFIG['logsavedir'] . "info/log_%y%m%d.txt");
+define('LOGGER_ERROR_FILE', USER_ROOT."/".$CONFIG['logsavedir'] . "error/log_%y%m%d.txt");
+define('LOGGER_DEBUG_FILE', USER_ROOT."/".$CONFIG['logsavedir'] . "debug/log_%y%m%d.txt");
 define('LOGGER_IS_DEBUG', $CONFIG['solution_configuration']=="debug"?true:false);
 set_error_handler('error_handler');//,$CONFIG['error_handler']
 

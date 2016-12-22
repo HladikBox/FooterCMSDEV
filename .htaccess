@@ -1,0 +1,5 @@
+RewriteEngine on
+
+RewriteRule ^((?:css|fonts|images|js|images|vendors|upload|lang).*|favicon.ico|favicon.png) $1 [NC,L]
+
+RewriteRule ^.*$ index.php
