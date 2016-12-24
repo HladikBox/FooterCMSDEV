@@ -12,7 +12,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="{{$rootpath}}/Admin/about.php">{{$Title}}</a>
+                            <a class="navbar-brand" href="{{$userpath}}/Admin/about.php">{{$Title}}</a>
                         </div>
                         <div class="collapse navbar-collapse main-navbar-collapse">
                             <ul class="nav navbar-nav">
@@ -22,7 +22,7 @@
                                     <ul class="dropdown-menu">
                                         {{foreach from=$rs.submenus.submenu item=sub}}
                                         {{if $sub.onlyadmin!=1||$SysUser.is_admin=="Y"}}
-                                        <li><a href="{{$rootpath}}{{$sub.url}}">{{$sub.name}}</a></li>
+                                        <li><a href="{{$userpath}}{{$sub.url}}">{{$sub.name}}</a></li>
                                         {{/if}}
                                         {{/foreach}}
                                     </ul>

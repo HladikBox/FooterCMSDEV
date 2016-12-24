@@ -28,7 +28,14 @@ class XmlModel
   }
   
   private function loadXmlFile($name){
+    
     $path=ROOT."/model/$name.xml";
+    if(!file_exists($path)){
+        $path=USER_ROOT."/model/$name.xml";
+        if(!file_exists($path)){
+            die("500,找不到模型文件");
+        }
+    }
     $fp = fopen($path,"r");
     $str = fread($fp,filesize($path));
     return $str;

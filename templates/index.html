@@ -35,7 +35,7 @@
                         <a class="close" data-dismiss="alert" href="#">&times;</a>
                         {{if $ErrorMsg==""}}{{$SysLang.index.submittips}}{{else}}{{$ErrorMsg}}{{/if}}
                     </div>
-                    <form method="post" action="{{$rootpath}}index.php" class="bootstrap-admin-login-form">
+                    <form method="post" class="bootstrap-admin-login-form">
                         <h1>{{$Title}} <br /> {{$SysLang.index.systemlogin}}</h1>
                         <div class="form-group">
                             <input class="form-control" type="text" name="login_id" value="{{$login_id}}" placeholder="{{$SysLang.common.loginname}}">

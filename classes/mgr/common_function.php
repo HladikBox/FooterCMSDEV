@@ -19,6 +19,7 @@ function parameter_filter($param)
 function ParentRedirect($url)
 {
 	//Header("Location: $url");
+    echo "<a href='$url'>$url</a>";
 	echo "<script languate=\"javascript\">";
 	echo "parent.location.href='".$url."'";
 	echo "</script>";
@@ -27,6 +28,7 @@ function ParentRedirect($url)
 function WindowRedirect($url)
 {
 	//Header("Location: $url");
+    echo "<a href='$url'>$url</a>";
 	echo "<script languate=\"javascript\">";
 	echo "window.location.href='".$url."'";
 	echo "</script>";
@@ -49,6 +51,19 @@ function remote_file_exists($url_file){
 		return false;
 	}
 }
+function xmlToArray($xml){ 
+ 
+ //禁止引用外部xml实体 
+ 
+libxml_disable_entity_loader(true); 
+ 
+$xmlstring = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA); 
+ 
+$val = json_decode(json_encode($xmlstring),true); 
+ 
+return $val; 
+ 
+} 
 
 function getMenuJson($menu){
 	

@@ -10,7 +10,20 @@
 
 define('ROOT', str_replace("\\", '/', substr(dirname(__FILE__), 0, -8)));	// -9 = 0-strlen('includes')-1;
 
-define(USER_ROOT, ROOT."/Users".$_SERVER["REDIRECT_URL"]."/");
+$urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
+//print_r($urlparam);
+define(LOGIN,$urlparam[1]);
+define(ALIAS,$urlparam[2]);
+define(MODULE,strtolower($urlparam[3]));
+define(MODEL,strtolower($urlparam[4]));
+$login=$urlparam[1];
+$alias=$urlparam[2];
+$module=$urlparam[3];
+$model=$urlparam[4];
+define(USER_ROOT, ROOT."/Users/$login/$alias/");
+define(USER_PATH, "/$login/$alias/");
+define(CURRENT_PATH, "/$login/$alias/$module/$model");
+//echo USER_ROOT;
 if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没有进行初始化");}
 require USER_ROOT.'config.inc.php';
 
@@ -30,9 +43,9 @@ session_start();
 
 //log start
 require ROOT.'/classes/mgr/logger_mgr.cls.php';
-define('LOGGER_INFO_FILE', USER_ROOT."/".$CONFIG['logsavedir'] . "info/log_%y%m%d.txt");
-define('LOGGER_ERROR_FILE', USER_ROOT."/".$CONFIG['logsavedir'] . "error/log_%y%m%d.txt");
-define('LOGGER_DEBUG_FILE', USER_ROOT."/".$CONFIG['logsavedir'] . "debug/log_%y%m%d.txt");
+define('LOGGER_INFO_FILE', USER_ROOT."/logs/info/log_%y%m%d.txt");
+define('LOGGER_ERROR_FILE', USER_ROOT."/logs/error/log_%y%m%d.txt");
+define('LOGGER_DEBUG_FILE', USER_ROOT."/logs/debug/log_%y%m%d.txt");
 define('LOGGER_IS_DEBUG', $CONFIG['solution_configuration']=="debug"?true:false);
 set_error_handler('error_handler');//,$CONFIG['error_handler']
 
@@ -73,7 +86,8 @@ include ROOT.'/classes/modelmgr/XmlModel.cls.php';
 
 include ROOT.'/include/lang.inc.php';
 
+include ROOT.'/include/login.inc.php';
 
-
+include ROOT.'/include/init.inc.php';
 
 ?>

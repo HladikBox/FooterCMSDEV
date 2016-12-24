@@ -13,7 +13,7 @@
                                     <button class="btn btn-info">导入</button>
                                     <button data-toggle="dropdown" class="btn btn-info dropdown-toggle"><span class="caret"></span></button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="{{$rootpath}}/template.php?model={{$ModelData.model}}" target="_blank">下载模板</a></li>
+                                        <li><a href="{{$userpath}}template.php?model={{$ModelData.model}}" target="_blank">下载模板</a></li>
                                         <li><a href="#" onclick="$('#file_import').click();">导入数据</a></li>
                                         <input class="hide" name="file_import" id="file_import" onchange="importData('import', '{{$ModelData.model}}_import')" type="file" />
                                     </ul>
@@ -140,15 +140,15 @@
     </div>
 </div>
 
-<script type="text/javascript" src="{{$rootpath}}/js/myjs.js"></script>
+<script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
 {{foreach from=$ModelData.javascripts.javascript item=rs}}
 {{if $rs.search=="1"}}
-<script type="text/javascript" src="{{$rootpath}}/js/myjs/{{$rs.filename}}"></script>
+<script type="text/javascript" src="{{$userpath}}js/myjs/{{$rs.filename}}"></script>
 {{/if}}
 {{/foreach}}
 {{foreach from=$ModelData.csss.css item=rs}}
 {{if $rs.search=="1"}}
-<link href="{{$rootpath}}/js/myjs/{{$rs.filename}}" rel='stylesheet' />
+<link href="{{$userpath}}js/myjs/{{$rs.filename}}" rel='stylesheet' />
 {{/if}}
 {{/foreach}}
 <script>

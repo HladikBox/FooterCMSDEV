@@ -4,10 +4,10 @@
 
 $smarty = new Smarty;
 
-$smarty->compile_check = $CONFIG['smarty']['compile_check'];
-$smarty->debugging = $CONFIG['smarty']['debugging'];
-$smarty->caching=$CONFIG['smarty']['caching'];
-$smarty->cache_lifetime=$CONFIG['smarty']['cache_lifetime'];
+$smarty->compile_check = true;
+$smarty->debugging = false;
+$smarty->caching=false;
+$smarty->cache_lifetime=3600;
 $smarty->compile_dir=ROOT."/templates_c";
 $smarty->cache_dir=ROOT."/cache";
 $smarty->left_delimiter="{{";
@@ -15,11 +15,12 @@ $smarty->right_delimiter="}}";
 
 
 
- $smarty->assign('rootpath',$CONFIG['smarty']['rootpath']);
+ $smarty->assign('rootpath',"/");
+ $smarty->assign('userpath',USER_PATH);
  $smarty->assign('smarty_root',ROOT."/templates");
  $smarty->assign('file_url',$_SERVER["PHP_SELF"]);
+ $rep=array(USER_PATH);
  $smarty->assign('file_url_parameter',strtr($_SERVER["QUERY_STRING"],$rep));
- $rep=array($CONFIG['smarty']['rootpath']=>'');
  $smarty->assign('script_path',strtr($_SERVER["PHP_SELF"],$rep));
  $smarty->assign('charset',$CONFIG['charset']);
  $smarty->assign('Title',$CONFIG['Title']);
