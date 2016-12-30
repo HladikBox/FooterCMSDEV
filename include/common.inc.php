@@ -9,6 +9,7 @@
 
 
 define('ROOT', str_replace("\\", '/', substr(dirname(__FILE__), 0, -8)));	// -9 = 0-strlen('includes')-1;
+require ROOT.'/classes/mgr/common_function.php';
 
 $urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
 //print_r($urlparam);
@@ -25,6 +26,13 @@ define(USER_PATH, "/$login/$alias/");
 define(CURRENT_PATH, "/$login/$alias/$module/$model");
 //echo USER_ROOT;
 if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没有进行初始化");}
+
+
+$appinfo=json_decode(request_get("http://console.app-link.org/api/cms?action=appinfo&login=$login&alias=$alias"),true);
+if($appinfo["return"]["run_status"]!="P"){
+	die("404错误，服务已经停止，请联系管理员");
+}
+
 require USER_ROOT.'config.inc.php';
 
 
@@ -74,7 +82,7 @@ $errortype=array(1=>"Error",2=>"Warning",4=>"Parsing Error",8=>"Notice",
 
 
 
-require ROOT.'/classes/mgr/common_function.php';
+
 
 include ROOT.'/classes/mgr/'.$CONFIG['database']['provider'].'.cls.php';
 
