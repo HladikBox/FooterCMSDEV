@@ -22,8 +22,8 @@
     $smarty->assign("MyModule","admin");
     $smarty->assign("MyMenuId","about");
     $smarty->display(ROOT.'/templates/about.html');
-  }elseif(MODULE=="admin"&&MODEL=="user"){
-
+  }else{
+  
     $action=$_REQUEST["action"];
     $model=new XmlModel(MODEL,CURRENT_PATH);
     $model->DefaultShow($smarty,$dbmgr,$action,MODEL,$_REQUEST);
