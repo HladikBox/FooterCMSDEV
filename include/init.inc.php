@@ -35,10 +35,22 @@ if($MenuArray["mainmenus"]["mainmenu"][0]==""){
 }
 
 for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
-    if($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]==""){
+    if($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][0]==""){
         $temp=$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]=array();
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][]=$temp;
+    }
+}
+
+
+
+$modellist=$_SESSION[SESSIONNAME]["modellist"];
+
+for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
+    for($j=0;$j<count($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]);$j++){
+        $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["name"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["name"];
+        $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["nolist"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["nolist"];
+        $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["ndh"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]];
     }
 }
 
@@ -52,7 +64,6 @@ if($smarty!=null){
 	$smarty->assign("SystemMenu",$MenuArray);
 	$smarty->assign("SysUser",$SysUser);
 }
-
 
 
 include ROOT.'/classes/datamgr/business.cls.php';

@@ -1,5 +1,8 @@
 <?php
 
+    
+
+
   if(MODULE=="login"){
       if($_REQUEST["action"]=="login"){
 	    if(trim($_REQUEST["login_id"])==""){
@@ -28,6 +31,24 @@
 			    if($_REQUEST["language"]!=""){
 				    $_SESSION[SESSIONNAME]["LangCode"]=$_REQUEST["language"];
 			    }
+
+                $folder=USER_ROOT."\\model\\";
+                $filesnames = scandir($folder);
+                $ret=array();
+                for($i=2;$i<count($filesnames);$i++){
+
+                    $filenamearr=explode(".", $filesnames[$i]);
+                    $model["modelname"]=$filenamearr[0];
+                    $path=$folder.$filenamearr[0].".xml";
+                    $fp = fopen($path,"r");
+                    $str = fread($fp,filesize($path));
+                    $model=xmlToArray($str);
+                    $model["modelname"]=$filenamearr[0];
+                    $ret[$filenamearr[0]]=$model;
+                }
+                $_SESSION[SESSIONNAME]["modellist"]=$ret;
+                //print_r($_SESSION[SESSIONNAME]["modellist"]);
+                //exit;
 			    WindowRedirect(USER_PATH."Admin/dashboard");
 			    exit();
 		    }
@@ -36,5 +57,13 @@
   
       $smarty->display(ROOT.'/templates/index.html');
       exit();
-  }
+  }elseif(MODULE=="logout"){
+
+      $_SESSION[SESSIONNAME]=null;
+        empty($_SESSION[SESSIONNAME]);
+        unset($_SESSION[SESSIONNAME]);
+        WindowRedirect(USER_PATH);
+
+
+      }
 ?>
