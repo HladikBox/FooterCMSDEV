@@ -18,7 +18,7 @@
      $smarty->display(ROOT.'/templates/dashboard.html');
      
 
-  }elseif(MODULE=="admin"&&MODEL=="about"){
+  }elseif(strtolower(MODULE)=="admin"&&strtolower(MODEL)=="about"){
     $smarty->assign("MyModule","admin");
     $smarty->assign("MyMenuId","about");
     $smarty->display(ROOT.'/templates/about.html');

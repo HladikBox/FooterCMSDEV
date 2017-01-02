@@ -32,6 +32,10 @@
     <updateotherlang>更新其它语言</updateotherlang>
   </model>
   <common>
+    <systemmanage>系统管理</systemmanage>
+    <dashboard>主控台</dashboard>
+    <aboutus>关于我们</aboutus>
+    <user>用户</user>
     <login>登录</login>
     <loginname>用户名</loginname>
     <password>密码</password>

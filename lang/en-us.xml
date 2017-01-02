@@ -32,6 +32,10 @@
     <updateotherlang>Updte other language</updateotherlang>
 </model>
   <common>
+    <systemmanage>System Management</systemmanage>
+    <dashboard>Dashboard</dashboard>
+    <aboutus>About us</aboutus>
+    <user>User</user>
     <login>Login</login>
     <loginname>Login Name</loginname>
     <password>Password</password>
