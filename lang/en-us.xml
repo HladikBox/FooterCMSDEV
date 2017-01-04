@@ -30,6 +30,11 @@
     <pleaseenter>Please enter or select </pleaseenter>
     <uploaderror>Upload failed, please contact administrator </uploaderror>
     <updateotherlang>Updte other language</updateotherlang>
+    <keyunique> has duplicted value.</keyunique>
+    <keyunionunique> have combined duplicted value.</keyunionunique>
+    <formatincorrect> has a format problem, please retry.</formatincorrect>
+    <lessminvalue> can not less than </lessminvalue>
+    <greatermaxvalue> can not greater than </greatermaxvalue>
 </model>
   <common>
     <systemmanage>System Management</systemmanage>

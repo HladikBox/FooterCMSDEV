@@ -94,6 +94,8 @@ include ROOT.'/classes/modelmgr/XmlModel.cls.php';
 
 include ROOT.'/include/lang.inc.php';
 
+include ROOT.'/include/upload.inc.php';
+
 include ROOT.'/include/login.inc.php';
 
 include ROOT.'/include/init.inc.php';

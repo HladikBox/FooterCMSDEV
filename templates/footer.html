@@ -40,7 +40,7 @@
 
 <script type="text/javascript">
     $(function () {
-
+        $('input[type="checkbox"],[type="radio"]').not('#create-switch').not('.multicheckbox').bootstrapSwitch();
         $('.datepicker').datepicker({ format: "yyyy-mm-dd" });
         $('.uniform_on').uniform();
         $('.chzn-select').chosen();

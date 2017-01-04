@@ -44,7 +44,7 @@
                                                 {{/foreach}}
                                                 <button {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
                                                 {{else}}
-                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} class="form-control" value="{{$rs.value}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
                                                 {{/if}}
                                             </div>
                                         </div>                                            
@@ -65,7 +65,7 @@
                                                 {{/foreach}}
                                                 <button {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
                                                 {{else}}
-                                                <textarea rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{$rs.value}}</textarea>
+                                                <textarea rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
                                                 {{/if}}
                                             </div>
                                         </div>                                            
@@ -94,7 +94,7 @@
                                         <div class="form-group col-md-6">
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
-                                                <input id="content_{{$rs.key}}" type="checkbox" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  {{if $rs.value=="Y"}}checked{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
+                                                <input id="content_{{$rs.key}}" type="checkbox" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  {{if $rs.value=="Y"||($action=="add"&&$rs.default=="1")}}checked{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
                                             </div>
                                         </div>                                                      
                                         {{elseif $rs.type=="upload"}}
@@ -158,7 +158,7 @@
                                         <div class="form-group col-md-12">
                                             <label class="col-md-2 control-label">{{$rs.name}}{{$SysLang.model.list}}</label>
                                             <div class="col-md-10">
-                                                <button class="btn btn-primary btnGridAdd" onclick="window.location.href='{{$userpath}}/{{$rs.newitemurl}}{{$id}}&parenturl={{$request_url_encode}}';"><i class="glyphicon glyphicon-plus  glyphicon-white"></i> {{$SysLang.model.add}}{{$rs.name}}</button>
+                                                <button class="btn btn-primary btnGridAdd" onclick="window.location.href='{{$userpath}}nomodule/{{$rs.model}}?action=add&key={{$rs.modelkey}}&id={{$id}}&parenturl={{$request_url_encode}}';"><i class="glyphicon glyphicon-plus  glyphicon-white"></i> {{$SysLang.model.add}}{{$rs.name}}</button>
                                                 <table class="table table-striped" id="content_{{$rs.key}}"></table>
                                             </div>
                                         </div>             
@@ -226,7 +226,7 @@
             }
         });
 
-        $('input[type="checkbox"],[type="radio"]').not('#create-switch').not('.multicheckbox').bootstrapSwitch();
+        
         $('#btnSave').click(save);
         $("#btnReturnToList").click(function(){
             self.location="{{$PageName}}";
@@ -234,7 +234,7 @@
         {{foreach from=$ModelData.fields.field item=rs}}
         {{if $action!="add" and $rs.type=="grid"}}
         var json_{{$rs.key}}={"parenturl":"{{$request_url_encode}}"};
-        $("#content_{{$rs.key}}").load("{{$userpath}}/{{$rs.api}}{{$id}}",json_{{$rs.key}},function(data){
+        $("#content_{{$rs.key}}").load("{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&{{$rs.modelkey}}={{$id}}",json_{{$rs.key}},function(data){
         });
         {{elseif $action!="add" and $rs.type=="flist"}}
         var fliststr{{$rs.key}} = $("#content_{{$rs.key}}").val();
@@ -342,6 +342,23 @@
             }
             {{/if}}
         {{/if}}
+        {{if $rs.type=="text"&&$rs.format!=""}}
+            format_check={{$rs.format}};
+            if(format_check.test($("#content_{{$rs.key}}").val())==false){
+                message+="<p><span style='color:red;'>{{$rs.name}}</span>{{$SysLang.model.formatincorrect}}</p>";
+            }
+        {{/if}}
+
+        {{if $rs.type=="number"&&$rs.minvalue!=""}}
+            if(Number($("#content_{{$rs.key}}").val())<Number("{{$rs.minvalue}}")){
+                message+="<p><span style='color:red;'>{{$rs.name}}</span>{{$SysLang.model.lessminvalue}}{{$rs.minvalue}}</p>";
+            }
+        {{/if}}
+        {{if $rs.type=="number"&&$rs.maxvalue!=""}}
+            if(Number($("#content_{{$rs.key}}").val())>Number("{{$rs.maxvalue}}")){
+                message+="<p><span style='color:red;'>{{$rs.name}}</span>{{$SysLang.model.greatermaxvalue}}{{$rs.maxvalue}}</p>";
+            }
+        {{/if}}
         {{/foreach}}
 
        message+=myjs_savevalidate();
@@ -360,7 +377,7 @@
         $.ajaxFileUpload
 		(
 			{
-			    "url": '{{$rootpath}}/fileupload.php?module=' + module+"&field=file_" + key,
+			    "url": '{{$userpath}}fileupload?module=' + module+"&field=file_" + key,
 			    "secureuri": false,
 			    "fileElementId": "file_" + key,
 			    "dataType": 'text',

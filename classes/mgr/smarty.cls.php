@@ -25,7 +25,7 @@ $smarty->right_delimiter="}}";
  $smarty->assign('charset',$CONFIG['charset']);
  $smarty->assign('Title',$CONFIG['Title']);
  $smarty->assign('Url',$CONFIG['URL']);
- $smarty->assign('uploadpath',$CONFIG['smarty']['rootpath']."/".$CONFIG['fileupload']['upload_path']);
+ $smarty->assign('uploadpath',USER_PATH.$CONFIG['fileupload']['upload_path']);
  $smarty->assign('request_url_encode',base64_encode($_SERVER["REQUEST_URI"]));
  $smarty->assign('parenturl',base64_decode($_REQUEST["parenturl"]));
  $smarty->assign('frontendurl',$CONFIG['frontendurl']);

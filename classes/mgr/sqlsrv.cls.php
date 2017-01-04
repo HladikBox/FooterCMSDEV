@@ -147,6 +147,15 @@ class DbSqlsrv
 	function getDate(){
 		return " GETDATE() ";
 	}
+	
+	function checkHave($tablename,$where){
+		$sql="select 1 checkid from ".$tablename." where ".$where;
+		$query = $this->query($sql);
+		$result = $this->fetch_array($query); 
+		$id=$result["checkid"];
+		return $id=="1";
+	}
+	
 	function query2($sql,$type,$value) 
 	{
 		if(!($query = @sqlsrv_query($this->conn,$sql)))

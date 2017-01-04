@@ -174,4 +174,17 @@ function request_get($url) {
       //echo $res;
       return $res;
       }
+
+   function setArrayNoNull($arr){
+    foreach($arr as $key=>$value){
+        if(is_array($value)){
+            if(count($value)==0){
+                $arr[$key]="";
+            }else{
+                $arr[$key]=setArrayNoNull($value);
+            }
+        }
+    }
+    return $arr;
+  }
 ?>

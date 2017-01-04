@@ -24,8 +24,8 @@
     $smarty->display(ROOT.'/templates/about.html');
   }else{
   
-    $action=$_REQUEST["action"];
     $model=new XmlModel(MODEL,CURRENT_PATH);
+    $action=$_REQUEST["action"];
     $model->DefaultShow($smarty,$dbmgr,$action,MODEL,$_REQUEST);
   }
    

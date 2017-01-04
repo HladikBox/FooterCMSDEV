@@ -128,6 +128,14 @@ class DbMysql
 	function getDate(){
 		return " now() ";
 	}
+	
+	function checkHave($tablename,$where){
+		$sql="select 1 checkid from ".$tablename." where ".$where;
+		$query = $this->query($sql);
+		$result = $this->fetch_array($query); 
+		$id=$result["checkid"];
+		return $id=="1";
+	}
 	/**
 	* execute sql statement, only get one record
 	* @param string $sql: sql statement

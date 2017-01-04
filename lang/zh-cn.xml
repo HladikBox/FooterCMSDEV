@@ -30,6 +30,11 @@
     <pleaseenter>请输入或选择</pleaseenter>
     <uploaderror>上传失败，请联系管理员</uploaderror>
     <updateotherlang>更新其它语言</updateotherlang>
+    <keyunique>的值已经被使用，不能重复</keyunique>
+    <keyunionunique> 的组合值已经被使用，不能重复</keyunionunique>
+    <formatincorrect> 格式不正确，请重新输入</formatincorrect>
+    <lessminvalue> 不能小于 </lessminvalue>
+    <greatermaxvalue> 不能大于 </greatermaxvalue>
   </model>
   <common>
     <systemmanage>系统管理</systemmanage>

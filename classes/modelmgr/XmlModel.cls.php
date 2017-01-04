@@ -16,11 +16,60 @@ class XmlModel
 	  }
 	  $this->XmlData["model"]=$name;
 	  $this->PageName=$pagename;
+
+	  if($this->XmlData["nolist"]=="1"){
+	  	$_REQUEST["id"]=$this->GetNoListId();
+	  	if($_REQUEST["action"]!="save"){
+	  		$_REQUEST["action"]="edit";
+	  	}
+	  }
+
   }
+
 
   private function xmlToArray( $xml )
   {
-     return json_decode(json_encode((array) simplexml_load_string($xml)), true);
+
+    $xmlstring = simplexml_load_string($xml, 'SimpleXMLElement',  LIBXML_NOBLANKS); 
+    $model = json_decode(json_encode($xmlstring),true); 
+
+    if($model["options"]["option"][0]==""&&$model["options"]["option"]["name"]!=""){
+      $temp=$model["options"]["option"][0];
+      $model["options"]["option"]=array();
+      $model["options"]["option"][]=$temp;
+    }
+    if($model["fields"]["field"][0]==""&&$model["fields"]["field"]["name"]!=""){
+      $temp=$model["fields"]["field"];
+      $model["fields"]["field"]=array();
+      $model["fields"]["field"][]=$temp;
+    }
+    if($model["javascripts"]["javascript"][0]==""&&$model["javascripts"]["javascript"]["filename"]!=""){
+      $temp=$model["javascripts"]["javascript"];
+      $model["javascripts"]["javascript"]=array();
+      $model["javascripts"]["javascript"][]=$temp;
+    }
+
+    for ($i=0; $i < count($model["fields"]["field"]); $i++) { 
+      $model["fields"]["field"][$i]["typename"]=$this->keytypename[$model["fields"]["field"][$i]["type"]];
+      $model["fields"]["field"][$i]["json"]=json_encode($model["fields"]["field"][$i]);
+      if($model["fields"]["field"][$i]["type"]=="select"){
+        if($model["fields"]["field"][$i]["options"]["option"][0]==""&&$model["fields"]["field"][$i]["options"]["option"]["name"]!=""){
+          $temp=$model["fields"]["field"][$i]["options"]["option"];
+          $model["fields"]["field"][$i]["options"]["option"]=array();
+          $model["fields"]["field"][$i]["options"]["option"][]=$temp;
+        }
+      }
+    }
+
+    for ($i=0; $i < count($model["options"]["option"]); $i++) { 
+      $model["options"]["option"][$i]["json"]=json_encode($model["options"]["option"][$i]);
+    }
+
+    for ($i=0; $i < count($model["javascripts"]["javascript"]); $i++) { 
+      $model["javascripts"]["javascript"][$i]["json"]=json_encode($model["javascripts"]["javascript"][$i]);
+    }
+    $model=setArrayNoNull($model);
+     return $model;
   }
 
   public function getModelData(){
@@ -362,14 +411,59 @@ class XmlModel
 	return $XmlDataEx;
   }
   public function Save($dbMgr,$request,$sysuser){
-	Global $SysLangConfig;
+	Global $SysLang,$Config;
 	//print_r($request);
+
+    $fields=$this->XmlData["fields"]["field"];
+    $unionunique_sql="";
+    $unionunique_keyname=Array();
+    foreach ($fields as $value){
+		if($value["type"]=="text"&&$value["unique"]=="1"){
+			//$sql="".$this->XmlData["tablename"];
+			$condition=$value["key"]."='".parameter_filter($request[$value["key"]])."' and id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"");
+			if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$condition) ){
+				return "<b style='color:red;'>".$value["name"]."</b>".$SysLang["model"]["keyunique"];
+			}
+		}
+		if($value["type"]=="text"&&!empty($value["format"])){
+			if(preg_match($value["format"],parameter_filter($request[$value["key"]]))==false){
+				return "<b style='color:red;'>".$value["name"]."</b>".$SysLang["model"]["formatincorrect"];
+			}
+		}
+
+		if($value["type"]=="text"&&$value["unionunique"]=="1"){
+			//$sql="".$this->XmlData["tablename"];
+			$unionunique_sql.=" and ".$value["key"]."='".parameter_filter($request[$value["key"]])."' ";
+			$unionunique_keyname[]=$value["name"];
+		}
+	}
+	if($unionunique_sql!=""){
+		$unionunique_sql="id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"").$unionunique_sql;
+		if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$unionunique_sql) ){
+				return "<b style='color:red;'>".join(", ",$unionunique_keyname)."</b>".$SysLang["model"]["keyunionunique"];
+		}
+	}
+
     $sql="";
+
 	$dbMgr->begin_trans();
 	$haveMutilLang=false;
+
+	if($this->XmlData["nolist"]=="1"){
+		if($dbMgr->checkHave($this->XmlData["tablename"]," id=".$this->GetNoListId()) ){
+			$request["primary_id"]="".$this->GetNoListId();
+		}else{
+			$request["primary_id"]="";
+		}
+	}
+
+
 	if($request["primary_id"]==""){
 	
 		$id=$dbMgr->getNewId($this->XmlData["tablename"]);
+		if($this->XmlData["nolist"]=="1"){
+			$id=$this->GetNoListId();
+		}
 
 		$haveMutilLang=false;
 
@@ -412,6 +506,9 @@ class XmlModel
 			}else{
 				$sql=$sql.",'".parameter_filter($request[$value["key"]])."'";
 			}
+			if($value["type"]=="check"&&$value["unique"]=="1"&&parameter_filter($request[$value["key"]])=="Y"){
+				$dbMgr->query("update ".$this->XmlData["tablename"]." set ".$value["key"]."='N'");
+			}
 		}
 		$sql=$sql.",".$dbMgr->getDate().",$sysuser,".$dbMgr->getDate().",$sysuser )";
 		$query = $dbMgr->query($sql);
@@ -435,6 +532,9 @@ class XmlModel
 			}
 			if($value["nosave"]=="1"){
 				continue;
+			}
+			if($value["type"]=="check"&&$value["unique"]=="1"&&parameter_filter($request[$value["key"]])=="Y"){
+				$dbMgr->query("update ".$this->XmlData["tablename"]." set ".$value["key"]."='N'");
 			}
 			$sql=$sql.", ".$value["key"]."='".parameter_filter($request[$value["key"]])."'";
 		}
@@ -505,6 +605,10 @@ class XmlModel
 
 	$dbMgr->commit_trans();
 	return "right".$id;
+  }
+
+  public function GetNoListId(){
+  	return 0;
   }
 
   public function Import($dbMgr,$smartyMgr,$request,$sysuser){

@@ -75,6 +75,10 @@
                                                     <option value="{{$rsoption.value}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
+                                            </div>                                       
+                                            {{elseif $rs.type=="check" }}
+                                            <div class="col-md-8 ">
+                                                <input id="condition_{{$rs.key}}" type="checkbox" value="Y" {{if $rs.default=="1"}}checked="checked"{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
                                             </div>
                                             {{/if}}
                                         </div>
@@ -179,6 +183,8 @@
                         {{if $rs.type=="datetime" }}
                         ,"{{$rs.key}}_from":$("#condition_{{$rs.key}}_from").val()
                         ,"{{$rs.key}}_to":$("#condition_{{$rs.key}}_to").val()
+                        {{elseif $rs.type=="check"}}
+                        ,"{{$rs.key}}":$("#condition_{{$rs.key}}").prop("checked")?"Y":"N"
                         {{else}}
                         ,"{{$rs.key}}":$("#condition_{{$rs.key}}").val()
                         {{/if}}
