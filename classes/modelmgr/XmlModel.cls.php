@@ -418,16 +418,17 @@ class XmlModel
     $unionunique_sql="";
     $unionunique_keyname=Array();
     foreach ($fields as $value){
+        
 		if($value["type"]=="text"&&$value["unique"]=="1"){
 			//$sql="".$this->XmlData["tablename"];
 			$condition=$value["key"]."='".parameter_filter($request[$value["key"]])."' and id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"");
 			if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$condition) ){
-				$error.= "<p><span style='color:red;'>".$value["name"]."</span>".$SysLang["model"]["keyunique"]."</p>";
+				$error.= $value["name"].$SysLang["model"]["keyunique"]."\r\n";
 			}
 		}
 		if($value["type"]=="text"&&!empty($value["format"])){
 			if(preg_match($value["format"],parameter_filter($request[$value["key"]]))==false){
-				$error.= "<p><span style='color:red;'>".$value["name"]."</span>".$SysLang["model"]["formatincorrect"]."</p>";
+				$error.= $value["name"].$SysLang["model"]["formatincorrect"]."\r\n";
 			}
 		}
 
@@ -436,16 +437,19 @@ class XmlModel
 			$unionunique_sql.=" and ".$value["key"]."='".parameter_filter($request[$value["key"]])."' ";
 			$unionunique_keyname[]=$value["name"];
 		}
-		if($value["notnull"]=="1"&&parameter_filter($request[$value["key"]])==""){ 
-			$error.= "<p>".$SysLang["model"]["pleaseenter"]."<span style='color:red;'>".$value["name"]."</span></p>";
+		if($value["notnull"]=="1"
+            &&(($value["type"]=="fkey"||$value["type"]=="number")&&parameter_filter($request[$value["key"]])=="0"
+                ||parameter_filter($request[$value["key"]])=="")){ 
+			$error.= $SysLang["model"]["pleaseenter"].$value["name"]."\r\n";
 		}
 	}
 	if($unionunique_sql!=""){
 		$unionunique_sql="id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"").$unionunique_sql;
 		if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$unionunique_sql) ){
-				$error.= "<p><span style='color:red;'>".join(", ",$unionunique_keyname)."</span>".$SysLang["model"]["keyunionunique"]."</p>";
+				$error.= join(", ",$unionunique_keyname).$SysLang["model"]["keyunionunique"]."\r\n";
 		}
 	}
+    return $error;
   }
 
   public function Save($dbMgr,$request,$sysuser){
