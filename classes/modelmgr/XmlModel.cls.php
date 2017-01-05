@@ -410,11 +410,11 @@ class XmlModel
 	//print_r($XmlDataEx);
 	return $XmlDataEx;
   }
-  public function Save($dbMgr,$request,$sysuser){
-	Global $SysLang,$Config;
-	//print_r($request);
 
-    $fields=$this->XmlData["fields"]["field"];
+  public function SaveValidate($request){
+  	Global $SysLang,$Config;
+  	$error="";
+  	$fields=$this->XmlData["fields"]["field"];
     $unionunique_sql="";
     $unionunique_keyname=Array();
     foreach ($fields as $value){
@@ -422,12 +422,12 @@ class XmlModel
 			//$sql="".$this->XmlData["tablename"];
 			$condition=$value["key"]."='".parameter_filter($request[$value["key"]])."' and id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"");
 			if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$condition) ){
-				return "<b style='color:red;'>".$value["name"]."</b>".$SysLang["model"]["keyunique"];
+				$error.= "<p><span style='color:red;'>".$value["name"]."</span>".$SysLang["model"]["keyunique"]."</p>";
 			}
 		}
 		if($value["type"]=="text"&&!empty($value["format"])){
 			if(preg_match($value["format"],parameter_filter($request[$value["key"]]))==false){
-				return "<b style='color:red;'>".$value["name"]."</b>".$SysLang["model"]["formatincorrect"];
+				$error.= "<p><span style='color:red;'>".$value["name"]."</span>".$SysLang["model"]["formatincorrect"]."</p>";
 			}
 		}
 
@@ -436,13 +436,26 @@ class XmlModel
 			$unionunique_sql.=" and ".$value["key"]."='".parameter_filter($request[$value["key"]])."' ";
 			$unionunique_keyname[]=$value["name"];
 		}
+		if($value["notnull"]=="1"&&parameter_filter($request[$value["key"]])==""){ 
+			$error.= "<p>".$SysLang["model"]["pleaseenter"]."<span style='color:red;'>".$value["name"]."</span></p>";
+		}
 	}
 	if($unionunique_sql!=""){
 		$unionunique_sql="id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"").$unionunique_sql;
 		if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$unionunique_sql) ){
-				return "<b style='color:red;'>".join(", ",$unionunique_keyname)."</b>".$SysLang["model"]["keyunionunique"];
+				$error.= "<p><span style='color:red;'>".join(", ",$unionunique_keyname)."</span>".$SysLang["model"]["keyunionunique"]."</p>";
 		}
 	}
+  }
+
+  public function Save($dbMgr,$request,$sysuser){
+	Global $SysLang,$Config;
+	//print_r($request);
+	$error=$this->SaveValidate($request);
+	if($error!=""){
+		return $error;
+	}
+    
 
     $sql="";
 
