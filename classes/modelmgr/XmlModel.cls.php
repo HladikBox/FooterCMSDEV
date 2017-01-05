@@ -450,6 +450,17 @@ class XmlModel
 
   public function Save($dbMgr,$request,$sysuser){
 	Global $SysLang,$Config;
+
+    $fields=$this->XmlData["fields"]["field"];
+    foreach ($fields as $value){
+        if($value["type"]=="fkey"||$value["type"]=="number"){
+            $request[$value["key"]]=$request[$value["key"]]+0;
+        }
+    }
+
+
+
+
 	//print_r($request);
 	$error=$this->SaveValidate($request);
 	if($error!=""){
@@ -710,7 +721,14 @@ class XmlModel
   }
 
   public function Delete($dbMgr,$idlist,$sysuser){
-    
+    if(empty($idlist)){
+        $idlist="-1";
+    }
+    $idlist=explode(",",$idlist);
+    for($i=0;$i<count($idlist);$i++){
+        $idlist[$i]=$idlist[$i]+0;
+    }
+    $idlist=join(",",$idlist);
 	$sql="update ".$this->XmlData["tablename"]." set status='D',updated_user=$sysuser,updated_date=".$dbMgr->getDate()." where id in ($idlist)";
 	$query = $dbMgr->query($sql);
 	return "success";
@@ -756,34 +774,52 @@ class XmlModel
     $sql=$this->GetSearchSql($request);
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
-
-	outputXml($result);
+	outputJSON($result);
   }
   public function DetailApi($dbMgr,$id,$lang){
 	if($this->XmlData["ismutillang"]=="1"){
 		$sql="select * from ".$this->XmlData["tablename"]." m
 		inner join ".$this->XmlData["tablename"]."_lang ml on m.id=ml.oid and code='$lang' where id=$id";
 		$query = $dbMgr->query($sql);
-		$result = $dbMgr->fetch_array_all($query);
+		$result = $dbMgr->fetch_array($query);
 	}else{
 		$sql="select * from ".$this->XmlData["tablename"]." where id=$id";
 		$query = $dbMgr->query($sql);
-		$result = $dbMgr->fetch_array_all($query);
+		$result = $dbMgr->fetch_array($query);
 	}
 
-	outputXml($result);
+	outputJSON($result);
+  }
+  public function SaveApi($dbmgr,$request){
+	$result=$this->Save($dbmgr,$request,-1);
+    if(substr($result,0,5)=="right"){
+        $result=outResult(0,"Save Success",substr($result,5));
+    }else{
+        $result=outResult(-1,"Save fail",$result);
+    }
+	outputJSON($result);
+  }
+  public function DeleteApi($dbmgr,$request){
+	$result=$this->Delete($dbmgr,$request["idlist"],-1);
+    if(substr($result,0,7)=="success"){
+        $result=outResult(0,"Delete Success");
+    }else{
+        $result=outResult(-1,"Delete fail");
+    }
+	outputJSON($result);
   }
 	  
   public function DefaultShowAPI($dbmgr,$action,$request){
+  
 	  if($action==""){
 		$this->ShowAPIList($dbmgr);
 	  }if($action=="detail"){
 		$this->DetailApi($dbmgr,$request["id"],$request["lang"]);
 	  }else if($action=="save"){
-		$result=$this->Save($dbmgr,$request,-1);
+		$result=$this->SaveApi($dbmgr,$request);
 		echo $result;
 	  }else if($action=="delete"){
-		$result=$this->Delete($dbmgr,$request["idlist"],-1);
+		$result=$this->DeleteApi($dbmgr,$request["idlist"]);
 		echo $result;
 	  }
   }

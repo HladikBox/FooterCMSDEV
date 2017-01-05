@@ -11,7 +11,7 @@
   $smarty->assign("MyModule",MODULE);
   $smarty->assign("MyMenuId",MODEL);
   if(MODULE==""||MODEL==""||(MODULE=="admin"&&MODEL=="dashboard")){
-    $smarty->assign("MyModule","admin");
+     $smarty->assign("MyModule","admin");
      $smarty->assign("MyMenuId","dashboard");
      $reminderList=$businessMgr->getReminderAll($SysUser["id"]);
      $smarty->assign("ReminderList",$reminderList);

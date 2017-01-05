@@ -8,7 +8,7 @@ class DbMysql
 	* @var resource
 	*/
 	public $conn;
-	public $in_trans;
+	public $in_trans=0;
 
 	/**
 	* calculate executed sql statement num
@@ -19,15 +19,7 @@ class DbMysql
 
 	private static $instance = null;
 	
-	public static function getInstance() 
-	{
-		return self::$instance!=null ? self::$instance : new DbMysql();
-	}
 	
-	private function __construct()
-	{
-		
-	}
 	
 	function __destruct()
 	{		
@@ -44,7 +36,7 @@ class DbMysql
 	* @param bool is persistent connection: 1 - Yes, 0 - No
 	* @return link_identifier
 	*/
-	function connect($dbhost, $dbuser, $dbpass, $dbname = '', $pconnect = 0) 
+	function __construct($dbhost, $dbuser, $dbpass, $dbname ="", $pconnect = 0) 
 	{
 		//echo $dbhost.' '.$dbuser.' '.$dbpass.' '.$dbname;exit;
 		
@@ -57,7 +49,7 @@ class DbMysql
 			$this->select_db($dbname);
 		}
 		
-		return $this->conn;
+		$this->conn;
 	}
 
 
@@ -68,27 +60,43 @@ class DbMysql
 	*/
 	function select_db($dbname) 
 	{
+		if(empty($dbname)){
+			return;
+		}
 		return @mysql_select_db($dbname , $this->conn);
 	}
 	
 	function begin_trans()
 	{
-		if (mysql_query("BEGIN") == false)
-		{
-		     echo "Could not begin transaction.\n";
-		     die( print_r( sqlsrv_errors(), true ));
+		$this->select_db($dbname);
+		if($this->in_trans==0){
+			if (mysql_query("BEGIN", $this->conn) == false)
+			{
+			     echo "Could not begin transaction.\n";
+			     die( print_r( sqlsrv_errors(), true ));
+			}
 		}
-		$this->in_trans=true;
+		$this->in_trans++;
+		
+		//echo "begin ".$this->in_trans."<br />";
 	}
 	function commit_trans()
 	{
-		mysql_query("COMMIT");
-		$this->in_trans=false;
+		$this->in_trans--;
+		//echo "commint ".$this->in_trans."<br />";
+		if($this->in_trans>0){
+			return;
+		}
+		//echo "ready commit ".$this->in_trans."<br />";
+		$this->select_db($dbname);
+		mysql_query("COMMIT", $this->conn);
+		$this->in_trans=0;
 	}
 	function rollback_trans()
 	{
-		mysql_query("ROOLBACK");
-		$this->in_trans=false;
+		$this->select_db($dbname);
+		mysql_query("ROOLBACK", $this->conn);
+		$this->in_trans=0;
 	}
 
 	/**
@@ -101,16 +109,15 @@ class DbMysql
 	*/
 	function query($sql) 
 	{
-		if(!($query = @mysql_query($sql)))
+		$this->select_db($dbname);
+		if(!($query = @mysql_query($sql, $this->conn)))
 		{
 			logger_mgr::logError("sql error :$sql");
-			if($this->in_trans)
+			if($this->in_trans>0)
 			{
 				$this->rollback_trans();
 			}
 			$this->halt($sql.'Sqlsrv Query Error', $sql);
-			
-			
 		}
 		logger_mgr::logDebug("sql :$sql");
 		$this->querynum++;
@@ -125,9 +132,6 @@ class DbMysql
 		$id=$result[0];
 		return $id;
 	}
-	function getDate(){
-		return " now() ";
-	}
 	
 	function checkHave($tablename,$where){
 		$sql="select 1 checkid from ".$tablename." where ".$where;
@@ -135,6 +139,9 @@ class DbMysql
 		$result = $this->fetch_array($query); 
 		$id=$result["checkid"];
 		return $id=="1";
+	}
+	function getDate(){
+		return " now() ";
 	}
 	/**
 	* execute sql statement, only get one record
@@ -288,15 +295,13 @@ class DbMysql
 	*/
 	function halt($message = '', $sql = '')
 	{
-		
-		echo $message;
-		echo "The method or operation is not implemented.";
+		//echo $message;
+		throw new Exception($message);
 		exit();
 	}
 
 }
 
-$dbmgr = DbMysql::getInstance();
-$myconn = $dbmgr->connect($CONFIG['database']['host'], $CONFIG['database']['user'], $CONFIG['database']['psw'], $CONFIG['database']['database']);
+$dbmgr = new DbMysql($CONFIG['database']['host'], $CONFIG['database']['user'], $CONFIG['database']['psw'], $CONFIG['database']['database']);
 
 ?>

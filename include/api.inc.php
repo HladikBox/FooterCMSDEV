@@ -16,16 +16,37 @@
     foreach($apilist as $api){
 
         if($api["model"]==MODEL&&$api["func"]==FUNC){
-            
-            if($api["type"]=="model"){
 
-            }else{
-                include USER_ROOT."api/".$api["model"]."/".$api["func"].".php";
+            if($api["active"]!="1"){
+
+                outputJSON(outResult("401","Api not active"));    
+
+            }
+            try
+            {
+                if($api["type"]=="model"){
+                    $model=new XmlModel(MODEL,CURRENT_PATH);
+                    if(FUNC=="list"){
+                        $_REQUEST["action"]="";
+                    }elseif(FUNC=="get"){
+                        $_REQUEST["action"]="detail";
+                    }elseif(FUNC=="update"){
+                        $_REQUEST["action"]="save";
+                    }elseif(FUNC=="delete"){
+                        $_REQUEST["action"]="delete";
+                    }
+                    $action=$_REQUEST["action"];
+                    $model->DefaultShowAPI($dbmgr,$action,$_REQUEST);
+                }else{
+                    include USER_ROOT."api/".$api["model"]."/".$api["func"].".php";
+                }
+            }catch(Exception $ex){
+                outputJSON(outResult("500",$ex->getMessage()));
             }
             break;
         }
     }
-    outputJSON(null);
+    outputJSON(outResult("404","Api not found"));
 
 }
 
