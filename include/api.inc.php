@@ -2,6 +2,10 @@
 
  if(MODULE=="api"){
     
+    header('Access-Control-Allow-Origin:*');  
+    header('Access-Control-Allow-Methods:POST');  
+    header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+
     $path=USER_ROOT."api.xml";
     $fp = fopen($path,"r");
     $str = fread($fp,filesize($path));
