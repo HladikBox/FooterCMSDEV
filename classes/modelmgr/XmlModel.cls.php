@@ -23,7 +23,7 @@ class XmlModel
 	  		$_REQUEST["action"]="edit";
 	  	}
 	  }
-
+	  $this->fixModelData($this->XmlData);
   }
 
 
@@ -72,8 +72,8 @@ class XmlModel
      return $model;
   }
 
-  public function getModelData(){
-	return $this->XmlData;
+  public function fixModelData($xmldata){
+	 $this->XmlData=$xmldata;
   }
   
   private function loadXmlFile($name){
@@ -89,14 +89,19 @@ class XmlModel
     $str = fread($fp,filesize($path));
     return $str;
   }
+
+  public function fixShowList($data){
+  	return $data;
+  }
   
-  public function ShowList($dbMgr,$smartyMgr){
+  private function ShowList($dbMgr,$smartyMgr){
   
     //$searchField=$this->XmlData["fields"];
 	//print_r($this->XmlData);
 	$dataWithFKey=$this->loadFKeyValue($dbMgr,$this->XmlData);
 
 	$this->GetFListData($dbMgr,$smartyMgr);
+	$dataWithFKey=$this->fixShowList($dataWithFKey);
     $smartyMgr->assign("ModelData",$dataWithFKey);
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->display(ROOT.'/templates/model/list.html');
@@ -131,7 +136,7 @@ class XmlModel
 	return $result;
   }
 
-  public function GetLangTableSql($tablename,$tablenickname){
+  private function GetLangTableSql($tablename,$tablenickname){
 	Global $CONFIG;
 	$subsql="  (select * from $tablename ".$tablenickname."_a 
 							left join ".$tablename."_lang ".$tablenickname."_b 
@@ -139,7 +144,7 @@ class XmlModel
 	return $subsql;
   }
 
-  public function GetSearchSql($request){
+  private function GetSearchSql($request){
 	Global $CONFIG;
 	//echo "a";
 	//print_r($request);
@@ -243,7 +248,7 @@ class XmlModel
 	return $sql;
   }
 
-  public function GetFListData($dbMgr,$smartyMgr){
+  private function GetFListData($dbMgr,$smartyMgr){
 	Global $CONFIG;
 
 	$Array=Array();
@@ -269,15 +274,26 @@ class XmlModel
     $smartyMgr->assign("FListArr",$Array);
   }
 
+  public function fixListSearchSql($sql)
+  {
+  	return $sql;
+  }
+  public function fixListSearchResult($result)
+  {
+  	return $result;
+  }
 
-  public function ShowSearchResult($dbMgr,$smartyMgr,$request){
+  private function ShowSearchResult($dbMgr,$smartyMgr,$request){
 	
 	$sql=$this->GetSearchSql($request);
+	$sql=$this->fixListSearchSql($sql);
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query);
 	$result=$this->ClearData($result);
 
 	$result=$this->ReloadFListData($dbMgr,$result);
+
+	$result=$this->fixListSearchResult($result);
 
     $smartyMgr->assign("ModelData",$this->XmlData);
     $smartyMgr->assign("PageName",$this->PageName);
@@ -286,7 +302,7 @@ class XmlModel
 
   }
 
-  public function ReloadFListData($dbMgr,$result){
+  private function ReloadFListData($dbMgr,$result){
 	$fields=$this->XmlData["fields"]["field"];
 	foreach ($fields as $value){
 		if($value["type"]=="flist"){
@@ -314,7 +330,7 @@ class XmlModel
 	return $result;
   }
 
-  public function ClearData($result){
+  private function ClearData($result){
 	$count=count($result);
 	for($i=0;$i<$count;$i++){
 		for($j=0;$j<count($result[$i]);$j++){
@@ -327,14 +343,24 @@ class XmlModel
 	return $result;
   }
 
-  public function ShowGridResult($dbMgr,$smartyMgr,$request,$parenturl){
+  public function fixGridSearchSql($sql)
+  {
+  	return $sql;
+  }
+  public function fixGridSearchResult($result)
+  {
+  	return $result;
+  }
+  private function ShowGridResult($dbMgr,$smartyMgr,$request,$parenturl){
 	$sql=$this->GetSearchSql($request);
+	$sql=$this->fixGridSearchSql($sql);
 
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
 	$result=$this->ClearData($result);
 
 	$result=$this->ReloadFListData($dbMgr,$result);
+	$result=$this->fixGridSearchResult($result);
 	
 	$this->GetFListData($dbMgr,$smartyMgr);
     $smartyMgr->assign("ModelData",$this->XmlData);
@@ -359,10 +385,21 @@ class XmlModel
     $smartyMgr->assign("action","add");
     $smartyMgr->display(ROOT.'/templates/model/detail.html');
   }
+
+  public function fixEditId($id){
+  	return $id;
+  }
+  public function fixEditSql($sql){
+  	return $sql;
+  }
+  public function fixEditData($result){
+  	return $result;
+  }
   
   public function Edit($dbMgr,$smartyMgr,$id){
-
+  	$id=$this->fixEditId($id);
 	$sql="select * from ".$this->XmlData["tablename"]." where id=$id";
+	$sql=$this->fixEditSql($sql);
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
 
@@ -381,6 +418,7 @@ class XmlModel
     $dataWithFKey=$this->loadFKeyValue($dbMgr,$XmlDataWithInfo);
 	
 	$this->GetFListData($dbMgr,$smartyMgr);
+	$dataWithFKey=$this->fixEditData($dataWithFKey);
     $smartyMgr->assign("ModelData",$dataWithFKey);
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("id",$id);
@@ -411,7 +449,7 @@ class XmlModel
 	return $XmlDataEx;
   }
 
-  public function SaveValidate($request){
+  public function saveValidate($dbMgr,$request){
   	Global $SysLang,$Config;
   	$error="";
   	$fields=$this->XmlData["fields"]["field"];
@@ -451,8 +489,17 @@ class XmlModel
 	}
     return $error;
   }
+  public function fixInsertSql($sql){
+  	return $sql;
+  }
+  public function fixUpdateSql($sql){
+  	return $sql;
+  }
+  public function afterSave($dbmgr){
+  	
+  }
 
-  public function Save($dbMgr,$request,$sysuser){
+  private function Save($dbMgr,$request,$sysuser){
 	Global $SysLang,$Config;
 
     $fields=$this->XmlData["fields"]["field"];
@@ -462,11 +509,8 @@ class XmlModel
         }
     }
 
-
-
-
 	//print_r($request);
-	$error=$this->SaveValidate($request);
+	$error=$this->saveValidate($dbMgr,$request);
 	if($error!=""){
 		return $error;
 	}
@@ -539,6 +583,7 @@ class XmlModel
 			}
 		}
 		$sql=$sql.",".$dbMgr->getDate().",$sysuser,".$dbMgr->getDate().",$sysuser )";
+		$sql=$this->fixInsertSql($sql);
 		$query = $dbMgr->query($sql);
 		
 	}else{
@@ -631,6 +676,8 @@ class XmlModel
 			}
 		}
 
+	$this->afterSave($dbMgr);
+
 	$dbMgr->commit_trans();
 	return "right".$id;
   }
@@ -639,7 +686,7 @@ class XmlModel
   	return 0;
   }
 
-  public function Import($dbMgr,$smartyMgr,$request,$sysuser){
+  private function Import($dbMgr,$smartyMgr,$request,$sysuser){
 	$file=$_FILES["file_import"];
 	if($file["error"]!="0"){
 		return "UPLOADERROR";
@@ -649,15 +696,21 @@ class XmlModel
 	}
 	$excelMgr=new ExcelMgr();
 	$excelarr=$excelMgr->read($file["tmp_name"]);
-	
+
+	$importData=$this->ImportDataCheck($excelarr,$dbMgr);
+	$importData=$this->fixImportDataCheck($importData,$dbMgr);
     $smartyMgr->assign("ModelData",$this->XmlData);
     $smartyMgr->assign("PageName",$this->PageName);
-    $smartyMgr->assign("ImportData",$this->ImportDataCheck($excelarr,$dbMgr));
+    $smartyMgr->assign("ImportData",$importData);
     $smartyMgr->display(ROOT.'/templates/model/import.html');
 
   }
 
-  public function ImportDataCheck($dataarr,$dbMgr){
+  public function fixImportDataCheck($dataarr,$dbMgr){
+  	return $dataarr;
+  }
+
+  private function ImportDataCheck($dataarr,$dbMgr){
 	$fields=$this->XmlData["fields"]["field"];
 	
 	$ret=array();
@@ -724,7 +777,17 @@ class XmlModel
 	return $ret;
   }
 
-  public function Delete($dbMgr,$idlist,$sysuser){
+  public function deleteId($id_array){
+  	return $id_array;
+  }
+  public function deleteVaild($id_array,$dbMgr){
+  	return "";
+  }
+  public function afterDelete($id_array,$dbMgr){
+  	
+  }
+
+  private function Delete($dbMgr,$idlist,$sysuser){
     if(empty($idlist)){
         $idlist="-1";
     }
@@ -732,9 +795,22 @@ class XmlModel
     for($i=0;$i<count($idlist);$i++){
         $idlist[$i]=$idlist[$i]+0;
     }
+    $idlist=$this->deleteId($idlist);
+
+    $error=$this->deleteVaild($idlist,$dbMgr);
+    if($error!=""){
+    	return $error;
+    }
+
     $idlist=join(",",$idlist);
+    $dbMgr->begin_trans();
+
 	$sql="update ".$this->XmlData["tablename"]." set status='D',updated_user=$sysuser,updated_date=".$dbMgr->getDate()." where id in ($idlist)";
 	$query = $dbMgr->query($sql);
+
+	$this->afterDelete($idlist,$dbMgr);
+    $dbMgr->commit_trans();
+
 	return "success";
   }
 
@@ -772,29 +848,52 @@ class XmlModel
 
  }
 
+ public function fixApiListSql($sql){
+ 	return $sql;
+ }
+ public function fixApiListResult($result){
+ 	return $result;
+ }
+
  
-  public function ShowAPIList($dbMgr){
+  private function ShowAPIList($dbMgr){
   
     $sql=$this->GetSearchSql($request);
+    $sql=$this->fixApiListSql($sql);
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
+	$result=$this->fixApiListResult($result);
 	outputJSON($result);
   }
-  public function DetailApi($dbMgr,$id,$lang){
+
+  public function fixApiGetId($id){
+  	return $id;
+  }
+ 
+  public function fixApiGetSql($sql){
+  	return $sql;
+  }
+  
+  public function fixApiGetData($result){
+  	return $result;
+  }
+
+  private function DetailApi($dbMgr,$id,$lang){
+  	$id=$this->fixApiGetId($id);
+
 	if($this->XmlData["ismutillang"]=="1"){
 		$sql="select * from ".$this->XmlData["tablename"]." m
 		inner join ".$this->XmlData["tablename"]."_lang ml on m.id=ml.oid and code='$lang' where id=$id";
-		$query = $dbMgr->query($sql);
-		$result = $dbMgr->fetch_array($query);
 	}else{
 		$sql="select * from ".$this->XmlData["tablename"]." where id=$id";
-		$query = $dbMgr->query($sql);
-		$result = $dbMgr->fetch_array($query);
 	}
-
+	$sql=$this->fixApiGetSql($sql);
+	$query = $dbMgr->query($sql);
+	$result = $dbMgr->fetch_array($query);
+	$result=$this->fixApiGetData($result);
 	outputJSON($result);
   }
-  public function SaveApi($dbmgr,$request){
+  private function SaveApi($dbmgr,$request){
 	$result=$this->Save($dbmgr,$request,-1);
     if(substr($result,0,5)=="right"){
         $result=outResult(0,"Save Success",substr($result,5));
@@ -803,12 +902,12 @@ class XmlModel
     }
 	outputJSON($result);
   }
-  public function DeleteApi($dbmgr,$request){
+  private function DeleteApi($dbmgr,$request){
 	$result=$this->Delete($dbmgr,$request["idlist"],-1);
     if(substr($result,0,7)=="success"){
         $result=outResult(0,"Delete Success");
     }else{
-        $result=outResult(-1,"Delete fail");
+        $result=outResult(-1,"Delete fail",$result);
     }
 	outputJSON($result);
   }
