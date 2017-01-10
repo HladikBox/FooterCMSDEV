@@ -23,8 +23,16 @@
     $smarty->assign("MyMenuId","about");
     $smarty->display(ROOT.'/templates/about.html');
   }else{
-  
-    $model=new XmlModel(MODEL,CURRENT_PATH);
+    $modelmgrpath=USER_ROOT."modelmgr/".MODEL.".model.php";
+     
+    if(file_exists($modelmgrpath)){
+      $class=MODEL."XmlModel";
+      include_once $modelmgrpath;
+      $model=new $class(MODEL,CURRENT_PATH);
+    }else{
+      $model=new XmlModel(MODEL,CURRENT_PATH);
+    }
+    
     $action=$_REQUEST["action"];
     $model->DefaultShow($smarty,$dbmgr,$action,MODEL,$_REQUEST);
   }

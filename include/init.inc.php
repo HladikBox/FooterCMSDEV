@@ -1,5 +1,13 @@
 <?php
 
+if(MODULE=="js"){
+    $content = @file_get_contents(USER_ROOT."js/".MODEL);
+    print_r($content);
+    exit;
+}
+
+
+
 //login redirect
 //print_r($_SESSION);
 if(!isset($_SESSION[SESSIONNAME]["SysUser"])&&MODULE!="login")

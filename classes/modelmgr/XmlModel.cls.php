@@ -503,6 +503,10 @@ class XmlModel
 	Global $SysLang,$Config;
 
     $fields=$this->XmlData["fields"]["field"];
+    if($fields=$this->XmlData["nosave"]=="1"){
+    	return "no save permission";
+    }
+
     foreach ($fields as $value){
         if($value["type"]=="fkey"||$value["type"]=="number"){
             $request[$value["key"]]=$request[$value["key"]]+0;
@@ -851,6 +855,7 @@ class XmlModel
  public function fixApiListSql($sql){
  	return $sql;
  }
+
  public function fixApiListResult($result){
  	return $result;
  }
@@ -893,6 +898,7 @@ class XmlModel
 	$result=$this->fixApiGetData($result);
 	outputJSON($result);
   }
+
   private function SaveApi($dbmgr,$request){
 	$result=$this->Save($dbmgr,$request,-1);
     if(substr($result,0,5)=="right"){
@@ -902,6 +908,7 @@ class XmlModel
     }
 	outputJSON($result);
   }
+
   private function DeleteApi($dbmgr,$request){
 	$result=$this->Delete($dbmgr,$request["idlist"],-1);
     if(substr($result,0,7)=="success"){

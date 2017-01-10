@@ -168,7 +168,9 @@
                                     <hr />
                                     <div class="text-center">
                                         <input type="hidden" id="content_id" value="{{$id}}" />
+                                        {{if $ModelData.nosave!="1"}}
                                         <button class="btn btn-primary" id="btnSave"><i class="glyphicon glyphicon-pencil  glyphicon-white"></i> {{$SysLang.model.save}}</button>
+                                        {{/if}}
                                         {{if $parenturl!=""}}
                                         <button class="btn btn-primary" onclick="window.location.href='{{$parenturl}}';"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.back}}</button>
                                         {{elseif $ModelData.nolist!="1"}}<button class="btn btn-primary" id="btnReturnToList"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.backtolist}}</button>
@@ -181,16 +183,7 @@
                 </div>
 
 <script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
-{{foreach from=$ModelData.javascripts.javascript item=rs}}
-{{if $rs.detail=="1"}}
-<script type="text/javascript" src="{{$userpath}}/js/myjs/{{$rs.filename}}"></script>
-{{/if}}
-{{/foreach}}
-{{foreach from=$ModelData.csss.css item=rs}}
-{{if $rs.detail=="1"}}
-<link href="{{$userpath}}/js/myjs/{{$rs.filename}}" rel='stylesheet' />
-{{/if}}
-{{/foreach}}
+<script type="text/javascript" src="{{$userpath}}/js/{{$ModelData.model}}.js"></script>
 <script>
 
     {{foreach from=$FListArr item=rs}}
