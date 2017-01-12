@@ -110,7 +110,12 @@ function ResetNameWithLang($arr,$lang){
 }
 
 function outputJson($result){
-    die( json_encode($result));
+	$str=json_encode($result);
+	if(MODULE=="api"){
+		$length=strlen($str);
+		request_get("http://console.app-link.org/api/cms?action=apicalllog&login=".LOGIN."&alias=".ALIAS."&model=".MODEL."&func=".FUNC."&output_data_length=".$length);
+	}
+    die( $str);
 }
 
 
