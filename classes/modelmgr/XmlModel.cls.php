@@ -618,6 +618,9 @@ class XmlModel
 		$sql=$sql." where id=$id";
 		$query = $dbMgr->query($sql);
 
+	}
+
+	
 		foreach ($fields as $value){
 			if($value["type"]=="password"){
 				$sql="update ".$this->XmlData["tablename"]." set ";
@@ -656,7 +659,6 @@ class XmlModel
 				$query = $dbMgr->query($sql);
 			}
 		}
-	}
 
 	if($haveMutilLang){
 			$sql="delete from ".$this->XmlData["tablename"]."_lang where oid=$id ";
