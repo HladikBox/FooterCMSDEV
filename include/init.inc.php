@@ -1,9 +1,10 @@
 <?php
-
-if(MODULE=="js"){
-    $content = @file_get_contents(USER_ROOT."js/".MODEL);
-    print_r($content);
-    exit;
+if(MODULE=="myjs"){
+	if(file_exists(USER_ROOT."js/".MODEL)){
+		$content = @file_get_contents(USER_ROOT."js/".MODEL);
+		echo $content;
+		exit;
+	}
 }
 
 

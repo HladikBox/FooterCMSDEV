@@ -32,7 +32,7 @@ function ParentRedirect($url)
 function WindowRedirect($url)
 {
 	//Header("Location: $url");
-    echo "<a href='$url'>$url</a>";
+    //echo "<a href='$url'>$url</a>";
 	echo "<script languate=\"javascript\">";
 	echo "window.location.href='".$url."'";
 	echo "</script>";
@@ -110,8 +110,10 @@ function ResetNameWithLang($arr,$lang){
 }
 
 function outputJson($result){
+	Global $CONFIG;
+	
 	$str=json_encode($result);
-	if(MODULE=="api"){
+	if($CONFIG['solution_configuration']!="release"&&MODULE=="api"){
 		$length=strlen($str);
 		request_get("http://console.app-link.org/api/cms?action=apicalllog&login=".LOGIN."&alias=".ALIAS."&model=".MODEL."&func=".FUNC."&output_data_length=".$length);
 	}

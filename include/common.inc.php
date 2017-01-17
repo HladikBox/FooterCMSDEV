@@ -11,6 +11,7 @@
 define('ROOT', str_replace("\\", '/', substr(dirname(__FILE__), 0, -8)));	// -9 = 0-strlen('includes')-1;
 require ROOT.'/classes/mgr/common_function.php';
 
+if(!file_exists(ROOT.'/Users/config.inc.php')){
 $urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
 //print_r($urlparam);
 define(LOGIN,$urlparam[1]);
@@ -35,8 +36,21 @@ if($appinfo["return"]["run_status"]!="P"){
 	die("404错误，服务已经停止，请联系管理员");
 }
 
-require USER_ROOT.'config.inc.php';
+}else{
+	$urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
+	//print_r($urlparam);
+	define(MODULE,strtolower($urlparam[1]));
+	define(MODEL,strtolower($urlparam[2]));
+	define(FUNC,strtolower($urlparam[3]));
+	$module=$urlparam[1];
+	$model=$urlparam[2];
+	$func=$urlparam[3];
+	define(USER_ROOT, ROOT."/Users/");
+	define(USER_PATH, "/");
+	define(CURRENT_PATH, "/$module/$model");
+}
 
+require USER_ROOT.'config.inc.php';
 
 define('PEAR_HOME',ROOT."/libs/PEAR/");
 define('SESSIONNAME',$CONFIG["SessionName"]);
