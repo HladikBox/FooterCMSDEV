@@ -14,9 +14,11 @@
                         <li {{if $sub.model|cat:"_list"==$MyMenuId}} class="active" {{/if}}>
                             <a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}"><i class="glyphicon glyphicon-chevron-right"></i> {{$sub.name}}{{$SysLang.model.list}}</a>
                         </li>
+                        {{if $sub.nosave!="1"}}
                         <li {{if $sub.model|cat:"_add"==$MyMenuId}} class="active" {{/if}}>
                             <a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}?action=add"><i class="glyphicon glyphicon-chevron-right"></i> {{$sub.name}}{{$SysLang.model.add}}</a>
                         </li>
+                        {{/if}}
                         {{/if}}
                             {{/if}}
                             {{/foreach}}

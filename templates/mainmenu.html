@@ -37,7 +37,7 @@
                                             <li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}">{{$sub.name}}</a></li>
                                             {{else}}
                                         <li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}">{{$sub.name}}{{$SysLang.model.list}}</a></li>
-                                        <li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}?action=add">{{$sub.name}}{{$SysLang.model.add}}</a></li>
+                                        {{if $sub.nosave!="1"}}<li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}?action=add">{{$sub.name}}{{$SysLang.model.add}}</a></li>{{/if}}
                                             {{/if}}
                                         {{/if}}
                                         {{/foreach}}

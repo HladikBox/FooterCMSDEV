@@ -204,7 +204,7 @@ class XmlModel
 		}
 	}
 
-	$sql=$sql."  where  ".$this->XmlData["searchcondition"];
+	$sql=$sql."  where  ".($this->XmlData["searchcondition"]==""?" 1=1 ":$this->XmlData["searchcondition"]);
 	foreach ($fields as $value){
 		
 		if($value["search"]=="1"){
