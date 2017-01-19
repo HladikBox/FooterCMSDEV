@@ -863,7 +863,7 @@ class XmlModel
  }
 
  
-  private function ShowAPIList($dbMgr){
+  private function ShowAPIList($dbMgr,$request){
   
     $sql=$this->GetSearchSql($request);
     $sql=$this->fixApiListSql($sql);
@@ -922,9 +922,8 @@ class XmlModel
   }
 	  
   public function DefaultShowAPI($dbmgr,$action,$request){
-  
 	  if($action==""){
-		$this->ShowAPIList($dbmgr);
+		$this->ShowAPIList($dbmgr,$request);
 	  }if($action=="detail"){
 		$this->DetailApi($dbmgr,$request["id"],$request["lang"]);
 	  }else if($action=="save"){
