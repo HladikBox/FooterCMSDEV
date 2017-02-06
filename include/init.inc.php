@@ -51,6 +51,29 @@ for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
     }
 }
 
+if($_SESSION[SESSIONNAME]["modellist"]==null){
+	
+	for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
+	    for($j=0;$j<count($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]);$j++){
+	    	
+		 	$filename=$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"];
+		    $model["modelname"]=$filename;
+		    $path=USER_ROOT."model/".$filename.".xml";
+		    $fp = fopen($path,"r");
+		    $str = fread($fp,filesize($path));
+		    $model=xmlToArray($str);
+		    $model["modelname"]=$filename;
+		    $ret[$filename]=$model;
+		}
+	}
+	$_SESSION[SESSIONNAME]["modellist"]=$ret;
+}
+
+
+
+
+
+
 
 
 $modellist=$_SESSION[SESSIONNAME]["modellist"];

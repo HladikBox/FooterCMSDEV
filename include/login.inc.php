@@ -32,21 +32,7 @@
 				    $_SESSION[SESSIONNAME]["LangCode"]=$_REQUEST["language"];
 			    }
 
-                $folder=USER_ROOT."\\model\\";
-                $filesnames = scandir($folder);
-                $ret=array();
-                for($i=2;$i<count($filesnames);$i++){
-
-                    $filenamearr=explode(".", $filesnames[$i]);
-                    $model["modelname"]=$filenamearr[0];
-                    $path=$folder.$filenamearr[0].".xml";
-                    $fp = fopen($path,"r");
-                    $str = fread($fp,filesize($path));
-                    $model=xmlToArray($str);
-                    $model["modelname"]=$filenamearr[0];
-                    $ret[$filenamearr[0]]=$model;
-                }
-                $_SESSION[SESSIONNAME]["modellist"]=$ret;
+                
                 //print_r($_SESSION[SESSIONNAME]["modellist"]);
                 //exit;
 			    WindowRedirect(USER_PATH."Admin/dashboard");
