@@ -243,7 +243,18 @@ class XmlModel
 
 	}
 
-	$sql=$sql." order by r_main.updated_date desc ";
+	$orderby=parameter_filter($request["orderby"]);
+	if($orderby==""){
+		$orderby="r_main.updated_date desc";	
+	}
+	$limit=parameter_filter($request["limit"]);
+	if($limit==""){
+		$limit="0,100";
+	}
+
+
+	$sql=$sql." order by $orderby  
+	limit $limit";
 
 	return $sql;
   }
