@@ -111,7 +111,9 @@ function ResetNameWithLang($arr,$lang){
 
 function outputJson($result){
 	Global $CONFIG;
-	
+
+	logger_mgr::logInfo($_SERVER["REQUEST_URI"]." output:".json_encode($result));
+
 	$str=json_encode($result);
 	if($CONFIG['solution_configuration']!="release"&&MODULE=="api"){
 		$length=strlen($str);

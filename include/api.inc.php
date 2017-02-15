@@ -28,6 +28,7 @@
             }
             try
             {
+                logger_mgr::logInfo($_SERVER["REQUEST_URI"]." input:".json_encode($_REQUEST));
                 if($api["type"]=="model"){
                     $modelmgrpath=USER_ROOT."modelmgr/".MODEL.".model.php";
      

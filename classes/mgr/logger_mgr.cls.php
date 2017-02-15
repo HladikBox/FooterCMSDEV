@@ -66,17 +66,17 @@
 		}
 		function logError($err){
 			$l = logger_mgr::get_error_logger();
-			$l->error($err);
+			$l->error($err."\r\n");
 		}
 		function logInfo($info){
 			$l = logger_mgr::get_info_logger();
-			$l->info($info);
+			$l->info($info."\r\n");
 		}
 		function logDebug($info){
 			if(LOGGER_IS_DEBUG)
 			{
 				$l = logger_mgr::get_debug_logger();
-				$l->debug($info);
+				$l->debug($info."\r\n");
 			}
 		}
 	}
