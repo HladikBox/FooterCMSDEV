@@ -104,9 +104,9 @@
                                                 <input  {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  class="form-control uniform_on" name="file_{{$rs.key}}" id="file_{{$rs.key}}" onchange="upload('{{$rs.key}}', '{{$rs.uploadmodule}}')" type="file" />
                                                 {{if $rs.filetype=="image"}}
                                                 <br />
-                                                <img id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;height:100px;" {{else}}style="height:100px;" src="{{$uploadpath}}{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
+                                                <img id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;height:100px;" {{else}}style="height:100px;" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
                                                 {{else}}
-                                                <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$uploadpath}}{{$rs.uploadmodule}}/{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
+                                                <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
                                                 {{/if}}
                                                 <input class="uniform_on" type="hidden" id="content_{{$rs.key}}" value="{{$rs.value}}" />
                                             </div>
