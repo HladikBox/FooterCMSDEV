@@ -3,7 +3,7 @@
 
 class XmlModel
 {
-  private $XmlData;
+  public $XmlData;
   private $PageName;
 
   public function __construct($name,$pagename){
@@ -172,7 +172,8 @@ class XmlModel
 
 			}else if($value["type"]=="fkey"){
 			
-				$sql=$sql." ,".$value["ntbname"].".".$value["displayfield"]." ".$value["key"];
+				$sql=$sql." ,r_main.".$value["key"];
+				$sql=$sql." ,".$value["ntbname"].".".$value["displayfield"]." ".$value["key"]."_name";
 
 			}else{
 
@@ -228,13 +229,16 @@ class XmlModel
 				if($request[$value["key"]]!="0"&&$request[$value["key"]]!=""){
 					$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
 				}
+				if($request[$value["key"]."_name"]!=""){
+					$sql=$sql." and ".$value["ntbname"].".".$value["displayfield"]." like '".parameter_filter($request[$value["key"]."_name"])."'";
+				}
 
 
 			}else{
 				if($request[$value["key"]]!=""
 				&&$request[$value["key"]]!="no-value"){
 
-					$sql=$sql." and r_main.".$value["key"]." like '%".parameter_filter($request[$value["key"]])."%'";
+					$sql=$sql." and r_main.".$value["key"]." like '".parameter_filter($request[$value["key"]])."'";
 					
 				}
 			}
@@ -470,7 +474,7 @@ class XmlModel
         
 		if($value["type"]=="text"&&$value["unique"]=="1"){
 			//$sql="".$this->XmlData["tablename"];
-			$condition=$value["key"]."='".parameter_filter($request[$value["key"]])."' and id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"");
+			$condition=$value["key"]."='".parameter_filter($request[$value["key"]])."' and id<>".($request["primary_id"]+0).(!empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"");
 			if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$condition) ){
 				$error.= $value["name"].$SysLang["model"]["keyunique"]."\r\n";
 			}
@@ -570,7 +574,7 @@ class XmlModel
 			if($value["nosave"]=="1"){
 				continue;
 			}
-			$sql=$sql.",".$value["key"]."";
+			$sql=$sql.",`".$value["key"]."`";
 		}
 		$sql=$sql.",created_date,created_user,updated_date,updated_user ) values (";
 		$sql=$sql.$id;
@@ -604,7 +608,7 @@ class XmlModel
 	}else{
 		$haveMutilLang=false;
 		$id=$request["primary_id"];
-		$sql="update ".$this->XmlData["tablename"]." set updated_date=".$dbMgr->getDate().",updated_user=$sysuser";
+		$sql="update `".$this->XmlData["tablename"]."` set updated_date=".$dbMgr->getDate().",updated_user=$sysuser";
 		$fields=$this->XmlData["fields"]["field"];
 		foreach ($fields as $value){
 			if($value["ismutillang"]=="1"){
@@ -624,7 +628,7 @@ class XmlModel
 			if($value["type"]=="check"&&$value["unique"]=="1"&&parameter_filter($request[$value["key"]])=="Y"){
 				$dbMgr->query("update ".$this->XmlData["tablename"]." set ".$value["key"]."='N'");
 			}
-			$sql=$sql.", ".$value["key"]."='".parameter_filter($request[$value["key"]])."'";
+			$sql=$sql.", `".$value["key"]."`='".parameter_filter($request[$value["key"]])."'";
 		}
 		$sql=$sql." where id=$id";
 		$query = $dbMgr->query($sql);
@@ -634,9 +638,9 @@ class XmlModel
 	
 		foreach ($fields as $value){
 			if($value["type"]=="password"){
-				$sql="update ".$this->XmlData["tablename"]." set ";
-				$sql=$sql." ".$value["key"]."='".md5($request[$value["key"]])."'";
-				$sql=$sql." where id=$id and ".$value["key"]."<>'".parameter_filter($request[$value["key"]])."'";
+				$sql="update `".$this->XmlData["tablename"]."` set ";
+				$sql=$sql." `".$value["key"]."`='".md5($request[$value["key"]])."'";
+				$sql=$sql." where id=$id and `".$value["key"]."`<>'".parameter_filter($request[$value["key"]])."'";
 				$query = $dbMgr->query($sql);
 			}
 			if($value["type"]=="flist"&&$value["relatetable"]!=""){

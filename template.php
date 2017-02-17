@@ -5,7 +5,6 @@
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
-  require 'include/common.inc.php';
 
  $model=$_REQUEST["model"];
  if($model==""){
@@ -13,8 +12,8 @@
 	exit;
  }
  
-  $model=new XmlModel($model,"");
-  $data=$model->getModelData();
+  $model=new XmlModel($model,CURRENT_PATH);
+  $data=$model->XmlData;
   
   //print_r($data);
   //exit;
