@@ -126,9 +126,9 @@ class XmlModel
 	Global $CONFIG;
 	if($ismutillang=="1"){
 		$subsql=$this->GetLangTableSql($tablename,$tablerename);
-		$sql="select oid id,$displayfield as name from $subsql where $condition ";
+		$sql="select oid id,$displayfield as name from $subsql where ".(empty($condition)?"1=1":$condition)." ";
 	}else{
-		$sql="select id,$displayfield as name from $tablename as $tablerename where $condition";
+		$sql="select id,$displayfield as name from $tablename as $tablerename where ".(empty($condition)?"1=1":$condition)."";
 	}
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
@@ -205,7 +205,7 @@ class XmlModel
 		}
 	}
 
-	$sql=$sql."  where  ".($this->XmlData["searchcondition"]==""?" 1=1 ":$this->XmlData["searchcondition"]);
+	$sql=$sql."  where  ".(empty($this->XmlData["searchcondition"])?" 1=1 ":$this->XmlData["searchcondition"]);
 	foreach ($fields as $value){
 		
 		if($value["search"]=="1"){

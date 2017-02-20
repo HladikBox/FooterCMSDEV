@@ -126,10 +126,10 @@ class DbMysql
 	}
 	
 	function getNewId($tablename){
-		$sql="select ifnull(max(id),0)+1 from ".$tablename;
+		$sql="select ifnull(max(id),0)+1 id from ".$tablename;
 		$query = $this->query($sql);
 		$result = $this->fetch_array($query); 
-		$id=$result[0];
+		$id=$result["id"];
 		return $id;
 	}
 	
@@ -168,7 +168,7 @@ class DbMysql
 	*/
 	function fetch_array($query) 
 	{
-		return mysql_fetch_array($query);
+		return mysql_fetch_array($query,MYSQL_ASSOC);
 	}
 	
 	/**
