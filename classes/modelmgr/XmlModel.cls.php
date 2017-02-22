@@ -34,7 +34,7 @@ class XmlModel
     $model = json_decode(json_encode($xmlstring),true); 
 
     if($model["options"]["option"][0]==""&&$model["options"]["option"]["name"]!=""){
-      $temp=$model["options"]["option"][0];
+      $temp=$model["options"]["option"];
       $model["options"]["option"]=array();
       $model["options"]["option"][]=$temp;
     }
@@ -42,11 +42,6 @@ class XmlModel
       $temp=$model["fields"]["field"];
       $model["fields"]["field"]=array();
       $model["fields"]["field"][]=$temp;
-    }
-    if($model["javascripts"]["javascript"][0]==""&&$model["javascripts"]["javascript"]["filename"]!=""){
-      $temp=$model["javascripts"]["javascript"];
-      $model["javascripts"]["javascript"]=array();
-      $model["javascripts"]["javascript"][]=$temp;
     }
 
     for ($i=0; $i < count($model["fields"]["field"]); $i++) { 
@@ -65,11 +60,8 @@ class XmlModel
       $model["options"]["option"][$i]["json"]=json_encode($model["options"]["option"][$i]);
     }
 
-    for ($i=0; $i < count($model["javascripts"]["javascript"]); $i++) { 
-      $model["javascripts"]["javascript"][$i]["json"]=json_encode($model["javascripts"]["javascript"][$i]);
-    }
     $model=setArrayNoNull($model);
-     return $model;
+    return $model;
   }
 
   public function fixModelData($xmldata){
@@ -230,7 +222,7 @@ class XmlModel
 					$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
 				}
 				if($request[$value["key"]."_name"]!=""){
-					$sql=$sql." and ".$value["ntbname"].".".$value["displayfield"]." like '".parameter_filter($request[$value["key"]."_name"])."'";
+					$sql=$sql." and ".$value["ntbname"].".".$value["displayfield"]." like '%".parameter_filter($request[$value["key"]."_name"])."%'";
 				}
 
 
@@ -238,7 +230,7 @@ class XmlModel
 				if($request[$value["key"]]!=""
 				&&$request[$value["key"]]!="no-value"){
 
-					$sql=$sql." and r_main.".$value["key"]." like '".parameter_filter($request[$value["key"]])."'";
+					$sql=$sql." and r_main.".$value["key"]." like '%".parameter_filter($request[$value["key"]])."%'";
 					
 				}
 			}
@@ -307,6 +299,7 @@ class XmlModel
 	$result=$this->ClearData($result);
 
 	$result=$this->ReloadFListData($dbMgr,$result);
+	$result=$this->ReloadFKeyData($dbMgr,$result);
 
 	$result=$this->fixListSearchResult($result);
 
@@ -345,6 +338,17 @@ class XmlModel
 	return $result;
   }
 
+  private function ReloadFKeyData($dbMgr,$result){
+	$fields=$this->XmlData["fields"]["field"];
+	foreach ($fields as $value){
+		if($value["type"]=="fkey"){
+			for($i=0;$i<count($result);$i++){
+				$result[$i][$value["key"]]=$result[$i][$value["key"]."_name"];
+			}
+		}
+	}
+	return $result;
+  }
   private function ClearData($result){
 	$count=count($result);
 	for($i=0;$i<$count;$i++){
@@ -375,6 +379,7 @@ class XmlModel
 	$result=$this->ClearData($result);
 
 	$result=$this->ReloadFListData($dbMgr,$result);
+	$result=$this->ReloadFKeyData($dbMgr,$result);
 	$result=$this->fixGridSearchResult($result);
 	
 	$this->GetFListData($dbMgr,$smartyMgr);
@@ -474,25 +479,25 @@ class XmlModel
         
 		if($value["type"]=="text"&&$value["unique"]=="1"){
 			//$sql="".$this->XmlData["tablename"];
-			$condition=$value["key"]."='".parameter_filter($request[$value["key"]])."' and id<>".($request["primary_id"]+0).(!empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"");
+			$condition=$value["key"]."='".($request[$value["key"]])."' and id<>".($request["primary_id"]+0).(!empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"");
 			if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$condition) ){
 				$error.= $value["name"].$SysLang["model"]["keyunique"]."\r\n";
 			}
 		}
 		if($value["type"]=="text"&&!empty($value["format"])){
-			if(preg_match($value["format"],parameter_filter($request[$value["key"]]))==false){
+			if(preg_match($value["format"],($request[$value["key"]]))==false){
 				$error.= $value["name"].$SysLang["model"]["formatincorrect"]."\r\n";
 			}
 		}
 
 		if($value["type"]=="text"&&$value["unionunique"]=="1"){
 			//$sql="".$this->XmlData["tablename"];
-			$unionunique_sql.=" and ".$value["key"]."='".parameter_filter($request[$value["key"]])."' ";
+			$unionunique_sql.=" and ".$value["key"]."='".($request[$value["key"]])."' ";
 			$unionunique_keyname[]=$value["name"];
 		}
 		if($value["notnull"]=="1"
-            &&(($value["type"]=="fkey"||$value["type"]=="number")&&parameter_filter($request[$value["key"]])=="0"
-                ||parameter_filter($request[$value["key"]])=="")){ 
+            &&(($value["type"]=="fkey"||$value["type"]=="number")&&($request[$value["key"]])=="0"
+                ||($request[$value["key"]])=="")){ 
 			$error.= $SysLang["model"]["pleaseenter"].$value["name"]."\r\n";
 		}
 	}
@@ -514,8 +519,17 @@ class XmlModel
   	
   }
 
+  public function resetRequestData($dbMgr,$request){
+  	return $request;
+  }
+
   private function Save($dbMgr,$request,$sysuser){
 	Global $SysLang,$Config;
+
+	foreach ($request as $key => $value) {
+		$request[$key]=parameter_filter($value);
+	}
+	$request=$this->resetRequestData($dbMgr,$request);
 
     $fields=$this->XmlData["fields"]["field"];
     if($fields=$this->XmlData["nosave"]=="1"){
@@ -595,9 +609,9 @@ class XmlModel
 			if($value["type"]=="password"){
 				$sql=$sql.",'".md5($request[$value["key"]])."'";
 			}else{
-				$sql=$sql.",'".parameter_filter($request[$value["key"]])."'";
+				$sql=$sql.",'".($request[$value["key"]])."'";
 			}
-			if($value["type"]=="check"&&$value["unique"]=="1"&&parameter_filter($request[$value["key"]])=="Y"){
+			if($value["type"]=="check"&&$value["unique"]=="1"&&($request[$value["key"]])=="Y"){
 				$dbMgr->query("update ".$this->XmlData["tablename"]." set ".$value["key"]."='N'");
 			}
 		}
@@ -625,10 +639,10 @@ class XmlModel
 			if($value["nosave"]=="1"){
 				continue;
 			}
-			if($value["type"]=="check"&&$value["unique"]=="1"&&parameter_filter($request[$value["key"]])=="Y"){
+			if($value["type"]=="check"&&$value["unique"]=="1"&&($request[$value["key"]])=="Y"){
 				$dbMgr->query("update ".$this->XmlData["tablename"]." set ".$value["key"]."='N'");
 			}
-			$sql=$sql.", `".$value["key"]."`='".parameter_filter($request[$value["key"]])."'";
+			$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
 		}
 		$sql=$sql." where id=$id";
 		$query = $dbMgr->query($sql);
@@ -640,7 +654,7 @@ class XmlModel
 			if($value["type"]=="password"){
 				$sql="update `".$this->XmlData["tablename"]."` set ";
 				$sql=$sql." `".$value["key"]."`='".md5($request[$value["key"]])."'";
-				$sql=$sql." where id=$id and `".$value["key"]."`<>'".parameter_filter($request[$value["key"]])."'";
+				$sql=$sql." where id=$id and `".$value["key"]."`<>'".($request[$value["key"]])."'";
 				$query = $dbMgr->query($sql);
 			}
 			if($value["type"]=="flist"&&$value["relatetable"]!=""){
@@ -667,7 +681,7 @@ class XmlModel
 				$sql="update ".$this->XmlData["tablename"]."_lang set lang='".$lang["code"]."'";
 				foreach ($fields as $value){
 					if($value["ismutillang"]=="1"){
-						$sql=$sql.", ".$value["key"]."='".parameter_filter($request[$value["key"]."_".$lang["code"]])."'";
+						$sql=$sql.", ".$value["key"]."='".($request[$value["key"]."_".$lang["code"]])."'";
 					}
 				}
 				$sql=$sql." where oid=$id and lang='".$lang["code"]."'";
@@ -689,7 +703,7 @@ class XmlModel
 				$sql=$sql." ) values ( $id ,'".$lang["code"]."' ";
 				foreach ($fields as $value){
 					if($value["ismutillang"]=="1"){
-						$sql=$sql.",'".parameter_filter($request[$value["key"]."_".$lang["code"]])."'";
+						$sql=$sql.",'".($request[$value["key"]."_".$lang["code"]])."'";
 					}
 				}
 				$sql=$sql." )";

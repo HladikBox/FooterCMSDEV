@@ -12,7 +12,7 @@
     <tbody>
         {{foreach from=$ImportData item=row }}
         <tr>
-            <td class="checkdd"><input type="checkbox" class="RowSelect" /></td>
+            <td class="checkdd"><input type="checkbox" class="RowSelect" checked="checked" /></td>
             {{foreach from=$row item=col }}
             {{if $col.type!="grid"}}
             <td class="err{{$col.error}} kd_{{$col.key}}">
@@ -29,14 +29,3 @@
         {{/foreach}}
     </tbody>
 </table>
-<script>
-    $(document).ready(function () {
-        $("#importList tr").each(function () {
-            if ($(this).find(".err1").length > 0) {
-                $(this).find(".checkdd").html("<i class='text-danger glyphicon glyphicon-remove'></i>");
-            } else {
-                $(this).find(".RowSelect").prop("checked", true);
-            }
-        });
-    });
-</script>

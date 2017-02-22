@@ -179,7 +179,7 @@ class DbMysql
 	*/
 	function fetch_array_all($query) 
 	{
-		while($row=mysql_fetch_array($query))
+		while($row=$this->fetch_array($query))
 			$rows[] = $row;
 		//return $rows;
 		return !is_array($rows)? array() : $rows ;
