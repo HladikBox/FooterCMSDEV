@@ -155,7 +155,8 @@ class XmlModel
 					$sql=$sql." when '".$option["value"]."' then '".$option["name"]."'";
 				}
 				$sql=$sql." else 'unknow' ";
-				$sql=$sql." end as ".$value["key"];
+				$sql=$sql." end as ".$value["key"]."_name";
+				$sql=$sql." ,r_main.".$value["key"];
 
 			}else if($value["type"]=="check"){
 
@@ -300,6 +301,7 @@ class XmlModel
 
 	$result=$this->ReloadFListData($dbMgr,$result);
 	$result=$this->ReloadFKeyData($dbMgr,$result);
+	$result=$this->ReloadSelectData($dbMgr,$result);
 
 	$result=$this->fixListSearchResult($result);
 
@@ -349,6 +351,17 @@ class XmlModel
 	}
 	return $result;
   }
+  private function ReloadSelectData($dbMgr,$result){
+	$fields=$this->XmlData["fields"]["field"];
+	foreach ($fields as $value){
+		if($value["type"]=="select"){
+			for($i=0;$i<count($result);$i++){
+				$result[$i][$value["key"]]=$result[$i][$value["key"]."_name"];
+			}
+		}
+	}
+	return $result;
+  }
   private function ClearData($result){
 	$count=count($result);
 	for($i=0;$i<$count;$i++){
@@ -380,6 +393,7 @@ class XmlModel
 
 	$result=$this->ReloadFListData($dbMgr,$result);
 	$result=$this->ReloadFKeyData($dbMgr,$result);
+	$result=$this->ReloadSelectData($dbMgr,$result);
 	$result=$this->fixGridSearchResult($result);
 	
 	$this->GetFListData($dbMgr,$smartyMgr);
@@ -869,7 +883,7 @@ class XmlModel
 
 	  }else if($action=="edit"){
 		$smarty->assign("MyMenuId",$menuId."_add");
-		$this->Edit($dbmgr,$smarty,$request["id"]);
+		$this->Edit($dbmgr,$smarty,$request["id"]+0);
 	  }else if($action=="save"){
 		$result=$this->Save($dbmgr,$request,$SysUser["id"]);
 		echo $result;
@@ -883,6 +897,10 @@ class XmlModel
 
  }
 
+ public function fixApiListRequest($dbMgr,$request){
+ 	return $request;
+ }
+
  public function fixApiListSql($sql){
  	return $sql;
  }
@@ -893,7 +911,7 @@ class XmlModel
 
  
   private function ShowAPIList($dbMgr,$request){
-  
+  	$request=$this->fixApiListRequest($dbMgr,$request);
     $sql=$this->GetSearchSql($request);
     $sql=$this->fixApiListSql($sql);
 	$query = $dbMgr->query($sql);
@@ -915,6 +933,7 @@ class XmlModel
   }
 
   private function DetailApi($dbMgr,$id,$lang){
+  	$id=$id+0;
   	$id=$this->fixApiGetId($id);
 
 	if($this->XmlData["ismutillang"]=="1"){

@@ -4,7 +4,7 @@
     
     header('Access-Control-Allow-Origin:*');  
     header('Access-Control-Allow-Methods:POST');  
-    header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str');  
+    header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str,lang');  
 
     $path=USER_ROOT."api.xml";
     $fp = fopen($path,"r");
@@ -28,8 +28,10 @@
             }
             try
             {
+                define(LANG, $_SERVER["HTTP_LANG"]);
+
                 $fmd5str=$_SERVER["HTTP_FMD5STR"];
-                logger_mgr::logInfo($_SERVER["REQUEST_URI"]." sign: ".$_SERVER["HTTP_SIGN"]."  $fmd5str tokenkey: ".$_SERVER["HTTP_TOKENKEY"]." input:".json_encode($_REQUEST));
+                logger_mgr::logInfo($_SERVER["REQUEST_URI"]."Lang: ".LANG." sign: ".$_SERVER["HTTP_SIGN"]."  $fmd5str tokenkey: ".$_SERVER["HTTP_TOKENKEY"]." input:".json_encode($_REQUEST));
                 if($api["type"]=="model"){
                     $modelmgrpath=USER_ROOT."modelmgr/".MODEL.".model.php";
      

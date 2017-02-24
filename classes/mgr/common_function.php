@@ -165,4 +165,22 @@ function request_get($url) {
     }
     return $arr;
   }
+
+  function checkToken($sign,$token,$tokenkey_id,$mdsalt){
+	$url="http://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+	//$url="http://szpc2057.morningstar.com/alucard263096/bbsignal/api/member/get";
+	$arr=$_POST;
+	ksort($arr);
+	$arrpost=array();
+	foreach ($arr as $key => $value) {
+		$arrpost[]=$key."=".urlencode($value);
+	}
+	$poststr=join("&",$arrpost);
+	$md5str=$url."~".$poststr."~".$token."~".$tokenkey_id;
+	//echo "\r\n";
+	$md5str=strtoupper($md5str);
+	$mysign=md5($md5str.$mdsalt);
+	//echo "$sign==$mysign";
+	return $sign==$mysign;
+  }
 ?>
