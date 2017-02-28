@@ -46,19 +46,25 @@
                                     <div class="row form-horizontal">
                                         {{foreach from=$ModelData.fields.field item=rs}}
                                         {{if $rs.search=="1"}}
-                                        <div class="form-group col-md-6">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             {{if $rs.type=="text" || $rs.type=="longtext" || $rs.type=="html"}}
+											<div class="form-group col-md-6">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" id="condition_{{$rs.key}}">
                                             </div>
+											</div>
                                             {{elseif $rs.type=="datetime"}}
+											<div class="form-group col-md-6">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}"></div>
                                                 <div class="col-md-2" style="padding:3px;text-align:center">-</div>
                                                 <div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_to" placeholder="{{$SysLang.model.to}}"></div>
-                                            </div>                                                     
+                                            </div>
+											</div>                                                     
                                             {{elseif $rs.type=="fkey"}}
+											<div class="form-group col-md-6">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <select id="condition_{{$rs.key}}" class="form-control selectize-select">
                                                     <option value="0">--{{$SysLang.model.select}}--</option>
@@ -66,8 +72,11 @@
                                                     <option value="{{$rsoption.id}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
-                                            </div>                                       
+                                            </div>
+											</div>                                       
                                             {{elseif $rs.type=="select" }}
+											<div class="form-group col-md-6">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <select id="condition_{{$rs.key}}" class="form-control selectize-select">
                                                     <option value="no-value">--{{$SysLang.model.select}}--</option>
@@ -75,13 +84,16 @@
                                                     <option value="{{$rsoption.value}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
-                                            </div>                                       
-                                            {{elseif $rs.type=="check" }}
+                                            </div>
+											</div>                                       
+                                            {{elseif 1==2&&$rs.type=="check" }}
+											<div class="form-group col-md-6">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8 ">
                                                 <input id="condition_{{$rs.key}}" type="checkbox" value="Y" {{if $rs.default=="1"}}checked="checked"{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
                                             </div>
+											</div>
                                             {{/if}}
-                                        </div>
                                         {{/if}}
                                         {{/foreach}}
                                     </div>
@@ -174,9 +186,9 @@
                         {{if $rs.type=="datetime" }}
                         ,"{{$rs.key}}_from":$("#condition_{{$rs.key}}_from").val()
                         ,"{{$rs.key}}_to":$("#condition_{{$rs.key}}_to").val()
-                        {{elseif $rs.type=="check"}}
+                        {{elseif 1==2&&$rs.type=="check"}}
                         ,"{{$rs.key}}":$("#condition_{{$rs.key}}").prop("checked")?"Y":"N"
-                        {{else}}
+                        {{elseif $rs.type=="text"||$rs.type=="longtext"||$rs.type=="html"||$rs.type=="select"||$rs.type=="fkey"}}
                         ,"{{$rs.key}}":$("#condition_{{$rs.key}}").val()
                         {{/if}}
                     {{/if}}
