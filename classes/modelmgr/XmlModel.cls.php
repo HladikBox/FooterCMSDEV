@@ -529,7 +529,7 @@ class XmlModel
   public function fixUpdateSql($sql){
   	return $sql;
   }
-  public function afterSave($dbmgr){
+  public function afterSave($dbmgr,$id){
   	
   }
 
@@ -725,7 +725,7 @@ class XmlModel
 			}
 		}
 
-	$this->afterSave($dbMgr);
+	$this->afterSave($dbMgr,$id);
 
 	$dbMgr->commit_trans();
 	return "right".$id;
