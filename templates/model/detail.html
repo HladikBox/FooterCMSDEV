@@ -397,6 +397,50 @@
         self.location='{{$PageName}}?action=add';
     }
 
+    function btnDeleteInList(){
+           
+            var isGo=deleteValidate();
+            if(isGo==false){
+                return;
+            }
+
+            confirmDialog("{{$SysLang.common.notice}}","{{$SysLang.model.deletesure}}",function(){
+                    var idlist="{{$id}}";
+                    if(idlist!="0"){
+                        $.post("{{$PageName}}",{"action":"delete","idlist":idlist},function(data){
+                            
+                            if(myjs_afterdelete(data)==false){
+                                return;
+                            }
+
+                            if(data=="success")
+                            {
+                                $("#btnReturnToList").click();
+                            }
+                            else
+                            {
+                                errorDialog(data);
+                            }
+                
+                        });
+                    }
+                });
+        }
+    function deleteValidate(){
+        var message="";
+
+        message+myjs_delevalidate();
+
+        if(message!=""){
+            //infoDialog(message);
+            warningDialog(message);
+            return false;
+        }
+
+
+        return true;
+
+    }
 </script>
 
  {{include  file="$smarty_root/footer.html" }}

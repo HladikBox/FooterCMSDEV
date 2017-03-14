@@ -240,6 +240,12 @@ class XmlModel
 
 	}
 
+	$lastupdatecalltime=parameter_filter($request["lastupdatecalltime"]);
+	if($lastupdatecalltime!=""){
+		$sql=$sql." r_main.updated_date > '$lastupdatecalltime' ";
+	}
+
+
 	$orderby=parameter_filter($request["orderby"]);
 	if($orderby==""){
 		$orderby="r_main.updated_date desc";	
