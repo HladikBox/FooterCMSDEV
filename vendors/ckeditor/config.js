@@ -8,5 +8,5 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 	config.filebrowserUploadUrl="/fileupload";
-	alert(config.filebrowserUploadUrl);
+	//alert(config.filebrowserUploadUrl);
 };
