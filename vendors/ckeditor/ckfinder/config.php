@@ -60,7 +60,26 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = '/htmleditupload/';
+
+$module=$_GET["g"];
+$model=$_GET["m"];
+if($module==""||$model==""){
+	$module="/".$module;
+	$model="/".$model;
+	//print_r($_REQUEST);
+	//print_r($_SERVER);
+	die("~~hack~~".$baseUrl = '/Users'.$module.$model."/upload/ckeditor/");
+}else{
+	$module="/".$module;
+	$model="/".$model;
+}
+if($_GET["n"]=="nocov"){
+	$baseUrl = $module.$model."/upload/ckeditor/";
+}else{
+	$baseUrl = '/Users'.$module.$model."/upload/ckeditor/";
+}
+
+//error_log($baseUrl."\r\n",3,"log.txt");
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the
@@ -80,6 +99,7 @@ Examples:
 ATTENTION: The trailing slash is required.
 */
 $baseDir = resolveUrl($baseUrl);
+//error_log($baseUrl,3,"\log.txt");
 
 /*
  * ### Advanced Settings

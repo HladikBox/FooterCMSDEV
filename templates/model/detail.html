@@ -201,12 +201,12 @@
         $('textarea.ckeditor').ckeditor({
             height: '200px',
             allowedContent: true,
-            filebrowserBrowseUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/ckfinder.html',
-            filebrowserImageBrowseUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/ckfinder.html?Type=Images',
-            filebrowserFlashBrowseUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/ckfinder.html?Type=Flash',
-            filebrowserUploadUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-            filebrowserImageUploadUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-            filebrowserFlashUploadUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+            filebrowserBrowseUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/ckfinder.html&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserImageBrowseUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/ckfinder.html?Type=Images&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserFlashBrowseUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/ckfinder.html?Type=Flash&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserUploadUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserImageUploadUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserFlashUploadUrl : '{{$rootpath}}vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash&g={{$LOGIN}}&m={{$ALIAS}}'
         });
         $(".flist_all").change(function(){
             var check=$(this).prop("checked");

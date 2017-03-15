@@ -10,6 +10,10 @@
   
   $smarty->assign("MyModule",MODULE);
   $smarty->assign("MyMenuId",MODEL);
+  
+  $smarty->assign("LOGIN",LOGIN);
+  $smarty->assign("ALIAS",ALIAS);
+
   if(MODULE==""||MODEL==""||(MODULE=="admin"&&MODEL=="dashboard")){
      $smarty->assign("MyModule","admin");
      $smarty->assign("MyMenuId","dashboard");
