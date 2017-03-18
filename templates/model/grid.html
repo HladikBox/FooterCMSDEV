@@ -21,7 +21,7 @@
                 {{/if}}
 
                 {{if $rs.type=="upload" && $rs.filetype=="image"}}
-                <img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}"  style="height:50px;" />
+                <img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}?height=50"   />
                 {{else}}
                 {{$col}}
                 {{/if}}

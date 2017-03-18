@@ -37,9 +37,23 @@ if(MODULE=="upload"){
 		die("File cannot be found");
 	}
 	ob_clean();
+
+    $info = pathinfo($filename);
+	if( in_array(strtolower($info['extension']),array("gif","jpeg","png","bmp","jpg"))){
+        $width=$_REQUEST["width"]+0;
+        $height=$_REQUEST["height"]+0;
+        if($width>0||$height>0){
+            $filename=getImageOtherSave($filename,$width,$height);
+            //echo $filename;
+        }
+    }
+    //exit;
 	$fp=fopen($filename,"r");
 	$length=filesize($filename);
-	$encoded_filename = rawurlencode($out_filename);
+	$encoded_filename = rawurlencode($filename);
+    
+
+
 	$ua = $_SERVER["HTTP_USER_AGENT"];
 	header('Accept-Ranges: bytes');
 	header('Accept-Length: ' . $length);
@@ -49,11 +63,11 @@ if(MODULE=="upload"){
 	header("Content-Length: ".$length);
 
 	if (preg_match("/MSIE/", $ua)) {
-		header('Content-Disposition: attachment; filename="' . $encoded_filename . '"');
+		//header('Content-Disposition: attachment; filename="' . $encoded_filename . '"');
 	} else if (preg_match("/Firefox/", $ua)) {
-		header('Content-Disposition: attachment; filename*="utf8\'\'' . $out_filename . '"');
+		//header('Content-Disposition: attachment; filename*="utf8\'\'' . $encoded_filename . '"');
 	} else {
-		header('Content-Disposition: attachment; filename="' . $out_filename . '"');
+		//header('Content-Disposition: attachment; filename="' . $encoded_filename . '"');
 	}
 	$buffer=1024;
 	$buffer_count=0;

@@ -183,4 +183,30 @@ function request_get($url) {
 	//echo "$sign==$mysign";
 	return $sign==$mysign;
   }
+  function getImageOtherSave($orifilename,$width,$height){
+    $info= pathinfo($orifilename);
+    $dir=$info["dirname"];
+    $filename=$info["filename"];
+    $extension=$info["extension"];
+
+    if($width>0){
+        $width_f="_w$width";
+    }
+    if($height>0){
+        $height_f="_h$height";
+    }
+
+    $filename=$filename.$width_f.$height_f;
+    $desfilename=$dir."/".$filename.".".$extension;
+    if(!file_exists($desfilename)){
+        
+        require ROOT."/classes/obj/imageresize.php";
+        $imgresize=new ImageResize($orifilename,$width,$height);
+        $tempfile=$imgresize->DoResize();
+        copy($tempfile,$desfilename);
+        unlink($tempfile);
+    }
+    return $desfilename;
+    
+  }
 ?>
