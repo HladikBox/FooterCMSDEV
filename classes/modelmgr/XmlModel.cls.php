@@ -251,13 +251,17 @@ class XmlModel
 		$orderby="r_main.updated_date desc";	
 	}
 	$limit=parameter_filter($request["limit"]);
-	if($limit==""){
-		$limit="0,100";
+	if(MODULE!="api"&&$limit==""){
+		$limit=" limit $limit 0,100";
+	}else{
+		if($limit!=""){
+			$limit=" limit $limit";
+		}
 	}
 
 
 	$sql=$sql." order by $orderby  
-	limit $limit";
+	$limit ";
 
 	return $sql;
   }
