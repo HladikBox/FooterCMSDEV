@@ -242,7 +242,7 @@ class XmlModel
 
 	$lastupdatecalltime=parameter_filter($request["lastupdatecalltime"]);
 	if($lastupdatecalltime!=""){
-		$sql=$sql." r_main.updated_date > '$lastupdatecalltime' ";
+		$sql=$sql." and r_main.updated_date > '$lastupdatecalltime' ";
 	}
 
 
