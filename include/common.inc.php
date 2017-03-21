@@ -31,10 +31,10 @@ define(CURRENT_PATH, "/$login/$alias/$module/$model");
 if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没有进行初始化");}
 
 
-$appinfo=json_decode(request_get("http://console.app-link.org/api/cms?action=appinfo&login=$login&alias=$alias"),true);
-if($appinfo["return"]["run_status"]!="P"){
-	die("404错误，服务已经停止，请联系管理员");
-}
+//$appinfo=json_decode(request_get("http://console.app-link.org/api/cms?action=appinfo&login=$login&alias=$alias"),true);
+//if($appinfo["return"]["run_status"]!="P"){
+//	die("404错误，服务已经停止，请联系管理员");
+//}
 
 }else{
 	$urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
