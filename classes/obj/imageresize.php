@@ -136,6 +136,12 @@ function resize($src,$w,$h)
     $im=$this->create($src);
 	//error_log($savepath.":".$temp_w."-".$temp_h."-".$width."-".$height."\r\n\r\n\r\n\r\n",3,"img.txt");
     imagecopyresampled($temp_img,$im,0,0,0,0,$temp_w,$temp_h,$width,$height);     
+	
+	imagejpeg($temp_img,$savepath, 100);     
+        imagedestroy($im);     
+        return $savepath;
+	
+	//²»²¹°×
     if($per1>$per2)     
     {     
         imagejpeg($temp_img,$savepath, 100);     
