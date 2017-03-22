@@ -14,7 +14,7 @@
 	echo "Fils is empty";
 	exit;
  }
- $filename=date('ymdHIs').$file["name"];
+ $filename=date('ymdHIs').".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
  $folder=USER_ROOT.$CONFIG['fileupload']['upload_path'];
  if(!file_exists($folder)){
 	mkdir($folder,0777);

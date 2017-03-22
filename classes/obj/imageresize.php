@@ -37,12 +37,15 @@ function show_pic_scal($width, $height, $picpath) {
 
     if($width==0){
         $width = round ( $height / $ra2 ); 
+		$newWidth=$width;
+		$newHeight=$height;
     }
-    if($height==0){
-        $height = round ( $width / $ra );   
-    }
-         
-    if ($imgw > $imgh) {     
+    elseif($height==0){
+        $height = round ( $width / $ra );
+		$newWidth=$width;
+		$newHeight=$height; 
+    }else{
+		if ($imgw > $imgh) {     
             $newWidth = $width;     
             $newHeight = round ( $newWidth / $ra );     
              
@@ -53,6 +56,8 @@ function show_pic_scal($width, $height, $picpath) {
             $newWidth = $width;     
             $newHeight = round ( $newWidth / $ra );     
         }   
+	}
+         
 
     $newsize [0] = $newWidth;     
     $newsize [1] = $newHeight;     
@@ -129,6 +134,7 @@ function resize($src,$w,$h)
     $temp_h=intval($height*$per);//计算原图缩放后的高度     
     $temp_img=imagecreatetruecolor($temp_w,$temp_h);//创建画布     
     $im=$this->create($src);
+	//error_log($savepath.":".$temp_w."-".$temp_h."-".$width."-".$height."\r\n\r\n\r\n\r\n",3,"img.txt");
     imagecopyresampled($temp_img,$im,0,0,0,0,$temp_w,$temp_h,$width,$height);     
     if($per1>$per2)     
     {     
