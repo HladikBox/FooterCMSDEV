@@ -218,12 +218,37 @@ class XmlModel
 				}
 
 			}else if($value["type"]=="fkey"){
-
+				
 				if($request[$value["key"]]!="0"&&$request[$value["key"]]!=""){
-					$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
+					if(is_array($request[$value["key"]])){
+						$crr=array();
+						foreach($request[$value["key"]] as $v){
+							$crr[]=$v;
+						}
+						$sql=$sql." and r_main.".$value["key"]." in (".parameter_filter(join(",",$crr)).")";
+						
+					}else{
+						$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
+					}
 				}
 				if($request[$value["key"]."_name"]!=""){
 					$sql=$sql." and ".$value["ntbname"].".".$value["displayfield"]." like '%".parameter_filter($request[$value["key"]."_name"])."%'";
+				}
+
+
+			}else if($value["type"]=="select"){
+				
+				if($request[$value["key"]]!=""){
+					if(is_array($request[$value["key"]])){
+						$crr=array();
+						foreach($request[$value["key"]] as $v){
+							$crr[]="'".parameter_filter($v)."'";
+						}
+						$sql=$sql." and r_main.".$value["key"]." in (".join(",",$crr).")";
+						
+					}else{
+						$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
+					}
 				}
 
 
