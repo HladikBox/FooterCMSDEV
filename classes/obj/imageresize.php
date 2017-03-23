@@ -32,31 +32,34 @@ function show_pic_scal($width, $height, $picpath) {
     $imgw = $imginfo [0];     
     $imgh = $imginfo [1];     
          
-    $ra = number_format ( ($imgw / $imgh), 1 ); //宽高比     
-    $ra2 = number_format ( ($imgh / $imgw), 1 ); //高宽比     
+
 
     if($width==0){
-        $width = round ( $height / $ra2 ); 
+        $width = ceil ( $height * $imgw / $imgh ); 
+		$newWidth=$width;
+		$newHeight=$height;
     }
-    if($height==0){
-        $height = round ( $width / $ra );   
-    }
-         
-    if ($imgw > $imgh) {     
+    elseif($height==0){
+        $height = ceil ( $width * $imgh / $imgw );
+		$newWidth=$width;
+		$newHeight=$height; 
+    }else{
+		if ($imgw > $imgh) {     
             $newWidth = $width;     
-            $newHeight = round ( $newWidth / $ra );     
+            $newHeight = ceil ( $newWidth * $imgh / $imgw );     
              
         } elseif ($imgw < $imgh) {     
             $newHeight = $height;     
-            $newWidth = round ( $newHeight / $ra2 );     
+            $newWidth = ceil ( $newHeight * $imgw / $imgh );     
         } else {     
             $newWidth = $width;     
-            $newHeight = round ( $newWidth / $ra );     
+            $newHeight = ceil ( $newWidth * $imgh / $imgw );     
         }   
+	}
+         
 
     $newsize [0] = $newWidth;     
-    $newsize [1] = $newHeight;     
-    //     print_r($newsize);
+    $newsize [1] = $newHeight;   
     return $newsize;     
 }     
     
@@ -129,7 +132,14 @@ function resize($src,$w,$h)
     $temp_h=intval($height*$per);//计算原图缩放后的高度     
     $temp_img=imagecreatetruecolor($temp_w,$temp_h);//创建画布     
     $im=$this->create($src);
-    imagecopyresampled($temp_img,$im,0,0,0,0,$temp_w,$temp_h,$width,$height);     
+	//error_log($savepath.":".$w."-".$h."-".$width."-".$height."\r\n\r\n\r\n\r\n",3,"img.txt");
+    imagecopyresampled($temp_img,$im,0,0,0,0,$w,$h,$width,$height);     
+	
+	imagejpeg($temp_img,$savepath, 100);     
+        imagedestroy($im);     
+        return $savepath;
+	
+	//不补白
     if($per1>$per2)     
     {     
         imagejpeg($temp_img,$savepath, 100);     
