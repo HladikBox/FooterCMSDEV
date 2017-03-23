@@ -247,7 +247,7 @@ class XmlModel
 						$sql=$sql." and r_main.".$value["key"]." in (".join(",",$crr).")";
 						
 					}else{
-						$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
+						$sql=$sql." and r_main.".$value["key"]."='".parameter_filter($request[$value["key"]])."'";
 					}
 				}
 
