@@ -87,7 +87,7 @@
                                         <div class="form-group col-md-6" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}}>
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
-                                                <input type="number" class="form-control" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} value="{{$rs.value}}" id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+                                                <input type="number" class="form-control" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} value="{{if $action=="add"}}0{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="check"}}
