@@ -218,16 +218,15 @@ class XmlModel
 				}
 
 			}else if($value["type"]=="fkey"){
-				
-				if($request[$value["key"]]!="0"&&$request[$value["key"]]!=""){
-					if(is_array($request[$value["key"]])){
-						$crr=array();
-						foreach($request[$value["key"]] as $v){
-							$crr[]=$v;
-						}
-						$sql=$sql." and r_main.".$value["key"]." in (".parameter_filter(join(",",$crr)).")";
+				if(is_array($request[$value["key"]])){
+					$crr=array();
+					foreach($request[$value["key"]] as $v){
+						$crr[]=$v;
+					}
+					$sql=$sql." and r_main.".$value["key"]." in (".parameter_filter(join(",",$crr)).")";
 						
-					}else{
+				}else{
+					if($request[$value["key"]]!="0"&&$request[$value["key"]]!=""){
 						$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
 					}
 				}
