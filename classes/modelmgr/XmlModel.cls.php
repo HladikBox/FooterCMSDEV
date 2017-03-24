@@ -218,13 +218,14 @@ class XmlModel
 				}
 
 			}else if($value["type"]=="fkey"){
+				$csr=explode(",",$request[$value["key"]]);
 				if(is_array($request[$value["key"]])){
-					$crr=array();
-					foreach($request[$value["key"]] as $v){
-						$crr[]=$v;
-					}
-					$sql=$sql." and r_main.".$value["key"]." in (".parameter_filter(join(",",$crr)).")";
+					$sql=$sql." and r_main.".$value["key"]." in (".parameter_filter(join(",",$request[$value["key"]])).")";
 						
+				}elseif(count($csr)>1){
+					
+					$sql=$sql." and r_main.".$value["key"]." in (".parameter_filter(join(",",$csr)).")";
+					
 				}else{
 					if($request[$value["key"]]!="0"&&$request[$value["key"]]!=""){
 						$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
@@ -236,6 +237,7 @@ class XmlModel
 
 
 			}else if($value["type"]=="select"){
+				$csr=explode(",",$request[$value["key"]]);
 				if(is_array($request[$value["key"]])){
 					$crr=array();
 					foreach($request[$value["key"]] as $v){
@@ -243,6 +245,13 @@ class XmlModel
 					}
 					$sql=$sql." and r_main.".$value["key"]." in (".join(",",$crr).")";
 						
+				}elseif(count($csr)>1){
+					$crr=array();
+					foreach($csr as $v){
+						$crr[]="'".parameter_filter($v)."'";
+					}
+					$sql=$sql." and r_main.".$value["key"]." in (".join(",",$crr).")";
+					
 				}else{
 					if($request[$value["key"]]!=""
 					&&$request[$value["key"]]!="no-value"){
