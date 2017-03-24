@@ -237,16 +237,16 @@ class XmlModel
 
 
 			}else if($value["type"]=="select"){
-				
-				if($request[$value["key"]]!=""){
-					if(is_array($request[$value["key"]])){
-						$crr=array();
-						foreach($request[$value["key"]] as $v){
-							$crr[]="'".parameter_filter($v)."'";
-						}
-						$sql=$sql." and r_main.".$value["key"]." in (".join(",",$crr).")";
+				if(is_array($request[$value["key"]])){
+					$crr=array();
+					foreach($request[$value["key"]] as $v){
+						$crr[]="'".parameter_filter($v)."'";
+					}
+					$sql=$sql." and r_main.".$value["key"]." in (".join(",",$crr).")";
 						
-					}else{
+				}else{
+					if($request[$value["key"]]!=""
+					&&$request[$value["key"]]!="no-value"){
 						$sql=$sql." and r_main.".$value["key"]."='".parameter_filter($request[$value["key"]])."'";
 					}
 				}
