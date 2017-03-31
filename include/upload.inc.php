@@ -57,7 +57,11 @@ if(MODULE=="upload"){
 	$ua = $_SERVER["HTTP_USER_AGENT"];
 	header('Accept-Ranges: bytes');
 	header('Accept-Length: ' . $length);
-	header('Content-Type: application/octet-stream');
+	if( in_array(strtolower($info['extension']),array("gif","jpeg","png","bmp","jpg"))){
+		header('Content-type: image/jpeg');
+	}else{
+		header('Content-Type: application/octet-stream');
+	}
 	header('Content-Encoding: none');
 	header("Content-Transfer-Encoding: binary" );
 	header("Content-Length: ".$length);

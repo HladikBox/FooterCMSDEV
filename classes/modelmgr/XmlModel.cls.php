@@ -665,6 +665,8 @@ class XmlModel
 
 			if($value["type"]=="password"){
 				$sql=$sql.",'".md5($request[$value["key"]])."'";
+			}elseif($value["type"]=="number"){
+				$sql=$sql.",'".($request[$value["key"]]+0)."'";
 			}else{
 				$sql=$sql.",'".($request[$value["key"]])."'";
 			}
@@ -699,6 +701,9 @@ class XmlModel
 			if($value["type"]=="check"&&$value["unique"]=="1"&&($request[$value["key"]])=="Y"){
 				$dbMgr->query("update ".$this->XmlData["tablename"]." set ".$value["key"]."='N'");
 			}
+			if($value["type"]=="number"){
+				$request[$value["key"]]=$request[$value["key"]]+0;
+			}
 			$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
 		}
 		$sql=$sql." where id=$id";
@@ -706,7 +711,6 @@ class XmlModel
 
 	}
 
-	
 		foreach ($fields as $value){
 			if($value["type"]=="password"){
 				$sql="update `".$this->XmlData["tablename"]."` set ";
@@ -733,6 +737,7 @@ class XmlModel
 				}
 			}
 		}
+		
 		if($haveMutilLang){
 			foreach ($SysLangConfig["langs"]["lang"] as $lang){
 				$sql="update ".$this->XmlData["tablename"]."_lang set lang='".$lang["code"]."'";
