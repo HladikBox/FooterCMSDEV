@@ -586,7 +586,7 @@ class XmlModel
 	foreach ($request as $key => $value) {
 		$request[$key]=parameter_filter($value);
 	}
-	$request=$this->resetRequestData($dbMgr,$request);
+	
 
     $fields=$this->XmlData["fields"]["field"];
     if($fields=$this->XmlData["nosave"]=="1"){
@@ -913,6 +913,9 @@ class XmlModel
 
   public function DefaultShow($smarty,$dbmgr,$action,$menuId,$request){
 	Global $SysUser;
+	
+	  $request=$this->resetRequestData($dbmgr,$request);
+	
 	  if($action==""){
 		$smarty->assign("MyMenuId",$menuId."_list");
 		$this->ShowList($dbmgr,$smarty);
@@ -1018,6 +1021,9 @@ class XmlModel
   }
 	  
   public function DefaultShowAPI($dbmgr,$action,$request){
+	  
+	  $request=$this->resetRequestData($dbmgr,$request);
+	  
 	  if($action==""){
 		$this->ShowAPIList($dbmgr,$request);
 	  }if($action=="detail"){
