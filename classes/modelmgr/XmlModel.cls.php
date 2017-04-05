@@ -667,6 +667,9 @@ class XmlModel
 				$sql=$sql.",'".md5($request[$value["key"]])."'";
 			}elseif($value["type"]=="number"){
 				$sql=$sql.",'".($request[$value["key"]]+0)."'";
+			}elseif($value["type"]=="datetime"
+				&&(strtolower($request[$value["key"]])=="null"||strtolower($request[$value["key"]])=="")){
+				$sql=$sql.",null";
 			}else{
 				$sql=$sql.",'".($request[$value["key"]])."'";
 			}
@@ -704,7 +707,15 @@ class XmlModel
 			if($value["type"]=="number"){
 				$request[$value["key"]]=$request[$value["key"]]+0;
 			}
-			$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
+
+			if($value["type"]=="datetime"
+				&&(strtolower($request[$value["key"]])=="null"||strtolower($request[$value["key"]])=="")){
+				$sql=$sql.", `".$value["key"]."`= null ";
+			}else{
+
+				$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
+			}
+
 		}
 		$sql=$sql." where id=$id";
 		$query = $dbMgr->query($sql);
