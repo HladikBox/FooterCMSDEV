@@ -55,6 +55,11 @@ if(MODULE=="upload"){
 
 
 	$ua = $_SERVER["HTTP_USER_AGENT"];
+	header("Cache-Control: public");
+	header("Pragma: cache");
+	$offset = 12*30*60*60*24; // cache 1 year
+	$ExpStr = "Expires: ".gmdate("D, d M Y H:i:s", time() + $offset)." GMT";
+	header($ExpStr);
 	header('Accept-Ranges: bytes');
 	header('Accept-Length: ' . $length);
 	if( in_array(strtolower($info['extension']),array("gif","jpeg","png","bmp","jpg"))){
