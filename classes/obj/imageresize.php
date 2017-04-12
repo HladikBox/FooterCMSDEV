@@ -135,28 +135,28 @@ function resize($src,$w,$h)
 	//error_log($savepath.":".$w."-".$h."-".$width."-".$height."\r\n\r\n\r\n\r\n",3,"img.txt");
     imagecopyresampled($temp_img,$im,0,0,0,0,$w,$h,$width,$height);     
 	
-	imagejpeg($temp_img,$savepath, 100);     
+	imagejpeg($temp_img,$savepath, 90);     
         imagedestroy($im);     
         return $savepath;
 	
 	//不补白
     if($per1>$per2)     
     {     
-        imagejpeg($temp_img,$savepath, 100);     
+        imagejpeg($temp_img,$savepath, 90);     
         imagedestroy($im);     
         return $this->addBg($savepath,$w,$h,"w");     
         //宽度优先，在缩放之后高度不足的情况下补上背景     
     }     
     if($per1==$per2)     
     {     
-        imagejpeg($temp_img,$savepath, 100);     
+        imagejpeg($temp_img,$savepath, 90);     
         imagedestroy($im);     
         return $savepath;     
         //等比缩放     
     }     
     if($per1<$per2)     
     {     
-        imagejpeg($temp_img,$savepath, 100);     
+        imagejpeg($temp_img,$savepath, 90);     
         imagedestroy($im);     
         return $this->addBg($savepath,$w,$h,"h");     
         //高度优先，在缩放之后宽度不足的情况下补上背景     
