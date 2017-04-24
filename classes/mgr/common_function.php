@@ -166,7 +166,7 @@ function request_get($url) {
     return $arr;
   }
 
-  function checkToken($sign,$token,$tokenkey_id,$mdsalt){
+  function GenerateTokenSign($token,$tokenkey_id,$mdsalt){
 	$url="http://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	//$url="http://szpc2057.morningstar.com/alucard263096/bbsignal/api/member/get";
 	$arr=$_POST;
@@ -181,7 +181,7 @@ function request_get($url) {
 	$md5str=strtoupper($md5str);
 	$mysign=md5($md5str.$mdsalt);
 	//echo "$sign==$mysign";
-	return $sign==$mysign;
+	return $mysign;
   }
   function getImageOtherSave($orifilename,$width,$height){
     $info= pathinfo($orifilename);
