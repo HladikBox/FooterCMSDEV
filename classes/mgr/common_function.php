@@ -173,7 +173,7 @@ function request_get($url) {
 	ksort($arr);
 	$arrpost=array();
 	foreach ($arr as $key => $value) {
-		$arrpost[]=$key."=".urlencode($value);
+		$arrpost[]=$key."=".rawurlencode($value);
 	}
 	$poststr=join("&",$arrpost);
 	$md5str=$url."~".$poststr."~".$token."~".$tokenkey_id;
