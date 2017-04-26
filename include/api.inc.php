@@ -6,7 +6,7 @@
     header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str,lang');  
 
     if(strtolower($_SERVER["REQUEST_METHOD"])=="options"){
-		outputJSON(outResult("200","option die"));   
+		exit();
 	}
     $path=USER_ROOT."api.xml";
     $fp = fopen($path,"r");
@@ -30,6 +30,12 @@
             }
             try
             {
+				$initphp=USER_ROOT."common/init.inc.php";
+				 if(file_exists($initphp)){
+					include $initphp;
+				 }
+
+
                 define(LANG, $_SERVER["HTTP_LANG"]);
 
                 $fmd5str=$_SERVER["HTTP_FMD5STR"];
