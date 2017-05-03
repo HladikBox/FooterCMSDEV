@@ -47,6 +47,8 @@ if(MODULE=="upload"){
             //echo $filename;
         }
     }
+	header('Location:'."/Users".USER_PATH."upload/".MODEL."/".basename($filename));
+	exit;
     //exit;
 	$fp=fopen($filename,"r");
 	$length=filesize($filename);
