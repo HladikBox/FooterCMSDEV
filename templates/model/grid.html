@@ -1,48 +1,26 @@
-
-<thead>
-    <tr>
-        {{foreach from=$ModelData.fields.field item=rs}}
-        {{if $rs.displayinlist=="1"}}
-        <th>{{$rs.name}}</th>
-        {{/if}}
-        {{/foreach}}
-    </tr>
-</thead>
-<tbody>
-    {{foreach from=$result item=row}}
-    <tr>
-        {{foreach from=$row item=col key=key}}
-        {{if $key!="id"}}
-        {{foreach from=$ModelData.fields.field item=rs}}
-        {{if $key==$rs.key && $rs.displayinlist=="1"}}
-        <td class="result_{{$rs.key}}" style="max-width: 300px;word-break: break-all; word-wrap:break-word;">
-            {{if $rs.gotodetail=="1"}}
-            <a href="{{$PageName}}?action=edit&id={{$row.id}}&parenturl={{$parenturl}}">
-                {{/if}}
-
-                {{if $rs.type=="upload" && $rs.filetype=="image"}}
-                <img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}?height=50"   />
-                {{else}}
-                {{$col}}
-                {{/if}}
-                {{if $rs.gotodetail=="1"}}
-            </a>
-            {{/if}}
-        </td>
-        {{/if}}
-        {{/foreach}}
-        {{/if}}
-        {{/foreach}}
-    </tr>
-    {{/foreach}}
+<thead><tr>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th>{{$rs.name}}</th>{{/if}}{{/foreach}}</tr></thead>
+<tbody>{{foreach from=$result item=row}}
+<tr>
+{{foreach from=$row item=col key=key}}
+{{if $key!="id"}}
+{{foreach from=$ModelData.fields.field item=rs}}
+{{if $key==$rs.key && $rs.displayinlist=="1"}}
+<td class="result_{{$rs.key}}" style="max-width: 300px;word-break: break-all; word-wrap:break-word;">
+{{if $rs.gotodetail=="1"}}<a href="{{$PageName}}?action=edit&id={{$row.id}}&parenturl={{$parenturl}}">{{/if}}{{if $rs.type=="upload" && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}?height=50"/>{{else}}{{$col}}{{/if}}{{if $rs.gotodetail=="1"}}</a>{{/if}}</td>
+{{/if}}
+{{/foreach}}
+{{/if}}
+{{/foreach}}
+</tr>
+{{/foreach}}
 </tbody>
 <script>
-    {{foreach from=$FListArr item=rs}}
-    flistarr{{$rs.key}} = new Array();
-    {{foreach from=$rs.value item=rsvalue}}
-    flistarr{{$rs.key}}[{{$rsvalue.id}}] = "{{$rsvalue.name}}";
-    {{/foreach}}
-        {{/foreach}}
+{{foreach from=$FListArr item=rs}}
+flistarr{{$rs.key}} = new Array();
+{{foreach from=$rs.value item=rsvalue}}
+flistarr{{$rs.key}}[{{$rsvalue.id}}] = "{{$rsvalue.name}}";
+{{/foreach}}
+{{/foreach}}
 
             $(function () {
                 {{foreach from=$ModelData.fields.field item=rs}}
