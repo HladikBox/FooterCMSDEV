@@ -30,6 +30,7 @@
     <pleaseenter>请输入或选择</pleaseenter>
     <uploaderror>上传失败，请联系管理员</uploaderror>
     <updateotherlang>更新其它语言</updateotherlang>
+    <systempluginconfig>系统插件配置</systempluginconfig>
   </model>
   <common>
     <login>登录</login>

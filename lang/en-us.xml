@@ -35,6 +35,7 @@
     <formatincorrect> has a format problem, please retry.</formatincorrect>
     <lessminvalue> can not less than </lessminvalue>
     <greatermaxvalue> can not greater than </greatermaxvalue>
+    <systempluginconfig>System Plugin Configuration</systempluginconfig>
 </model>
   <common>
     <systemmanage>System Management</systemmanage>

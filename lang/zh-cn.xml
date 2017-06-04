@@ -35,6 +35,7 @@
     <formatincorrect> 格式不正确，请重新输入</formatincorrect>
     <lessminvalue> 不能小于 </lessminvalue>
     <greatermaxvalue> 不能大于 </greatermaxvalue>
+    <systempluginconfig>系统插件配置</systempluginconfig>
   </model>
   <common>
     <systemmanage>系统管理</systemmanage>
