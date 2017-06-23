@@ -39,9 +39,13 @@ if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没�
 }else{
 	$urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
 	//print_r($urlparam);
+	define(LOGIN,"");
+	define(ALIAS,"");
 	define(MODULE,strtolower($urlparam[1]));
 	define(MODEL,strtolower($urlparam[2]));
 	define(FUNC,strtolower($urlparam[3]));
+	$login="";
+	$alias="";
 	$module=$urlparam[1];
 	$model=$urlparam[2];
 	$func=$urlparam[3];
