@@ -51,26 +51,6 @@ for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
     }
 }
 
-$path=USER_ROOT."plugin.xml";
-$fp = fopen($path,"r");
-$str = fread($fp,filesize($path));
-$PluginArray=xmlToArray($str);
-$menucount=count($MenuArray["mainmenus"]["mainmenu"]);
-$pluginConfigMenu=array();
-
-foreach ($PluginArray as $key => $value) {
-	if($value["cmsmenu"]!=""){
-		$cmsmenu=explode(",", $value["cmsmenu"]);
-		foreach ($cmsmenu as $ck => $cv) {
-			$MenuArray["mainmenus"]["mainmenu"][$menucount]["module"]="plugin_config";
-			$MenuArray["mainmenus"]["mainmenu"][$menucount]["name"]=$SysLang["model"]["systempluginconfig"];
-			$MenuArray["mainmenus"]["mainmenu"][$menucount]["onlyadmin"]=1;
-			$subcount=count($MenuArray["mainmenus"]["mainmenu"][$menucount]["submenus"]["submenu"]);
-			$MenuArray["mainmenus"]["mainmenu"][$menucount]["submenus"]["submenu"][$subcount]["model"]=$cv;
-			$MenuArray["mainmenus"]["mainmenu"][$menucount]["submenus"]["submenu"][$subcount]["onlyadmin"]=1;
-		}
-	}
-}
 
 
 
