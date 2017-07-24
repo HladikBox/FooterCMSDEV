@@ -211,4 +211,18 @@ function request_get($url) {
     return $desfilename;
     
   }
+  
+  function saveBase64ToImage($imageData,$module)
+	$dir = USER_ROOT."/upload/$module/";
+	$fileName = date("YmdHis").floor(microtime() * 1000).'.jpg';
+	try
+	{
+	$imageData = str_replace(" ","+",$imageData);
+	$binImageData = base64_decode($imageData);
+	$FP = fopen($dir.$fileName,"w"); 
+	fwrite($FP,$binImageData);
+	return $fileName;
+  }
+  
+  
 ?>
