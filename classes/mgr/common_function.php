@@ -224,5 +224,15 @@ function request_get($url) {
 	return $fileName;
   }
   
+  function getSession($key){
+	  Global $CONFIG;
+	  $sessionname=$CONFIG["SessionName"];
+	  return $_SESSION[$sessionname][$key];
+  }
   
+  function setSession($key,$value){
+	  Global $CONFIG;
+	  $sessionname=$CONFIG["SessionName"];
+	  $_SESSION[$sessionname][$key]=$value;
+  }
 ?>
