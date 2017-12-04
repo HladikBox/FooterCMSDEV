@@ -225,14 +225,26 @@ function request_get($url) {
   }
   
   function getSession($key){
-	  Global $CONFIG;
-	  $sessionname=$CONFIG["SessionName"];
-	  return $_SESSION[$sessionname][$key];
+	  $jsonfile=$jsonfile.$_SERVER["HTTP_ACCESSTOKEN"].".json";
+	  $data = json_decode(file_get_contents($jsonfile),true);
+	  if($data["expired_time"] < time()){
+		return $data["data"][$key];
+	  }else{
+		return "";
+	  }
+	  
+	  //$sessionname=$CONFIG["SessionName"];
+	  //return $_SESSION[$sessionname][$key];
   }
   
   function setSession($key,$value){
-	  Global $CONFIG;
-	  $sessionname=$CONFIG["SessionName"];
-	  $_SESSION[$sessionname][$key]=$value;
+	  
+	  $jsonfile=$jsonfile.$_SERVER["HTTP_ACCESSTOKEN"].".json";
+	  $data = json_decode(file_get_contents($jsonfile),true);
+	  $data["data"][$key]=$value;
+	  
+	  $fp = fopen($jsonfile, "w");
+      fwrite($fp, json_encode($data));
+      fclose($fp);
   }
 ?>
