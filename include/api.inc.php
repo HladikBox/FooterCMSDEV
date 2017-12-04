@@ -4,10 +4,30 @@
     header('Access-Control-Allow-Credentials:true');  
     header('Access-Control-Allow-Origin:'.$_SERVER['HTTP_ORIGIN']);  
     header('Access-Control-Allow-Methods:POST,GET,OPTIONS,DELETE');  
-    header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str,lang');  
+    header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str,lang,accesstoken');  
     if(strtolower($_SERVER["REQUEST_METHOD"])=="options"){
 		exit();
 	}
+	if($_SERVER["HTTP_ACCESSTOKEN"]!=""){
+		$jsonfile=USER_ROOT."logs/accesstoken/";
+		mkdir($jsonfile,0777,true);
+		$jsonfile=$jsonfile.$_SERVER["HTTP_ACCESSTOKEN"].".json";
+		$data = json_decode(file_get_contents($jsonfile),true);
+		if ($data["expired_time"] < time()) {
+			$data["expired_time"] = time() + 60*30;//30分钟有效期
+			$fp = fopen($jsonfile, "w");
+			fwrite($fp, json_encode($data));
+			fclose($fp);
+		}else{
+			$data["expired_time"] = time() + 60*30;//30分钟有效期
+			$data["data"] = [];
+			$fp = fopen($jsonfile, "w");
+			fwrite($fp, json_encode($data));
+			fclose($fp);
+		}
+	}
+	
+	
     $path=USER_ROOT."api.xml";
     $fp = fopen($path,"r");
     $str = fread($fp,filesize($path));
