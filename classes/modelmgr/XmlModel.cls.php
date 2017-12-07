@@ -136,7 +136,7 @@ class XmlModel
 	return $subsql;
   }
 
-  private function GetSearchSql($request){
+  public function GetSearchSql($request){
 	Global $CONFIG;
 	//echo "a";
 	//print_r($request);
@@ -529,6 +529,12 @@ class XmlModel
   public function saveValidate($dbMgr,$request){
   	Global $SysLang,$Config;
   	$error="";
+	
+	
+    if($this->XmlData["nosave"]=="1"){
+    	return "no save permission";
+    }
+	
   	$fields=$this->XmlData["fields"]["field"];
     $unionunique_sql="";
     $unionunique_keyname=Array();
@@ -579,33 +585,27 @@ class XmlModel
   public function resetRequestData($dbMgr,$request){
   	return $request;
   }
-
-  private function Save($dbMgr,$request,$sysuser){
-	Global $SysLang,$Config;
-
+  
+  public function beforeSaveDataFix($request){
+	$fields=$this->XmlData["fields"]["field"];
 	foreach ($request as $key => $value) {
 		$request[$key]=parameter_filter($value);
 	}
-	
-
-    $fields=$this->XmlData["fields"]["field"];
-    if($fields=$this->XmlData["nosave"]=="1"){
-    	return "no save permission";
-    }
-
-    foreach ($fields as $value){
+	foreach ($fields as $value){
         if($value["type"]=="fkey"||$value["type"]=="number"){
             $request[$value["key"]]=$request[$value["key"]]+0;
         }
     }
+	return $request;
+  }
 
+  public function Save($dbMgr,$request,$sysuser=-1){
+	Global $SysLang,$Config;
+
+	$fields=$this->XmlData["fields"]["field"];
+   
 	//print_r($request);
-	$error=$this->saveValidate($dbMgr,$request);
-	if($error!=""){
-		return $error;
-	}
-    
-
+	
     $sql="";
 
 	$dbMgr->begin_trans();
@@ -895,7 +895,7 @@ class XmlModel
   	
   }
 
-  private function Delete($dbMgr,$idlist,$sysuser){
+  public function Delete($dbMgr,$idlist,$sysuser=-1){
     if(empty($idlist)){
         $idlist="-1";
     }
@@ -947,8 +947,17 @@ class XmlModel
 		$smarty->assign("MyMenuId",$menuId."_add");
 		$this->Edit($dbmgr,$smarty,$request["id"]+0);
 	  }else if($action=="save"){
-		$result=$this->Save($dbmgr,$request,$SysUser["id"]);
-		echo $result;
+		  
+		$request=$this->beforeSaveDataFix($request);
+		$error=$this->saveValidate($dbmgr,$request);
+		if($error!=""){
+			echo $result;
+		}else{
+			
+			$result=$this->Save($dbmgr,$request,$SysUser["id"]);
+			echo $result;
+		}
+		  
 	  }else if($action=="delete"){
 		$result=$this->Delete($dbmgr,$request["idlist"],$SysUser["id"]);
 		echo $result;
@@ -1012,6 +1021,12 @@ class XmlModel
   }
 
   private function SaveApi($dbmgr,$request){
+	  
+	$request=$this->beforeSaveDataFix($request);
+	$error=$this->saveValidate($dbmgr,$request);
+	if($error!=""){
+		outputJSON(outResult(-1,"Save fail",$error));
+	}
 	$result=$this->Save($dbmgr,$request,-1);
     if(substr($result,0,5)=="right"){
         $result=outResult(0,"Save Success",substr($result,5));

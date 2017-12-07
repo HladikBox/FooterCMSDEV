@@ -17,13 +17,14 @@
         $apilist["apis"]["api"]=array();
         $apilist["apis"]["api"][]=$temp;
     }
+					
     $apilist=$apilist["apis"]["api"];
 
     foreach($apilist as $api){
 
         if($api["model"]==MODEL&&$api["func"]==FUNC){
 
-            if($api["active"]!="1"){
+            if($api["type"]!=""&&$api["active"]!="1"){
 
                 outputJSON(outResult("401","Api not active"));    
 
