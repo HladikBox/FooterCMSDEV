@@ -299,7 +299,10 @@
                     {{if $parenturl!=""}}
                     self.location='{{$parenturl}}';
                     {{elseif $action=="add"}}
-                    self.location='{{$PageName}}?action=edit&id='+id;
+                    infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转。");
+					setTimeout(function(){
+						self.location='{{$PageName}}?action=edit&id='+id;
+					},3000);
                     {{/if}}
                 }else{
                         errorDialog(data);
