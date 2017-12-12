@@ -184,6 +184,7 @@
 
 <script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
 <script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
+<script type="text/javascript" src="{{$userpath}}myjs/init.js"></script>
 <script>
 
     {{foreach from=$FListArr item=rs}}
@@ -193,9 +194,6 @@
     {{/foreach}}
     {{/foreach}}
 
-    $(document).ready(function(){
-        myjs_detailPageLoad();
-    });
     $(function () {
         // CKEditor Full
         $('textarea.ckeditor').ckeditor({
@@ -441,6 +439,12 @@
         return true;
 
     }
+	
+	
+    $(document).ready(function(){
+        myjs_detailPageLoad();
+    });
+	
 </script>
 
  {{include  file="$smarty_root/footer.html" }}

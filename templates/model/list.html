@@ -158,11 +158,9 @@
 
 <script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
 <script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
+<script type="text/javascript" src="{{$userpath}}myjs/init.js"></script>
 <script>
     var ds=null;
-    $(document).ready(function(){
-        myjs_listPageLoad();
-    });
     
     {{foreach from=$FListArr item=rs}}
     flistarr{{$rs.key}} = new Array();
@@ -171,13 +169,11 @@
     {{/foreach}}
     {{/foreach}}
 
-    
-    $(function () {
-
-
-
-        $("#btnSearch").click(function () {
-            
+    function addNew(){
+        self.location='{{$PageName}}?action=add';
+    }
+	function search(){
+	
             $("#btnSearch").prop("disabled","disabled");
             var json={
                 "action":"search"
@@ -223,12 +219,8 @@
                 });
                 ds.fnAdjustColumnSizing();
             }
-            });
         });
-    });
-    function addNew(){
-        self.location='{{$PageName}}?action=add';
-    }
+	}
 
     function btnDeleteInList(){
        
@@ -332,6 +324,10 @@
     }
 
    
+    $(document).ready(function(){
+		$("#btnSearch").click(search);
+        myjs_listPageLoad();
+    });
 
 </script>
 
