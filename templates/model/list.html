@@ -19,19 +19,6 @@
                                     </ul>
                                 </div>
                                 {{/if}}
-                                {{foreach from=$ModelData.options.option item=rs}}
-                                    {{if $rs.search=="1"}}
-                                        {{if $rs.type=="link"}}    
-                                    <a href="{{$rs.link}}" class="action">
-                                        <button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
-                                    </a>
-                                        {{elseif $rs.type=="function"}}
-                                    <a href="javascript:{{$rs.function}}" class="action">
-                                        <button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
-                                    </a>
-                                        {{/if}}                                 
-                                    {{/if}} 
-                                {{/foreach}}   
                             </div>
                         </div>
                     </div>
@@ -99,6 +86,19 @@
                                     </div>
                                     <hr />
                                     <div class="text-right">
+										{{foreach from=$ModelData.options.option item=rs}}
+											{{if $rs.search=="1"}}
+												{{if $rs.type=="link"}}    
+											<a href="{{$rs.link}}" class="action">
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+											</a>
+												{{elseif $rs.type=="function"}}
+											<a href="javascript:{{$rs.function}}" class="action">
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+											</a>
+												{{/if}}                                 
+											{{/if}} 
+										{{/foreach}}   
                                         <button class="btn btn-info" id="btnSearch"><i class="glyphicon glyphicon-refresh glyphicon-white"></i> {{$SysLang.model.search}}</button>
                                     </div>
                                </div>

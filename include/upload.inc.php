@@ -47,7 +47,9 @@ if(MODULE=="upload"){
             //echo $filename;
         }
     }
-	header('Location:'."/Users".USER_PATH."upload/".MODEL."/".basename($filename));
+	$folder=explode("upload/".MODEL,dirname($filename));
+	$folder=$folder[1];
+	header('Location:'."/Users".USER_PATH."upload/".MODEL.$folder."/".basename($filename));
 	exit;
     //exit;
 	$fp=fopen($filename,"r");
