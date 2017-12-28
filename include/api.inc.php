@@ -20,7 +20,7 @@
 			fclose($fp);
 		}else{
 			$data["expired_time"] = time() + 60*30;//30分钟有效期
-			$data["data"] = [];
+			$data["data"] = array();
 			$fp = fopen($jsonfile, "w");
 			fwrite($fp, json_encode($data));
 			fclose($fp);
