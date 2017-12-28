@@ -39,7 +39,10 @@
     }
 					
     $apilist=$apilist["apis"]["api"];
-
+	$initphp=USER_ROOT."common/init.inc.php";
+	if(file_exists($initphp)){
+		include $initphp;
+	}
     foreach($apilist as $api){
 
         if($api["model"]==MODEL&&$api["func"]==FUNC){
@@ -51,10 +54,7 @@
             }
             try
             {
-				$initphp=USER_ROOT."common/init.inc.php";
-				 if(file_exists($initphp)){
-					include $initphp;
-				 }
+				
 
 
                 define(LANG, $_SERVER["HTTP_LANG"]);

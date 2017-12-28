@@ -63,12 +63,15 @@ ATTENTION: The trailing slash is required.
 
 $module=$_GET["g"];
 $model=$_GET["m"];
+$filename=$_FILES["upload"]["name"];
+$filename=md5(time().$filename).".".(explode(".",$filename)[1]);
+$_FILES["upload"]["name"]=$filename;
 if($module==""||$model==""){
-	$module="/".$module;
-	$model="/".$model;
+	//$module="/".$module;
+	//$model="/".$model;
 	//print_r($_REQUEST);
 	//print_r($_SERVER);
-	die("~~hack~~".$baseUrl = '/Users'.$module.$model."/upload/ckeditor/");
+	//die("~~hack~~".$baseUrl = '/Users'.$module.$model."/upload/ckeditor/");
 }else{
 	$module="/".$module;
 	$model="/".$model;

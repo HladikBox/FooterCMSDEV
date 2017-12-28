@@ -285,7 +285,7 @@ class XmlModel
 	}
 	$limit=parameter_filter($request["limit"]);
 	if(MODULE!="api"&&$limit==""){
-		$limit=" limit $limit 0,100";
+		$limit=" limit $limit 0,1000";
 	}else{
 		if($limit!=""){
 			$limit=" limit $limit";
@@ -951,7 +951,7 @@ class XmlModel
 		$request=$this->beforeSaveDataFix($request);
 		$error=$this->saveValidate($dbmgr,$request);
 		if($error!=""){
-			echo $result;
+			echo $error;
 		}else{
 			
 			$result=$this->Save($dbmgr,$request,$SysUser["id"]);

@@ -142,6 +142,7 @@
         <script type="text/javascript" src="{{$rootpath}}vendors/chosen.jquery.min.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/selectize/dist/js/standalone/selectize.min.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="{{$rootpath}}vendors/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/bootstrap-wysihtml5-rails-b3/vendor/assets/javascripts/bootstrap-wysihtml5/wysihtml5.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/bootstrap-wysihtml5-rails-b3/vendor/assets/javascripts/bootstrap-wysihtml5/core-b3.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/twitter-bootstrap-wizard/jquery.bootstrap.wizard-for.bootstrap3.js"></script>
@@ -167,7 +168,7 @@
 
         {{include  file="$smarty_root/mainmenu.html" }}
 
-        <div class="container">            
+        <div class="container" id="bodycontent">            
             <!-- left, vertical navbar & content -->
             <div class="row">
                 {{include  file="$smarty_root/submenu.html" }}

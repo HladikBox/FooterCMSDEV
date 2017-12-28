@@ -2,7 +2,7 @@
         </div>
 
 <!-- footer -->
-<div class="navbar navbar-footer">
+<div class="navbar navbar-footer" id="footer">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -39,9 +39,26 @@
 
 
 <script type="text/javascript">
+
+	var dataOlanguage={
+"sLengthMenu": "每页显示 _MENU_ 条记录",
+"sZeroRecords": "抱歉， 没有找到",
+"sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+"sInfoEmpty": "没有数据",
+"sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+"oPaginate": {
+"sFirst": "首页",
+"sPrevious": "前一页",
+"sNext": "后一页",
+"sLast": "尾页"
+},
+"sZeroRecords": "没有检索到数据",
+"sSearch": "搜索"
+};
+
     $(function () {
         $('input[type="checkbox"],[type="radio"]').not('#create-switch').not('.multicheckbox').bootstrapSwitch();
-        $('.datepicker').datetimepicker({ format: "yyyy-mm-dd hh:ii:ss" });
+        $('.datepicker').datetimepicker({ format: "yyyy-mm-dd hh:ii",language:"zh-CN",autoclose:true,todayhightline:true });
         $('.uniform_on').uniform();
         $('.chzn-select').chosen();
         $('.selectize-select').selectize();
