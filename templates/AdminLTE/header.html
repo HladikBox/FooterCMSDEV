@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>APP链结</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" media="screen" href="{{$rootpath}}css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{$rootpath}}css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="{{$rootpath}}css/skins/_all-skins.min.css">
+
+    <style type="text/css">
+
+   body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",SimSun,sans-serif;
+    }
+
+    </style>
+
+    {{include  file="$smarty_root/header.inc.html" }}
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <header class="main-header">
+    <!-- Logo -->
+    <a href="/" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"><b>L</b>ink</span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg"><b>App</b>Link</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="https://avatars0.githubusercontent.com/u/621332?v=3" class="user-image" alt="User Image">
+                        <span class="hidden-xs">蔡小司</span>
+                    </a>
+                </li>
+                <!-- Control Sidebar Toggle Button
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+</header>
+        <!-- =============================================== -->
+<!-- Left side column. contains the sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                                <img src="https://avatars0.githubusercontent.com/u/621332?v=3" class="img-circle" alt="No Photo">
+                            </div>
+            <div class="pull-left info">
+                <p>蔡小司</p>
+                <a href="#"> Helpfooter company</a>
+            </div>
+        </div>
+        <!-- search form -->
+        <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="搜索...">
+                <span class="input-group-btn">
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <!--<li class="header">MAIN NAVIGATION</li>-->
+            <li class="treeview">
+                <a href="/">
+                    <i class="fa fa-envelope"></i> <span>关于我们</span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/apps">
+                    <i class="fa fa-dashboard"></i>
+                    <span>应用控制台</span>
+                    <span class="pull-right-container">
+                        <span class="label label-primary pull-right">16</span>
+                    </span>
+                </a>
+            </li>
+            <li class="active treeview">
+                <a href="#">
+                    <i class="fa fa-laptop"></i>
+                    <span>应用列表</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                                                            <li><a href="/apps/board?id=7"><i class="fa fa-circle-o"></i> 应用评分系统</a></li>
+                                                                                <li><a href="/apps/board?id=31"><i class="fa fa-circle-o"></i> 会员组件测试</a></li>
+                                                                                <li><a href="/apps/board?id=30"><i class="fa fa-circle-o"></i> PetCure</a></li>
+                                                                                <li><a href="/apps/board?id=29"><i class="fa fa-circle-o"></i> 忠贞不渝的座右铭</a></li>
+                                                                                <li><a href="/apps/board?id=28"><i class="fa fa-circle-o"></i> tes111</a></li>
+                                                                                <li><a href="/apps/board?id=27"><i class="fa fa-circle-o"></i> H5商品故事</a></li>
+                                                                                <li><a href="/apps/board?id=26"><i class="fa fa-circle-o"></i> Test</a></li>
+                                                                                <li><a href="/apps/board?id=25"><i class="fa fa-circle-o"></i> QEric</a></li>
+                                                                                <li><a href="/apps/board?id=24"><i class="fa fa-circle-o"></i> 老司机嘟嘟</a></li>
+                                                                                <li><a href="/apps/board?id=23"><i class="fa fa-circle-o"></i> 药房</a></li>
+                                                                                <li><a href="/apps/board?id=22"><i class="fa fa-circle-o"></i> 妈妈大学</a></li>
+                                                                                <li><a href="/apps/board?id=21"><i class="fa fa-circle-o"></i> 企业推广网站</a></li>
+                                                                                <li><a href="/apps/board?id=20"><i class="fa fa-circle-o"></i> 颜面</a></li>
+                                                                                <li><a href="/apps/board?id=16"><i class="fa fa-circle-o"></i> 在线教育</a></li>
+                                                                                <li><a href="/apps/board?id=15"><i class="fa fa-circle-o"></i> 海富特官网</a></li>
+                                                                                <li><a href="/apps/board?id=12"><i class="fa fa-circle-o"></i> bbsignal</a></li>
+                                                        </ul>
+            </li>
+            <li class="treeview">
+                <a href="/market/submit">
+                    <i class="fa fa-mercury"></i>
+                    <span>我的提交应用</span>
+                    <span class="pull-right-container">
+                        <span class="label pull-right" id="lblSubmitApp"></span>
+                    </span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/market/apps">
+                    <i class="fa fa-wrench"></i>
+                    <span>我的上线应用</span>
+                    <span class="pull-right-container">
+                        <span class="label pull-right label-success" >1</span>
+                    </span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/market">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>应用市场</span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/market/buylist">
+                    <i class="fa fa-list"></i>
+                    <span>我购买的应用</span>
+                </a>
+            </li>
+            <li class="treeview">
+                <a href="/datacenter">
+                    <i class="fa fa-database"></i>
+                    <span>数据中心安装</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+
+
+
+<!-- =============================================== -->
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">

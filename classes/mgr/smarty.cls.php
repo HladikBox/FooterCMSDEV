@@ -28,7 +28,10 @@ $smarty->right_delimiter="}}";
  $smarty->assign('uploadpath',USER_PATH.$CONFIG['fileupload']['upload_path']);
  $smarty->assign('request_url_encode',base64_encode($_SERVER["REQUEST_URI"]));
  $smarty->assign('parenturl',base64_decode($_REQUEST["parenturl"]));
- $smarty->assign('frontendurl',$CONFIG['frontendurl']);
  $smarty->assign('support_multilang',$CONFIG["SupportMultiLanguage"]?"1":"0");
+ if($CONFIG["CmsStyle"]==""){
+ 	$CONFIG["CmsStyle"]="AdminLTE";
+ }
+ $smarty->assign('CmsStyle',$CONFIG["CmsStyle"]);
 
 ?>
