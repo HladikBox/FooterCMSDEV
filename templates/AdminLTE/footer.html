@@ -4,7 +4,7 @@
 <!-- /.content-wrapper -->
 
 
-<footer class="main-footer">
+<footer class="main-footer" id="footerbar">
     <div class="pull-right hidden-xs">
         <b>Version</b> 1.0.1
     </div>
@@ -25,9 +25,10 @@
 
 <!-- AdminLTE App -->
 <script src="{{$rootpath}}js/app.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{$rootpath}}js/demo.js"></script>
-<!-- Common -->
-<script src="{{$rootpath}}js/common.js"></script>
 
 
+<script>
+$(document).ready(function(){
+$("body").removeClass("hide");
+});
+</script>

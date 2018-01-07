@@ -109,7 +109,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
+                                <div class="panel-heading" id="searchPanelHeading">
                                     <div class="text-muted bootstrap-admin-box-title">{{$SysLang.model.result}}</div>
                                 </div>
                                 <div class="bootstrap-admin-panel-content">
@@ -156,9 +156,27 @@
     </div>
 </div>
 
+
+
+<div id="dialog_gridtable" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped " id="listGridTable"></table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
 <script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
-<script type="text/javascript" src="{{$userpath}}myjs/init.js"></script>
 <script>
     var ds=null;
 	var deleteTips="{{$SysLang.model.deletesure}}";
@@ -273,7 +291,12 @@
         return true;
 
     }
-
+	function showTableModel(dataurl){
+		$("#listGridTable").html();
+        $("#dialog_gridtable").modal('show');
+		$("#listGridTable").load(dataurl);
+		
+	}
      
     function importData(key,module) {
         $.ajaxFileUpload

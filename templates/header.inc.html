@@ -1,6 +1,25 @@
 
         <style type="text/css">
-
+			.panel-bootstrap-switch,
+            .panel-bootstrap-switch .bootstrap-admin-panel-content{
+                float: left;
+            }
+            .panel-bootstrap-switch .buttons-group{
+                margin-top: 0;
+            }
+            .panel-bootstrap-switch .buttons-group .has-switch{
+                margin-top: 10px;
+            }
+            .panel-bootstrap-switch #btn-destroy-switch,
+            .panel-bootstrap-switch #btn-create{
+                margin-top: 5px;
+            }
+            .panel-bootstrap-switch #btn-destroy-switch{
+                margin-bottom: 10px;
+            }
+            .panel-bootstrap-switch .bootstrap-switch-footer{
+                margin-top: 20px;
+            }
             #searchResult th{
                 max-width:250px;
                 word-wrap:break-word;
@@ -66,6 +85,7 @@
         <script type="text/javascript" src="{{$rootpath}}vendors/ckeditor/ckfinder/ckfinder.js"></script>
         <script type="text/javascript" src="{{$rootpath}}js/ajaxfileupload.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/bootstrap-switch/build/js/bootstrap-switch.min.js"></script>
+		<script type="text/javascript" src="{{$userpath}}myjs/init.js"></script>
 
     <script type="text/javascript">
         var userpath="{{$userpath}}";
