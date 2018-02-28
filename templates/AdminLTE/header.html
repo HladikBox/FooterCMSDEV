@@ -61,7 +61,7 @@
                         {{$SysLang.common.welcome}} {{$SysUser.user_name}} 
                     </a>
                 </li>
-                <li >
+                <li onclick="window.location.href='{{$userpath}}logout?lang={{$SysLangCode}}'">
                     <a href="{{$userpath}}logout?lang={{$SysLangCode}}" class="dropdown-toggle" data-toggle="dropdown">
                         {{$SysLang.common.logout}} <i class="fa fa-sign-out"></i>
                     </a>
@@ -98,6 +98,7 @@
 			</li>
 			
                                 {{foreach from=$SystemMenu.mainmenus.mainmenu item=rs}}
+								{{if $rs.onlyadmin!=1||$SysUser.is_admin=="Y"}}
                                 <li class="treeview {{if $rs.module==$MyModule}}active{{/if}}">
 									<a href="#">
 										<i class="fa fa-files-o"></i>
@@ -128,6 +129,7 @@
 									
                                     </ul>
                                 </li>
+								{{/if}}
                                 {{/foreach}}
         </ul>
     </section>
@@ -140,4 +142,5 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" id="bodycontent">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
+    <section class="content">
+		<div class="row">

@@ -48,9 +48,9 @@
     <welcome>欢迎</welcome>
     <gotofrontend>回到前台页面</gotofrontend>
     <logout>退出系统</logout>
-    <notice>系统通知</notice>
-    <warning>系统警告</warning>
-    <error>系统错误</error>
+    <notice>提示</notice>
+    <warning>警告</warning>
+    <error>错误</error>
     <ok>确定</ok>
     <close>关闭</close>
     <cmsname>Footer 后台文本管理系统 </cmsname>

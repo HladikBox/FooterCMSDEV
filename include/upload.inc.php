@@ -2,7 +2,6 @@
 
  if(MODULE=="fileupload"){
 
- require ROOT.'/classes/obj/upload.php';
  $field=$_REQUEST["field"];
  $module=$_REQUEST["module"];
  if($module==""){
@@ -11,21 +10,31 @@
  }
  $file=$_FILES[$field];
  if($file==""){
-	echo "Fils is empty";
-	exit;
+	//echo "Fils is empty";
+	//exit;
  }
- $filename=date('ymdHIs').".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
- $folder=USER_ROOT.$CONFIG['fileupload']['upload_path'];
- if(!file_exists($folder)){
-	mkdir($folder,0777);
- }
+ $filename=md5($file["name"])."_".date('ymdHIs').".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
+ if($CONFIG['fileupload']['oss']==true){
+	 require ROOT.'/classes/obj/ossupload.php';
+	 $file=new OssUpload($file,$filename,USER_PATH2."$module/",false);
+	 
+ }else{
+	 
+	 
+	require ROOT.'/classes/obj/upload.php';
+	 $folder=USER_ROOT.$CONFIG['fileupload']['upload_path'];
+	 if(!file_exists($folder)){
+		mkdir($folder,0777);
+	 }
 
 
- $folder=USER_ROOT.$CONFIG['fileupload']['upload_path']."/$module/";
- if(!file_exists($folder)){
-	mkdir($folder,0777);
+	 $folder=USER_ROOT.$CONFIG['fileupload']['upload_path']."/$module/";
+	 if(!file_exists($folder)){
+		mkdir($folder,0777);
+	 }
+	 $file=new Upload($file,$filename,$folder,true);
  }
- $file=new Upload($file,$filename,$folder,true);
+
  echo $file->safetyUpload();
  echo "|~~|".$filename;
  exit;

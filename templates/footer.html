@@ -101,18 +101,30 @@
        
     });
 
-    function infoDialog(msg) {
-        $("#dialog_boxtitle").text("{{$SysLang.common.notice}}");
+    function infoDialog(msg,title) {
+		if(title==undefined){
+			$("#dialog_boxtitle").text("{{$SysLang.common.notice}}");
+		}else{
+			$("#dialog_boxtitle").text(title);
+		}
         showDialog(msg);
     }
 
-    function warningDialog(msg) {
-        $("#dialog_boxtitle").text("{{$SysLang.common.warning}}");
+    function warningDialog(msg,title) {
+		if(title==undefined){
+			$("#dialog_boxtitle").text("{{$SysLang.common.warning}}");
+		}else{
+			$("#dialog_boxtitle").text(title);
+		}
         showDialog(msg);
     }
 
-    function errorDialog(msg) {
-        $("#dialog_boxtitle").text("{{$SysLang.common.error}}");
+    function errorDialog(msg,title) {
+		if(title==undefined){
+			$("#dialog_boxtitle").text("{{$SysLang.common.error}}");
+		}else{
+			$("#dialog_boxtitle").text(title);
+		}
         showDialog(msg);
     }
     function showDialog(msg) {

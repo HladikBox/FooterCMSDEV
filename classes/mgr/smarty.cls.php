@@ -25,7 +25,12 @@ $smarty->right_delimiter="}}";
  $smarty->assign('charset',$CONFIG['charset']);
  $smarty->assign('Title',$CONFIG['Title']);
  $smarty->assign('Url',$CONFIG['URL']);
- $smarty->assign('uploadpath',USER_PATH.$CONFIG['fileupload']['upload_path']);
+ if($CONFIG['fileupload']['oss']==true){
+	 $smarty->assign('uploadpath',$CONFIG['fileupload']['upload_path'].USER_PATH3);
+ }else{
+	 
+	$smarty->assign('uploadpath',USER_PATH.$CONFIG['fileupload']['upload_path']);
+ }
  $smarty->assign('request_url_encode',base64_encode($_SERVER["REQUEST_URI"]));
  $smarty->assign('parenturl',base64_decode($_REQUEST["parenturl"]));
  $smarty->assign('support_multilang',$CONFIG["SupportMultiLanguage"]?"1":"0");
@@ -33,5 +38,6 @@ $smarty->right_delimiter="}}";
  	$CONFIG["CmsStyle"]="AdminLTE";
  }
  $smarty->assign('CmsStyle',$CONFIG["CmsStyle"]);
+ $smarty->assign('now',date("Y-m-d H:i:s"));
 
 ?>

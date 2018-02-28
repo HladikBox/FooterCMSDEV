@@ -68,6 +68,22 @@ class XmlModel
 	 $this->XmlData=$xmldata;
   }
   
+  public function getModelField($key){
+	  for($i=0;$i<count($this->XmlData["fields"]["field"]);$i++){
+		if($this->XmlData["fields"]["field"][$i]["key"]==$key){
+			return $this->XmlData["fields"]["field"][$i];
+		}
+	  }
+  }
+  
+  public function setModelField($key,$field){
+	  for($i=0;$i<count($this->XmlData["fields"]["field"]);$i++){
+		if($this->XmlData["fields"]["field"][$i]["key"]==$key){
+			$this->XmlData["fields"]["field"][$i]=$field;
+		}
+	  }
+  }
+  
   private function loadXmlFile($name){
     
     $path=ROOT."/model/$name.xml";
@@ -120,7 +136,7 @@ class XmlModel
 		$subsql=$this->GetLangTableSql($tablename,$tablerename);
 		$sql="select oid id,$displayfield as name from $subsql where ".(empty($condition)?"1=1":$condition)." ";
 	}else{
-		$sql="select id,$displayfield as name from $tablename as $tablerename where ".(empty($condition)?"1=1":$condition)."";
+		$sql="select id,$displayfield as name from $tablename as `$tablerename` where ".(empty($condition)?"1=1":$condition)."";
 	}
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
@@ -137,13 +153,20 @@ class XmlModel
   }
 
   public function GetSearchSql($request){
+	$sql=$this->GetSearchSqlField($request);
+	$sql.=$this->GetSearchSqlCondition($request);
+	//echo $sql;
+	return $sql;
+  }
+  public function GetSearchSqlField($request,$allfieldshow=false){
+	  
 	Global $CONFIG;
 	//echo "a";
 	//print_r($request);
-	$sql="select r_main.id";
+	$sql="select r_main.id,r_main.updated_date,r_main.created_date";
 	$fields=$this->XmlData["fields"]["field"];
 	foreach ($fields as $value){
-		if($value["displayinlist"]=="1"){
+		if($value["displayinlist"]=="1"||$allfieldshow){
 			if($value["type"]=="flist"&&$value["relatetable"]!=""){
 				$table=$value["relatetable"];
 				
@@ -166,7 +189,11 @@ class XmlModel
 			}else if($value["type"]=="fkey"){
 			
 				$sql=$sql." ,r_main.".$value["key"];
-				$sql=$sql." ,".$value["ntbname"].".".$value["displayfield"]." ".$value["key"]."_name";
+				$fkeys=explode(",",$value["displayfield"]);
+				$sql=$sql." ,".$value["ntbname"].".".$fkeys[0]." ".$value["key"]."_name";
+				foreach($fkeys as $key){
+					$sql=$sql." ,".$value["ntbname"].".".$key." ".$value["ntbname"]."_".$key;
+				}
 
 			}else{
 
@@ -185,20 +212,23 @@ class XmlModel
 	}
 
 	foreach ($fields as $value){
-		if($value["displayinlist"]=="1"){
+		if($value["displayinlist"]=="1"||$allfieldshow){
 			if($value["type"]=="fkey"){
 				if($value["fmutillang"]=="1"){
 					$subsql=$this->GetLangTableSql($value["tablename"],$value["ntbname"]);
 					$sql=$sql." left join $subsql on r_main.".$value["key"]."=".$value["ntbname"].".id ";
 				}else{
 				
-					$sql=$sql." left join ".$value["tablename"]." ".$value["ntbname"]." on r_main.".$value["key"]."=".$value["ntbname"].".id ";
+					$sql=$sql." left join ".$value["tablename"]." `".$value["ntbname"]."` on r_main.".$value["key"]."=".$value["ntbname"].".id ";
 				}
 			}
 		}
 	}
-
-	$sql=$sql."  where  ".(empty($this->XmlData["searchcondition"])?" 1=1 ":$this->XmlData["searchcondition"]);
+	return $sql;
+  }
+  public function GetSearchSqlCondition($request){
+	  $fields=$this->XmlData["fields"]["field"];
+	$sql="  where  ".(empty($this->XmlData["searchcondition"])?" 1=1 ":$this->XmlData["searchcondition"]);
 	foreach ($fields as $value){
 		
 		if($value["search"]=="1"){
@@ -291,11 +321,11 @@ class XmlModel
 			$limit=" limit $limit";
 		}
 	}
-
-
+	  
 	$sql=$sql." order by $orderby  
 	$limit ";
 
+	  
 	return $sql;
   }
 
@@ -531,7 +561,7 @@ class XmlModel
   	$error="";
 	
 	
-    if($this->XmlData["nosave"]=="1"){
+    if(MODULE!="api"&&$this->XmlData["nosave"]=="1"){
     	return "no save permission";
     }
 	
@@ -734,7 +764,7 @@ class XmlModel
 				$sql="delete from $relatetable where pid=$id";
 				$query = $dbMgr->query($sql);
 				$arr=explode(",",$request[$value["key"]]);
-				if(count($arr)>0){
+				if($request[$value["key"]]!=""&&count($arr)>0){
 					$sql="insert into $relatetable (pid,fid) values";
 					$isfirst=1;
 					foreach($arr as $v){

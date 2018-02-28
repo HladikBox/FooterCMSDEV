@@ -247,4 +247,15 @@ function request_get($url) {
       fwrite($fp, json_encode($data));
       fclose($fp);
   }
+  function getCMSSession($key){
+	  Global $CONFIG;
+	  $sessionname=$CONFIG["SessionName"];
+	  return $_SESSION[$sessionname][$key];
+  }
+  function setCMSSession($key,$val){
+	  
+	  Global $CONFIG;
+	  $sessionname=$CONFIG["SessionName"];
+	  $_SESSION[$sessionname][$key]=$val;
+  }
 ?>

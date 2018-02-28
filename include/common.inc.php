@@ -26,6 +26,8 @@ $model=$urlparam[4];
 $func=$urlparam[5];
 define(USER_ROOT, ROOT."/Users/$login/$alias/");
 define(USER_PATH, "/$login/$alias/");
+define(USER_PATH2, "$login/$alias/");
+define(USER_PATH3, "/$login/$alias");
 define(CURRENT_PATH, "/$login/$alias/$module/$model");
 //echo USER_ROOT;
 if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没有进行初始化");}
@@ -51,6 +53,8 @@ if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没�
 	$func=$urlparam[3];
 	define(USER_ROOT, ROOT."/Users/");
 	define(USER_PATH, "/");
+	define(USER_PATH2, "");
+	define(USER_PATH3, "/");
 	define(CURRENT_PATH, "/$module/$model");
 }
 

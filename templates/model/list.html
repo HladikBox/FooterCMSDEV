@@ -1,7 +1,7 @@
 {{include  file="$smarty_root/$CmsStyle/header.html" }}
 
                 <!-- content -->
-                <div class="col-md-10">
+                <div class="col-md-12">
 
 
                     <div class="row">
@@ -34,14 +34,14 @@
                                         {{foreach from=$ModelData.fields.field item=rs}}
                                         {{if $rs.search=="1"}}
                                             {{if $rs.type=="text" || $rs.type=="longtext" || $rs.type=="html"}}
-											<div class="form-group col-md-6" id="searchblock_{{$rs.key}}">
+											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" id="condition_{{$rs.key}}">
                                             </div>
 											</div>
                                             {{elseif $rs.type=="datetime"}}
-											<div class="form-group col-md-6" id="searchblock_{{$rs.key}}">
+											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}"></div>
@@ -50,7 +50,7 @@
                                             </div>
 											</div>                                                     
                                             {{elseif $rs.type=="fkey"}}
-											<div class="form-group col-md-6" id="searchblock_{{$rs.key}}">
+											<div class="form-group col-md-6  {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <select id="condition_{{$rs.key}}" class="form-control selectize-select">
@@ -62,7 +62,7 @@
                                             </div>
 											</div>                                       
                                             {{elseif $rs.type=="select" }}
-											<div class="form-group col-md-6" id="searchblock_{{$rs.key}}">
+											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <select id="condition_{{$rs.key}}" class="form-control selectize-select">
@@ -74,7 +74,7 @@
                                             </div>
 											</div>                                       
                                             {{elseif 1==2&&$rs.type=="check" }}
-											<div class="form-group col-md-6" id="searchblock_{{$rs.key}}">
+											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8 ">
                                                 <input id="condition_{{$rs.key}}" type="checkbox" value="Y" {{if $rs.default=="1"}}checked="checked"{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
@@ -180,7 +180,7 @@
 <script>
     var ds=null;
 	var deleteTips="{{$SysLang.model.deletesure}}";
-    
+    var searchincomming=true;
     {{foreach from=$FListArr item=rs}}
     flistarr{{$rs.key}} = new Array();
     {{foreach from=$rs.value item=rsvalue}}
@@ -342,11 +342,14 @@
 			}
 		);
     }
-
+	
    
     $(document).ready(function(){
 		$("#btnSearch").click(search);
         myjs_listPageLoad();
+		if(searchincomming){
+			search();
+		}
     });
 
 </script>
