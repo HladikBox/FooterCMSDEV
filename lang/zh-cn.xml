@@ -45,6 +45,8 @@
     <userrole>用户权限</userrole>
     <login>登录</login>
     <loginname>用户名</loginname>
+    <changepassword>修改密码</changepassword>
+    <change>修改</change>
     <password>密码</password>
     <welcome>欢迎</welcome>
     <gotofrontend>回到前台页面</gotofrontend>

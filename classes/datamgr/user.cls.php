@@ -33,16 +33,19 @@
 		return $result;
 	}
 	
-	public function changsePassword($user_id,$current_password,$new_password)
+	public function changsePassword($loginname,$current_password,$new_password)
 	{
-		$new_password=parameter_filter($new_password);
-		$user=$this->getUser($user_id);
-		if($current_password!=$user["password"])
+		$new_password=md5($new_password);
+		$user=$this->getUserByName($loginname);
+		$user=$user[0];
+		$user_id=$user["id"];
+		//echo md5($current_password)."=".$user["password"];
+		if(md5($current_password)!=$user["password"])
 		{
 			return "current_password_diff";
 		}
 		
-		$sql="update tb_user set password='$new_password',updated_user=$user_id,updated_date=".$dbMgr->getDate()." where user_id=$user_id";
+		$sql="update tb_user set password='$new_password',updated_user=$user_id,updated_date=now() where id=$user_id";
 		$query = $this->dbmgr->query($sql);
 		
 		return "success";

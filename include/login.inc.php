@@ -1,6 +1,14 @@
 <?php
 
-    
+    if(MODULE=="changepassword"){
+		
+	    require ROOT.'/classes/datamgr/user.cls.php';
+		$oldpassword=$_REQUEST["oldpassword"];
+		$newpassword=$_REQUEST["newpassword"];
+		$user=$_SESSION[SESSIONNAME]["SysUser"];
+		echo $userMgr->changsePassword($user["login_id"],$oldpassword,$newpassword);
+		exit;
+	}
 
 
   if(MODULE=="login"){
