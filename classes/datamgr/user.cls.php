@@ -29,6 +29,7 @@
 		$sql="select * from tb_user where login_id='$loginname' ";
 		$query = $this->dbmgr->query($sql);
 		$result = $this->dbmgr->fetch_array_all($query); 
+		$result["right"]=$this->getAccessRight($result["role_id"]);
 		return $result;
 	}
 	
@@ -54,7 +55,21 @@
 		$sql="update tb_user set password='$password',updated_user=$sysUser_id,updated_date=".$dbMgr->getDate()." where user_id=$user_id";
 		$query = $this->dbmgr->query($sql);
 	}
-	
+
+	public function getAccessRight($role_id){
+		$role_id=$role_id+0;
+		$right=array();
+		if($role_id>0){
+			$sql="select * from tb_userrole where id=$role_id ";
+			$query = $this->dbmgr->query($sql);
+			$result = $this->dbmgr->fetch_array($query); 
+			
+			$right=($result["accessright"]);
+			$right=json_decode(htmlspecialchars_decode( $right),true);
+		}
+		return $right;
+	}
+
  }
  
  $userMgr=UserMgr::getInstance();

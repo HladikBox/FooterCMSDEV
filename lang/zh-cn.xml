@@ -42,6 +42,7 @@
     <dashboard>主控台</dashboard>
     <aboutus>关于我们</aboutus>
     <user>用户</user>
+    <userrole>用户权限</userrole>
     <login>登录</login>
     <loginname>用户名</loginname>
     <password>密码</password>

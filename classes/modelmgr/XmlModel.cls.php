@@ -487,7 +487,8 @@ class XmlModel
 
 	$smartyMgr->assign("ParentKey",$request["key"]);
 	$smartyMgr->assign("ParentId",$request["id"]);
-
+	
+	$dataWithFKey=$this->fixEditData($dataWithFKey);
     $smartyMgr->assign("ModelData",$dataWithFKey);
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("action","add");
@@ -971,7 +972,6 @@ class XmlModel
 	  }else if($action=="add"){
 
 		$smarty->assign("MyMenuId",$menuId."_add");
-
 		$this->Add($dbmgr,$smarty,$request);
 
 	  }else if($action=="edit"){

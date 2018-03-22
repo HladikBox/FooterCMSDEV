@@ -82,12 +82,43 @@ if(1==1||$_SESSION[SESSIONNAME]["modellist"]==null){
 $modellist=$_SESSION[SESSIONNAME]["modellist"];
 
 for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
+	
     for($j=0;$j<count($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]);$j++){
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["name"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["name"];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["nolist"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["nolist"];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["nosave"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["nosave"];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["ndh"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]];
+        $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["right"]=1;
     }
+	$MenuArray["mainmenus"]["mainmenu"][$i]["submenucount"]=count($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]);
+}
+if($SysUser["is_admin"]!="Y"){
+	include_once ROOT."/classes/datamgr/user.cls.php";
+	$right=$userMgr->getAccessRight($SysUser["role_id"]);
+	$inaccessright=false;
+	for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
+		$subcount=0;	
+		for($j=0;$j<count($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]);$j++){
+			$val=$MenuArray["mainmenus"]["mainmenu"][$i]["module"]."_".$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"];
+			if(in_array($val,$right)){
+				$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["right"]=1;
+				$subcount++;
+				if(MODULE."_".MODEL==$val){
+					$inaccessright=true;
+				}
+			}else{
+				$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["right"]=0;
+			}
+		}
+		$MenuArray["mainmenus"]["mainmenu"][$i]["submenucount"]=$subcount;
+	}
+	if($inaccessright==false){
+		if((MODULE!="admin"&&MODEL!="dashboard")||(MODULE!="admin"&&MODEL!="about")){
+			WindowRedirect(USER_PATH."Admin/About");
+			die("hack");
+			exit;
+		}
+	}
 }
 
  if($CONFIG["SupportMultiLanguage"]==true){
