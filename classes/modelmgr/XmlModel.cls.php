@@ -182,9 +182,10 @@ class XmlModel
 				$sql=$sql." ,r_main.".$value["key"];
 
 			}else if($value["type"]=="check"){
-
+			
 				$sql=$sql." ,case   r_main.".$value["key"]." when 'Y' then '".$value["yvalue"]."' else '".$value["nvalue"]."' ";
 				$sql=$sql." end as ".$value["key"];
+				$sql=$sql." , r_main.".$value["key"]." as ".$value["key"]."_value";
 
 			}else if($value["type"]=="fkey"){
 			

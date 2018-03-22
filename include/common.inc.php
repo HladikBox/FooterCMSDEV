@@ -125,12 +125,12 @@ include ROOT.'/include/api.inc.php';
 
 include ROOT.'/include/upload.inc.php';
 
-if(file_exists(USER_ROOT."common/cms.inc.php")){
-	include USER_ROOT."common/cms.inc.php";
-}
 
 include ROOT.'/include/login.inc.php';
 
 include ROOT.'/include/init.inc.php';
 
+if(file_exists(USER_ROOT."common/cms.inc.php")){
+	include USER_ROOT."common/cms.inc.php";
+}
 ?>
