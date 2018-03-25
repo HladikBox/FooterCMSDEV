@@ -38,6 +38,11 @@ class XmlModel
       $model["options"]["option"]=array();
       $model["options"]["option"][]=$temp;
     }
+    if($model["charts"]["chart"][0]==""&&$model["charts"]["chart"]["name"]!=""){
+      $temp=$model["charts"]["chart"];
+      $model["charts"]["chart"]=array();
+      $model["charts"]["chart"][]=$temp;
+    }
     if($model["fields"]["field"][0]==""&&$model["fields"]["field"]["name"]!=""){
       $temp=$model["fields"]["field"];
       $model["fields"]["field"]=array();
@@ -58,6 +63,9 @@ class XmlModel
 
     for ($i=0; $i < count($model["options"]["option"]); $i++) { 
       $model["options"]["option"][$i]["json"]=json_encode($model["options"]["option"][$i]);
+    }
+    for ($i=0; $i < count($model["charts"]["chart"]); $i++) { 
+      $model["charts"]["chart"][$i]["json"]=json_encode($model["charts"]["chart"][$i]);
     }
 
     $model=setArrayNoNull($model);

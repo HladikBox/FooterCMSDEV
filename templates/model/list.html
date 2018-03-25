@@ -105,6 +105,23 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" id="searchPanelHeading">
+                                    <div class="text-muted bootstrap-admin-box-title">{{$rs.name}}</div>
+                                </div>
+                                <div class="bootstrap-admin-panel-content">
+                                    <div id="chart0">
+
+                                    </div>
+                                </div>
+                            </div>
+                            {{/foreach}}
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-lg-12">
@@ -216,6 +233,8 @@
             myjs_afterResultLoad();
             
             $("#btnSearch").prop("disabled","");
+            loadCharts();
+			
             if(ds!=null){
                 var oldwidth=$("#searchResult").width();
                 ds.fnDestroy();
@@ -234,6 +253,7 @@
                 });
                 ds.fnAdjustColumnSizing();
             }
+
         });
 	}
 
@@ -342,16 +362,125 @@
 			}
 		);
     }
-	
-   
+
+        function loadCharts()
+        {
+			var title="";
+			var subtitle="";
+			var seriesdata=new Array();
+			
+            {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
+			title="{{$rs.name}}";
+			subtitle="{{$rs.description}}";
+			{{if $rs.type=="timeline"}}
+			var xAxisName=$(".resulttitle_{{$rs.datetimefield}}").first().text();
+			var yAxisName=$(".resulttitle_{{$rs.numberfield}}").first().text();
+			{{if $rs.statusfield==""}}
+			$(".rstr").each(function(){
+				var series=null;
+				if(seriesdata.length>0){
+					series=seriesdata[0];
+				}else{
+					series={name:xAxisName,data:[]};
+				}
+				series.data.push([stringToDate($(this).find(".result_{{$rs.datetimefield}}").text()),Number($(this).find(".result_{{$rs.numberfield}}").text())]);
+				seriesdata[0]=series;
+			});
+			{{else}}
+			$(".rstr").each(function(){
+				var series=null;
+				if(seriesdata.length>0){
+					series=seriesdata[0];
+				}else{
+					series={name:xAxisName,data:[]};
+				}
+				var dt=stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
+				var nb=Number($(this).find(".result_{{$rs.numberfield}}").text());
+				console.log(dt);
+				console.log(nb);
+				var dcourse=-1;
+				for(var i=0;i<series.data.length;i++){
+					var dtt=series.data[i];
+					if(dtt[0]==dt){
+						dcourse=i;
+						break;
+					}
+				}
+				if(dcourse==-1){
+					series.data.push([dt,nb]);
+				}else{
+					var dtt=series.data[i];
+					dtt[1]=dtt[1]+nb;
+					series.data[i]=dtt;
+				}
+				seriesdata[0]=series;
+			});
+			{{/if}}
+			
+			
+            $('#chart0').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: title
+                },
+                subtitle: {
+                    text: subtitle
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: { // don't display the dummy year
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: xAxisName
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: yAxisName
+                    },
+                    min: 0
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: seriesdata
+            });
+			{{/if}}
+			{{/foreach}}
+        }
+   function stringToDate(fDate){  
+	var dateandtime=fDate.split(" ");
+	if(dateandtime.length>1){
+		var fullDate = dateandtime[0].split("-");  
+		var fulltime = dateandtime[1].split(":");  
+		console.log(new Date(fullDate[0], fullDate[1]-1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]) );
+		return Date.UTC(fullDate[0], fullDate[1]-1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]);  
+	}else{
+		var fullDate = dateandtime[0].split("-");  
+		return Date.UTC(fullDate[0], fullDate[1]-1, fullDate[2], 0, 0,0);  
+	}
+  }
     $(document).ready(function(){
 		$("#btnSearch").click(search);
         myjs_listPageLoad();
 		if(searchincomming){
-			search();
+            search();
 		}
     });
 
 </script>
 
  {{include  file="$smarty_root/footer.html" }}
+
+
+<script src="{{$rootpath}}vendors/highcharts/highcharts.js"></script>
