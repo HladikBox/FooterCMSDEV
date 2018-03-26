@@ -22,9 +22,9 @@
                                         <li><a href="{{$userpath}}Admin/dashboard">{{$SysLang.common.dashboard}}</a></li>
                                         <li><a href="{{$userpath}}Admin/about">{{$SysLang.common.aboutus}}</a></li>
                                         {{if $SysUser.is_admin=="Y"}}
-                                        <li><a href="{{$userpath}}Admin/User">{{$SysLang.common.user}}{{$SysLang.model.list}}</a></li>
+                                        <li><a href="{{$userpath}}Admin/User">{{$SysLang.common.user}}</a></li>
                                         <li><a href="{{$userpath}}Admin/User?action=add">{{$SysLang.common.user}}{{$SysLang.model.add}}</a></li>
-                                        <li><a href="{{$userpath}}Admin/Userrole">{{$SysLang.common.userrole}}{{$SysLang.model.list}}</a></li>
+                                        <li><a href="{{$userpath}}Admin/Userrole">{{$SysLang.common.userrole}}</a></li>
                                         <li><a href="{{$userpath}}Admin/Userrole?action=add">{{$SysLang.common.userrole}}{{$SysLang.model.add}}</a></li>
                                         {{/if}}
                                     </ul>
@@ -38,7 +38,7 @@
                                             {{if $sub.nolist=="1"}}
                                             <li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}">{{$sub.name}}</a></li>
                                             {{else}}
-                                        <li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}">{{$sub.name}}{{$SysLang.model.list}}</a></li>
+                                        <li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}">{{$sub.name}}</a></li>
                                         {{if $sub.nosave!="1"}}<li><a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}?action=add">{{$sub.name}}{{$SysLang.model.add}}</a></li>{{/if}}
                                             {{/if}}
                                         {{/if}}

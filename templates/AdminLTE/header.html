@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -96,9 +96,9 @@
 				<li><a href="{{$userpath}}Admin/dashboard"><i class="fa fa-circle-o"></i> {{$SysLang.common.dashboard}}</a></li>
 				<li><a href="{{$userpath}}Admin/about"><i class="fa fa-circle-o"></i> {{$SysLang.common.aboutus}}</a></li>
 				{{if $SysUser.is_admin=="Y"}}
-				<li><a href="{{$userpath}}Admin/User"><i class="fa fa-circle-o"></i> {{$SysLang.common.user}}{{$SysLang.model.list}}</a></li>
+				<li><a href="{{$userpath}}Admin/User"><i class="fa fa-circle-o"></i> {{$SysLang.common.user}}</a></li>
 				<li><a href="{{$userpath}}Admin/User?action=add"><i class="fa fa-circle-o"></i> {{$SysLang.common.user}}{{$SysLang.model.add}}</a></li>
-                <li><a href="{{$userpath}}Admin/Userrole"><i class="fa fa-circle-o"></i> {{$SysLang.common.userrole}}{{$SysLang.model.list}}</a></li>
+                <li><a href="{{$userpath}}Admin/Userrole"><i class="fa fa-circle-o"></i> {{$SysLang.common.userrole}}</a></li>
                 <li><a href="{{$userpath}}Admin/Userrole?action=add"><i class="fa fa-circle-o"></i> {{$SysLang.common.userrole}}{{$SysLang.model.add}}</a></li>
 				{{/if}}
 			  </ul>
@@ -122,7 +122,7 @@
 									</li>
 									{{else}}
 									<li {{if $sub.model|cat:"_list"==$MyMenuId}} class="active" {{/if}}>
-										<a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}"> {{$sub.name}}{{$SysLang.model.list}}</a>
+										<a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}"> {{$sub.name}}</a>
 									</li>
 									{{if $sub.nosave!="1"}}
 									<li {{if $sub.model|cat:"_add"==$MyMenuId}} class="active" {{/if}}>
