@@ -37,6 +37,9 @@
       $model=new XmlModel(MODEL,CURRENT_PATH);
     }
     
+if(file_exists(USER_ROOT."common/cms.inc.php")){
+	include USER_ROOT."common/cms.inc.php";
+}
     $action=$_REQUEST["action"];
     $model->DefaultShow($smarty,$dbmgr,$action,MODEL,$_REQUEST);
   }
