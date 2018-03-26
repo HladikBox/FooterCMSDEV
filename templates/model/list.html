@@ -508,7 +508,7 @@
                         var utctime = new Date(data[j][0]);
                         strs += "<tr><td>" + utctime.format() + "</td><td>"+ data[j][2] +"</td><td>" + data[j][1] + "</td></tr>";
                         total += data[j][1];
-                        totalrecord++;
+                        totalrecord += data[j][2];
                     }
                     strs += "<tr><th style='text-align:right'>总计：</th><th>" + totalrecord + "</th><th>" + total + "</th></tr>";
                     
