@@ -13,9 +13,12 @@ if(MODULE=="myjs"){
 //print_r($_SESSION);
 if(!isset($_SESSION[SESSIONNAME]["SysUser"])&&MODULE!="login")
 {
-	$_SESSION[SESSIONNAME]["url_request"]="http://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	WindowRedirect(USER_PATH."login");
-	exit();
+	if($CONFIG["nologincheck"]!=true){
+		
+		$_SESSION[SESSIONNAME]["url_request"]="http://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		WindowRedirect(USER_PATH."login");
+		exit();
+	}
 }
 
 if(isset($_SESSION[SESSIONNAME]["url_request"]))
