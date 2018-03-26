@@ -376,26 +376,55 @@
 			var xAxisName=$(".resulttitle_{{$rs.datetimefield}}").first().text();
 			var yAxisName=$(".resulttitle_{{$rs.numberfield}}").first().text();
 			{{if $rs.statusfield==""}}
-			$(".rstr").each(function(){
-				var series=null;
-				if(seriesdata.length>0){
-					series=seriesdata[0];
-				}else{
-					series={name:xAxisName,data:[]};
-				}
-				series.data.push([stringToDate($(this).find(".result_{{$rs.datetimefield}}").text()),Number($(this).find(".result_{{$rs.numberfield}}").text())]);
-				seriesdata[0]=series;
-			});
+            $(".rstr").each(function () {
+                var series = null;
+                if (seriesdata.length > 0) {
+                    series = seriesdata[0];
+                } else {
+                    series = { name: xAxisName, data: [] };
+                }
+                var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
+                var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+                console.log(dt);
+                console.log(nb);
+                var dcourse = -1;
+                for (var i = 0; i < series.data.length; i++) {
+                    var dtt = series.data[i];
+                    if (dtt[0] == dt) {
+                        dcourse = i;
+                        break;
+                    }
+                }
+                if (dcourse == -1) {
+                    series.data.push([dt, nb]);
+                } else {
+                    var dtt = series.data[i];
+                    dtt[1] = dtt[1] + nb;
+                    series.data[i] = dtt;
+                }
+                seriesdata[0] = series;
+            });
 			{{else}}
-			$(".rstr").each(function(){
-				var series=null;
-				if(seriesdata.length>0){
-					series=seriesdata[0];
-				}else{
-					series={name:xAxisName,data:[]};
+            $(".rstr").each(function () {
+                var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
+                var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+                var sv = $(this).find(".result_{{$rs.statusfield}}").attr("sval");
+                var svn = $(this).find(".result_{{$rs.statusfield}}").text();
+                var series = null;
+                var sindex = -1;
+                for (var i = 0; i < seriesdata.length; i++) {
+                    if (seriesdata[i].val == sv) {
+                        sindex = i;
+                        break;;
+                    }
+                }
+                if (sindex == -1) {
+                    series = { name: svn, data: [], val: sv };
+                    seriesdata.push(series);
+                    sindex = seriesdata.length - 1;
+                } else {
+                    series = seriesdata[sindex];
 				}
-				var dt=stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
-				var nb=Number($(this).find(".result_{{$rs.numberfield}}").text());
 				console.log(dt);
 				console.log(nb);
 				var dcourse=-1;
@@ -413,7 +442,7 @@
 					dtt[1]=dtt[1]+nb;
 					series.data[i]=dtt;
 				}
-				seriesdata[0]=series;
+                seriesdata[sindex]=series;
 			});
 			{{/if}}
 			
@@ -431,8 +460,8 @@
                 xAxis: {
                     type: 'datetime',
                     dateTimeLabelFormats: { // don't display the dummy year
-                        month: '%e. %b',
-                        year: '%b'
+                        month: '%m-%d',
+                        year: '%Y'
                     },
                     title: {
                         text: xAxisName

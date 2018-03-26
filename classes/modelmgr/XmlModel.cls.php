@@ -204,6 +204,15 @@ class XmlModel
 					$sql=$sql." ,".$value["ntbname"].".".$key." ".$value["ntbname"]."_".$key;
 				}
 
+			}else if($value["type"]=="datetime"){
+			
+				if($value["onlydate"]=="1"){
+					$sql=$sql." ,DATE_FORMAT(r_main.".$value["key"] .",'%Y-%m-%d') as ".$value["key"];
+				}else{
+				
+					$sql=$sql." ,r_main.".$value["key"];
+				}
+
 			}else{
 
 				$sql=$sql." ,r_main.".$value["key"];
@@ -427,7 +436,10 @@ class XmlModel
 	foreach ($fields as $value){
 		if($value["type"]=="fkey"){
 			for($i=0;$i<count($result);$i++){
-				$result[$i][$value["key"]]=$result[$i][$value["key"]."_name"];
+				$col=array();
+				$col["name"]=$result[$i][$value["key"]."_name"];
+				$col["value"]=$result[$i][$value["key"]];
+				$result[$i][$value["key"]]=$col;
 			}
 		}
 	}
@@ -438,7 +450,10 @@ class XmlModel
 	foreach ($fields as $value){
 		if($value["type"]=="select"){
 			for($i=0;$i<count($result);$i++){
-				$result[$i][$value["key"]]=$result[$i][$value["key"]."_name"];
+				$col=array();
+				$col["name"]=$result[$i][$value["key"]."_name"];
+				$col["value"]=$result[$i][$value["key"]];
+				$result[$i][$value["key"]]=$col;
 			}
 		}
 	}
