@@ -82,6 +82,7 @@ class XmlModel
 			return $this->XmlData["fields"]["field"][$i];
 		}
 	  }
+	  return null;
   }
   
   public function setModelField($key,$field){
