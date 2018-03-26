@@ -403,10 +403,11 @@
                     }
                 }
                 if (dcourse == -1) {
-                    series.data.push([dt, nb]);
+                    series.data.push([dt, nb,1]);
                 } else {
                     var dtt = series.data[i];
                     dtt[1] = dtt[1] + nb;
+                    dtt[2] = dtt[2] + 1;
                     series.data[i] = dtt;
                 }
                 seriesdata[0] = series;
@@ -446,10 +447,11 @@
 					}
 				}
 				if(dcourse==-1){
-					series.data.push([dt,nb]);
+					series.data.push([dt,nb,1]);
 				}else{
 					var dtt=series.data[i];
-					dtt[1]=dtt[1]+nb;
+                    dtt[1] = dtt[1] + nb;
+                    dtt[2] = dtt[2] + 1;
 					series.data[i]=dtt;
 				}
                 seriesdata[sindex]=series;
@@ -500,10 +502,10 @@
                     var total = 0;
                     strs += "<div class='col-md-12'><h3>" + series.name + "</h3>";
                     strs += "<table class='table table-condensed'>";
-                    strs += "<tr><th>" + series.datetimename + "</th><th>" + series.numbername + "</th></tr>";
+                    strs += "<tr><th>" + series.datetimename + "</th><th>数量</th><th>" + series.numbername + "</th></tr>";
                     for (var j = 0; j < data.length; j++) {
                         var utctime = new Date(data[j][0]);
-                        strs += "<tr><td>" + utctime.format() + "</td><td>" + data[j][1] + "</td></tr>";
+                        strs += "<tr><td>" + utctime.format() + "</td><td>"+ data[j][2] +"</td><td>" + data[j][1] + "</td></tr>";
                         total += data[j][1];
                     }
                     strs += "<tr><th style='text-align:right'>总计：</th><th>" + total + "</th></tr>";
