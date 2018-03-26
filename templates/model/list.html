@@ -114,7 +114,10 @@
                                     <div class="text-muted bootstrap-admin-box-title">{{$rs.name}}</div>
                                 </div>
                                 <div class="bootstrap-admin-panel-content">
-                                    <div id="chart0">
+                                    <div id="chart{{$chartindex}}">
+
+                                    </div>
+                                    <div id="chart{{$chartindex}}_tables" class="row">
 
                                     </div>
                                 </div>
@@ -374,17 +377,21 @@
 			subtitle="{{$rs.description}}";
 			{{if $rs.type=="timeline"}}
 			var xAxisName=$(".resulttitle_{{$rs.datetimefield}}").first().text();
-			var yAxisName=$(".resulttitle_{{$rs.numberfield}}").first().text();
+            var yAxisName = $(".resulttitle_{{$rs.numberfield}}").first().text();
+            var min = 0;
 			{{if $rs.statusfield==""}}
             $(".rstr").each(function () {
                 var series = null;
                 if (seriesdata.length > 0) {
                     series = seriesdata[0];
                 } else {
-                    series = { name: xAxisName, data: [] };
+                    series = { name: xAxisName, data: [], datetimename: xAxisName, numbername: yAxisName };
                 }
                 var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
                 var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+                if (nb < min) {
+                    min = nb;
+                }
                 console.log(dt);
                 console.log(nb);
                 var dcourse = -1;
@@ -408,6 +415,9 @@
             $(".rstr").each(function () {
                 var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
                 var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+                if (nb < min) {
+                    min = nb;
+                }
                 var sv = $(this).find(".result_{{$rs.statusfield}}").attr("sval");
                 var svn = $(this).find(".result_{{$rs.statusfield}}").text();
                 var series = null;
@@ -419,7 +429,7 @@
                     }
                 }
                 if (sindex == -1) {
-                    series = { name: svn, data: [], val: sv };
+                    series = { name: svn, data: [], val: sv, datetimename: xAxisName, numbername: yAxisName };
                     seriesdata.push(series);
                     sindex = seriesdata.length - 1;
                 } else {
@@ -445,11 +455,19 @@
                 seriesdata[sindex]=series;
 			});
 			{{/if}}
+                for (var i = 0; i < seriesdata.length; i++) {
+                    var series = seriesdata[i];
+                    var data = series.data;
+                    data.sort(function (a, b) {
+                        return a[0] > b[0];
+                    });
+                    series.data = data;
+                    seriesdata[i] = series;
+                }
 			
-			
-            $('#chart0').highcharts({
+                $('#chart{{$chartindex}}').highcharts({
                 chart: {
-                    type: 'spline'
+                    type: 'line'
                 },
                 title: {
                     text: title
@@ -471,19 +489,29 @@
                     title: {
                         text: yAxisName
                     },
-                    min: 0
+                    min: min
                 },
-
-                plotOptions: {
-                    spline: {
-                        marker: {
-                            enabled: true
-                        }
-                    }
-                },
-
                 series: seriesdata
             });
+                var strs = "";
+                for (var i = 0; i < seriesdata.length; i++) {
+                    var series = seriesdata[i];
+                    var data = series.data;
+                    var total = 0;
+                    strs += "<div class='col-md-12'><h3>" + series.name + "</h3>";
+                    strs += "<table class='table table-condensed'>";
+                    strs += "<tr><th>" + series.datetimename + "</th><th>" + series.numbername + "</th></tr>";
+                    for (var j = 0; j < data.length; j++) {
+                        var utctime = new Date(data[j][0]);
+                        strs += "<tr><td>" + utctime.format() + "</td><td>" + data[j][1] + "</td></tr>";
+                        total += data[j][1];
+                    }
+                    strs += "<tr><th style='text-align:right'>总计：</th><th>" + total + "</th></tr>";
+                    
+                    strs += "</table></div>";
+                }
+                $('#chart{{$chartindex}}_tables').empty().append(strs);
+
 			{{/if}}
 			{{/foreach}}
         }
@@ -492,11 +520,12 @@
 	if(dateandtime.length>1){
 		var fullDate = dateandtime[0].split("-");  
 		var fulltime = dateandtime[1].split(":");  
-		console.log(new Date(fullDate[0], fullDate[1]-1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]) );
-		return Date.UTC(fullDate[0], fullDate[1]-1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]);  
+        console.log(new Date(fullDate[0], fullDate[1] - 1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]));
+        console.log(new Date(fullDate[0], fullDate[1] - 1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]) - 3600 * 1000 * 8);
+        return Date.UTC(fullDate[0], fullDate[1] - 1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]) - 3600 * 1000 * 8;  
 	}else{
 		var fullDate = dateandtime[0].split("-");  
-		return Date.UTC(fullDate[0], fullDate[1]-1, fullDate[2], 0, 0,0);  
+        return Date.UTC(fullDate[0], fullDate[1] - 1, fullDate[2], 0, 0, 0) - 3600 * 1000 * 8;  
 	}
   }
     $(document).ready(function(){
