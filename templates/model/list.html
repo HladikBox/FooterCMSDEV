@@ -370,11 +370,11 @@
         {
 			var title="";
 			var subtitle="";
-			var seriesdata=new Array();
 			
             {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
 			title="{{$rs.name}}";
-			subtitle="{{$rs.description}}";
+            subtitle = "{{$rs.description}}";
+            var seriesdata = new Array();
 			{{if $rs.type=="timeline"}}
 			var xAxisName=$(".resulttitle_{{$rs.datetimefield}}").first().text();
             var yAxisName = $(".resulttitle_{{$rs.numberfield}}").first().text();
