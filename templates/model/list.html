@@ -503,7 +503,7 @@
                     var totalrecord = 0;
                     strs += "<div class='col-md-12'><h3>" + series.name + "</h3>";
                     strs += "<table class='table table-condensed'>";
-                    strs += "<tr><th>" + series.datetimename + "</th><th>数量</th><th>" + series.numbername + "</th></tr>";
+                    strs += "<tr><th>" + series.datetimename + "</th><th>数据条数</th><th>" + series.numbername + "</th></tr>";
                     for (var j = 0; j < data.length; j++) {
                         var utctime = new Date(data[j][0]);
                         strs += "<tr><td>" + utctime.format() + "</td><td>"+ data[j][2] +"</td><td>" + data[j][1] + "</td></tr>";
