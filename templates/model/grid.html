@@ -1,4 +1,4 @@
-<thead ><tr>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th>{{$rs.name}}</th>{{/if}}{{/foreach}}</tr></thead>
+<thead ><tr>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th>{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}</tr></thead>
 <tbody class='gridResult'>{{foreach from=$result item=row}}
 <tr>
 {{foreach from=$row item=col key=key}}

@@ -1,4 +1,4 @@
-<thead><tr><th  class='checkboxl'></th>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th class="resulttitle_{{$rs.key}}">{{$rs.name}}</th>{{/if}}{{/foreach}}</tr></thead>
+<thead><tr><th  class='checkboxl'></th>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th class="resulttitle_{{$rs.key}}">{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}</tr></thead>
 <tbody class='searchResult'>
 {{foreach from=$result item=row}}
 <tr class="rstr"><td class='checkboxl'><input type="checkbox" class="RowSelect result_id" value="{{$row.id}}" /></td>
