@@ -90,12 +90,9 @@
                                         </div>                                            
                                         {{elseif $rs.type=="number"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label" >{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</label>
                                             <div class="col-md-8">
-                                                <div class="row">
-                                                    <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{$rs.minvalue+0}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
-                                                    <label class=" col-md-3">{{$rs.unit}}</label>
-                                                </div>
+                                                <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{$rs.minvalue+0}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'></span>
                                             </div>
                                         </div>                                            
