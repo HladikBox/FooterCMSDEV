@@ -19,6 +19,12 @@
      $smarty->assign("MyMenuId","dashboard");
      $reminderList=$businessMgr->getReminderAll($SysUser["id"]);
      $smarty->assign("ReminderList",$reminderList);
+	 
+	 $model=null;
+if(file_exists(USER_ROOT."common/cms.inc.php")){
+	include USER_ROOT."common/cms.inc.php";
+}
+	 
      $smarty->display(ROOT.'/templates/dashboard.html');
      
 

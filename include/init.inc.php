@@ -95,7 +95,7 @@ for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
     }
 	$MenuArray["mainmenus"]["mainmenu"][$i]["submenucount"]=count($MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"]);
 }
-if($SysUser["is_admin"]!="Y"){
+if($SysUser["is_admin"]!="Y"&&$CONFIG["nologincheck"]!=true){
 	include_once ROOT."/classes/datamgr/user.cls.php";
 	$right=$userMgr->getAccessRight($SysUser["role_id"]);
 	$inaccessright=false;
@@ -116,10 +116,12 @@ if($SysUser["is_admin"]!="Y"){
 		$MenuArray["mainmenus"]["mainmenu"][$i]["submenucount"]=$subcount;
 	}
 	if($inaccessright==false){
-		if((MODULE!="admin"&&MODEL!="dashboard")||(MODULE!="admin"&&MODEL!="about")){
-			WindowRedirect(USER_PATH."Admin/About");
-			die("hack");
-			exit;
+		if((MODULE=="nomodule"&&$_REQUEST["action"]=="getgrid")==false){
+			if((MODULE!="admin"&&MODEL!="dashboard")||(MODULE!="admin"&&MODEL!="about")){
+				WindowRedirect(USER_PATH."Admin/About");
+				die("hack");
+				exit;
+			}
 		}
 	}
 }
