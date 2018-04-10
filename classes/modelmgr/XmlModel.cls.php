@@ -507,7 +507,6 @@ class XmlModel
   public function Add($dbMgr,$smartyMgr,$request){
    $dataWithFKey=$this->loadFKeyValue($dbMgr,$this->XmlData);
 	$this->GetFListData($dbMgr,$smartyMgr);
-	
 
 	$smartyMgr->assign("ParentKey",$request["key"]);
 	$smartyMgr->assign("ParentId",$request["id"]);
@@ -675,7 +674,7 @@ class XmlModel
 		}
 	}
 
-
+	
 	if($request["primary_id"]==""){
 	
 		$id=$dbMgr->getNewId($this->XmlData["tablename"]);

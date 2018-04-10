@@ -14,21 +14,21 @@ require ROOT.'/classes/mgr/common_function.php';
 if(!file_exists(ROOT.'/Users/config.inc.php')){
 $urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
 //print_r($urlparam);
-define(LOGIN,$urlparam[1]);
-define(ALIAS,$urlparam[2]);
-define(MODULE,strtolower($urlparam[3]));
-define(MODEL,strtolower($urlparam[4]));
-define(FUNC,strtolower($urlparam[5]));
+define("LOGIN",$urlparam[1]);
+define("ALIAS",$urlparam[2]);
+define("MODULE",strtolower($urlparam[3]));
+define("MODEL",strtolower($urlparam[4]));
+define("FUNC",strtolower($urlparam[5]));
 $login=$urlparam[1];
 $alias=$urlparam[2];
 $module=$urlparam[3];
 $model=$urlparam[4];
 $func=$urlparam[5];
-define(USER_ROOT, ROOT."/Users/$login/$alias/");
-define(USER_PATH, "/$login/$alias/");
-define(USER_PATH2, "$login/$alias/");
-define(USER_PATH3, "/$login/$alias");
-define(CURRENT_PATH, "/$login/$alias/$module/$model");
+define("USER_ROOT", ROOT."/Users/$login/$alias/");
+define("USER_PATH", "/$login/$alias/");
+define("USER_PATH2", "$login/$alias/");
+define("USER_PATH3", "/$login/$alias");
+define("CURRENT_PATH", "/$login/$alias/$module/$model");
 //echo USER_ROOT;
 if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没有进行初始化");}
 

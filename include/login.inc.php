@@ -27,7 +27,6 @@
 	    $login_id=$_REQUEST["login_id"];
 	    $password=$_REQUEST["password"];
 	    $userRows=$userMgr->getUserByName($login_id);
-	
 	    if(count($userRows)==0||$userRows[0]["status"]!="A"){
 		    $smarty->assign("ErrorMsg",$SysLang["index"]["invaliduser"]);
 	    }else{
