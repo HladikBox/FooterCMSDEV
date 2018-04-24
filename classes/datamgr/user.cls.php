@@ -29,7 +29,7 @@
 		$sql="select * from tb_user where login_id='$loginname' ";
 		$query = $this->dbmgr->query($sql);
 		$result = $this->dbmgr->fetch_array_all($query); 
-		$result["right"]=$this->getAccessRight($result["role_id"]);
+		$result[0]["right"]=$this->getAccessRight($result[0]["role_id"]);
 		return $result;
 	}
 	

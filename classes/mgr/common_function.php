@@ -26,7 +26,7 @@ function parameter_filter($param,$htmlchange=true)
 function ParentRedirect($url)
 {
 	//Header("Location: $url");
-    echo "<a href='$url'>$url</a>";
+    //echo "<a href='$url'>$url</a>";
 	echo "<script languate=\"javascript\">";
 	echo "parent.location.href='".$url."'";
 	echo "</script>";

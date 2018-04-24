@@ -27,7 +27,7 @@
     <savesuccess>保存成功</savesuccess>
     <back>返回</back>
     <backtolist>返回列表</backtolist>
-    <pleaseenter>请输入或选择</pleaseenter>
+    <pleaseenter>请正确设置</pleaseenter>
     <uploaderror>上传失败，请联系管理员</uploaderror>
     <updateotherlang>更新其它语言</updateotherlang>
     <keyunique>的值已经被使用，不能重复</keyunique>
