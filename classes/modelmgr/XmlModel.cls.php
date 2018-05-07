@@ -213,7 +213,14 @@ class XmlModel
 				
 					$sql=$sql." ,r_main.".$value["key"];
 				}
+				if($value["onlydate"]=="1"){
+					$sql=$sql." ,DATE_FORMAT(r_main.".$value["key"] .",'%Y-%m-%d') as ".$value["key"]."_formatting";
+				}else{
+				
+					$sql=$sql." ,DATE_FORMAT(r_main.".$value["key"] .",'%Y-%m-%d %H:%i') as ".$value["key"]."_formatting";
+				}
 
+				$sql=$sql." ,UNIX_TIMESTAMP(r_main.".$value["key"].") as ".$value["key"]."_timespan";
 			}else{
 
 				$sql=$sql." ,r_main.".$value["key"];
@@ -334,7 +341,7 @@ class XmlModel
 	}
 	$limit=parameter_filter($request["limit"]);
 	if(MODULE!="api"&&$limit==""){
-		$limit=" limit $limit 0,1000";
+		$limit=" limit $limit 0,65535";
 	}else{
 		if($limit!=""){
 			$limit=" limit $limit";

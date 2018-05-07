@@ -41,21 +41,21 @@ if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没�
 }else{
 	$urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
 	//print_r($urlparam);
-	define(LOGIN,"");
-	define(ALIAS,"");
-	define(MODULE,strtolower($urlparam[1]));
-	define(MODEL,strtolower($urlparam[2]));
-	define(FUNC,strtolower($urlparam[3]));
+	define("LOGIN","");
+	define("ALIAS","");
+	define("MODULE",strtolower($urlparam[1]));
+	define("MODEL",strtolower($urlparam[2]));
+	define("FUNC",strtolower($urlparam[3]));
 	$login="";
 	$alias="";
 	$module=$urlparam[1];
 	$model=$urlparam[2];
 	$func=$urlparam[3];
-	define(USER_ROOT, ROOT."/Users/");
-	define(USER_PATH, "/");
-	define(USER_PATH2, "");
-	define(USER_PATH3, "/");
-	define(CURRENT_PATH, "/$module/$model");
+	define("USER_ROOT", ROOT."/Users/");
+	define("USER_PATH", "/");
+	define("USER_PATH2", "");
+	define("USER_PATH3", "/");
+	define("CURRENT_PATH", "/$module/$model");
 }
 
 require USER_ROOT.'config.inc.php';

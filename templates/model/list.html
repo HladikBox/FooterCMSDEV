@@ -183,6 +183,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="dialog_gridtable_title" class="modal-title">数据导入</h4>
             </div>
             <div class="modal-body">
                 <table class="table table-striped " id="listGridTable"></table>
@@ -314,8 +315,9 @@
         return true;
 
     }
-	function showTableModel(dataurl){
+	function showTableModel(dataurl,title){
 		$("#listGridTable").html();
+        $("#dialog_gridtable_title").text(title);
         $("#dialog_gridtable").modal('show');
 		$("#listGridTable").load(dataurl);
 		

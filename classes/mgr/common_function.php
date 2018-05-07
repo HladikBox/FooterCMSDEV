@@ -17,12 +17,24 @@ function parameter_filter($param,$htmlchange=true)
       $param = trim($param);
 	$param = strtr($param,$arr);
 	$param = mysqli_real_escape_string($dbmgr->conn,$param);
-	
+	$param=filter_Emoji($param);
       if($htmlchange){
          $param = htmlspecialchars($param);
       }
 	return $param;
 }
+
+function filter_Emoji($str)
+{
+    $str = preg_replace_callback(    //执行一个正则表达式搜索并且使用一个回调进行替换
+            '/./u',
+            function (array $match) {
+                return strlen($match[0]) >= 4 ? '' : $match[0];
+            },
+            $str);
+
+     return $str;
+ }
 function ParentRedirect($url)
 {
 	//Header("Location: $url");
