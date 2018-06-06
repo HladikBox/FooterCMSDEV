@@ -227,6 +227,16 @@ function request_get($url) {
     
   }
   
+  function formatIDSplit($ids){
+	  $ret=array();
+	  $ret[]=0;
+	  $ids=explode(",",$ids);
+	  foreach($ids as $v){
+		  $ret[]=($v+0);
+	  }
+	  return join(",",$ret);
+  }
+  
   function saveBase64ToImage($imageData,$module)
   {
 	$dir = USER_ROOT."/upload/$module/";

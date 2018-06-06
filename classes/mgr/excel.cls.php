@@ -163,19 +163,16 @@ class ExcelMgr
 	}
 
 	public function getCol($num){
-		$num=$num+1;
+		$num=$num;
+		//echo $num."—~";
 		$ret="";
-		$yu=$num%26;
-		while(intval($num/26)){
-			$num=intval($num/26);
-			if($num<26){
-				$ret=chr($num+64).$ret;
-				break;
-			}
+		while($num>-1){
+			$yu=$num%26;
+			$ret=$ret.chr($yu+64+1);
+			$num-=26;
 		}
-		if($yu>0){
-			$ret=$ret.chr($yu+64);
-		}
+		//echo $ret."<br />";
+		
 		return $ret;
 	}
 

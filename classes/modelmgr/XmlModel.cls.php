@@ -857,6 +857,7 @@ class XmlModel
   }
 
   private function Import($dbMgr,$smartyMgr,$request,$sysuser){
+	  set_time_limit(3000);
 	$file=$_FILES["file_import"];
 	if($file["error"]!="0"){
 		return "UPLOADERROR";
@@ -923,7 +924,7 @@ class XmlModel
 					$condition=" 1=1 ";
 				}
 				$searchfield=$field["displayfield"];
-				$sql=" select id from $tablename as $tname where $condition and name='".$field["value"]."' ";
+				$sql=" select id from $tablename as $tname where $condition and $searchfield='".$field["value"]."' ";
 				
 				$query = $dbMgr->query($sql);
 				$result = $dbMgr->fetch_array($query); 
