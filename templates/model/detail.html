@@ -118,6 +118,11 @@
                                                 <input class="uniform_on" type="hidden" id="content_{{$rs.key}}" value="{{$rs.value}}" />
 												<span class='help-block'></span>
                                             </div>
+											<div class="col-md-4"></div>
+											<div class="col-md-8">
+											
+											<a href="javascript:void();"; class="pull-offset-col-4 {{if $action!="add" and $rs.disableindetail=="1"}}hide{{/if}} deleteupload" name="{{$rs.key}}"  id="uploaddelete_{{$rs.key}}"  >删除</a>
+											</div>
                                         </div>                                                 
                                         {{elseif $rs.type=="fkey"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
@@ -226,7 +231,15 @@
                 $("."+fck).parent().removeClass("checked");
             }
         });
-
+		
+		$(".deleteupload").click(function(){
+			var key=$(this).attr("name");
+			//alert(key);
+			$("#file_"+key).val("");
+			$("#content_"+key).val("");
+			$("#view_"+key).hide();
+			 $(this).addClass("hide");
+		});
         
         $('#btnSave').click(save);
         $("#btnReturnToList").click(function(){
@@ -394,6 +407,7 @@
                             .attr("src", "{{$uploadpath}}/"+module+"/" + str.split('|~~|')[1])
                             .show();
                         
+						$("#uploaddelete_" + key).removeClass("hide");
 			        } else {
 			            errorDialog("{{$SysLang.model.uploaderror}}");
 			        }
