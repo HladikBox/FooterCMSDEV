@@ -39,7 +39,7 @@ if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没�
 //}
 
 }else{
-	$urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
+	$urlparam=explode("/",$_SERVER["REQUEST_URI"]);
 	//print_r($urlparam);
 	define("LOGIN","");
 	define("ALIAS","");

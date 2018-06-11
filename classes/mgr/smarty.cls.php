@@ -15,7 +15,7 @@ $smarty->right_delimiter="}}";
 
 
 
- $smarty->assign('rootpath',"/");
+ $smarty->assign('rootpath',"https://cmsdev.oss-cn-hangzhou.aliyuncs.com/");
  $smarty->assign('userpath',USER_PATH);
  $smarty->assign('smarty_root',ROOT."/templates");
  $smarty->assign('file_url',$_SERVER["PHP_SELF"]);
