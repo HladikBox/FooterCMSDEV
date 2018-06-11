@@ -121,7 +121,7 @@
 											<div class="col-md-4"></div>
 											<div class="col-md-8">
 											
-											<a href="javascript:void();"; class="pull-offset-col-4 {{if $action!="add" and $rs.disableindetail=="1"}}hide{{/if}} deleteupload" name="{{$rs.key}}"  id="uploaddelete_{{$rs.key}}"  >删除</a>
+											<a href="javascript:void();"; class="{{if $action=="add" or $rs.disableindetail=="1"}}hide{{/if}} deleteupload" name="{{$rs.key}}"  id="uploaddelete_{{$rs.key}}"  >删除</a>
 											</div>
                                         </div>                                                 
                                         {{elseif $rs.type=="fkey"}}
