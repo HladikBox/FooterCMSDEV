@@ -10,9 +10,10 @@
 
 define('ROOT', str_replace("\\", '/', substr(dirname(__FILE__), 0, -8)));	// -9 = 0-strlen('includes')-1;
 require ROOT.'/classes/mgr/common_function.php';
-
+$redurecturl=explode("?",$_SERVER["REDIRECT_URL"]);
+$redurecturl=$redurecturl[0];
 if(!file_exists(ROOT.'/Users/config.inc.php')){
-$urlparam=explode("/",$_SERVER["REDIRECT_URL"]);
+$urlparam=explode("/",$redurecturl);
 //print_r($urlparam);
 define("LOGIN",$urlparam[1]);
 define("ALIAS",$urlparam[2]);
@@ -39,7 +40,7 @@ if(!file_exists(USER_ROOT.'config.inc.php')){die("500错误,你的应用还没�
 //}
 
 }else{
-	$urlparam=explode("/",$_SERVER["REQUEST_URI"]);
+	$urlparam=explode("/",$redurecturl);
 	//print_r($urlparam);
 	define("LOGIN","");
 	define("ALIAS","");

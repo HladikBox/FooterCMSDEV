@@ -46,7 +46,7 @@
 }
 
 if(MODULE=="upload"){
-	$filename=ROOT."/Users".$_SERVER["REQUEST_URI"];
+	$filename=ROOT."/Users".$redurecturl;
 	if(!file_exists($filename)){
 		die("File cannot be found");
 	}
