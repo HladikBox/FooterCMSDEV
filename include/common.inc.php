@@ -10,7 +10,7 @@
 
 define('ROOT', str_replace("\\", '/', substr(dirname(__FILE__), 0, -8)));	// -9 = 0-strlen('includes')-1;
 require ROOT.'/classes/mgr/common_function.php';
-$redurecturl=explode("?",$_SERVER["REDIRECT_URL"]);
+$redurecturl=explode("?",$_SERVER["REQUEST_URI"]);
 $redurecturl=$redurecturl[0];
 if(!file_exists(ROOT.'/Users/config.inc.php')){
 $urlparam=explode("/",$redurecturl);
