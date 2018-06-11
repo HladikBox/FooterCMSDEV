@@ -15,7 +15,12 @@
  }
  $filename=md5($file["name"])."_".date('ymdHIs').".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
  if($CONFIG['fileupload']['oss']==true){
-	 require ROOT.'/classes/obj/ossupload.php';
+	$type=$CONFIG['fileupload']['type'];
+	if($type==""){
+		$type="aliyun";
+	}
+	
+	 require ROOT.'/classes/obj/ossupload.'.$type.'.php';
 	 $file=new OssUpload($file,$filename,USER_PATH2."$module/",false);
 	 
  }else{
