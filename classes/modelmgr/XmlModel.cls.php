@@ -221,6 +221,7 @@ class XmlModel
 				}
 
 				$sql=$sql." ,UNIX_TIMESTAMP(r_main.".$value["key"].") as ".$value["key"]."_timespan";
+			}else if($value["type"]=="grid"){
 			}else{
 
 				$sql=$sql." ,r_main.".$value["key"];
