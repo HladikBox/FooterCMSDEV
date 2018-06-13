@@ -45,7 +45,7 @@ class DbMysql
 			$this->halt('service unavailable');
 		}
 		
-		mysqli_set_charset("utf8");
+		mysqli_set_charset($this->conn,"utf8");
 		$this->conn;
 	}
 
