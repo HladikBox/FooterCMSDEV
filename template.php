@@ -19,7 +19,8 @@
   //exit;
 
   $mgr=new ExcelMgr();
-  
+  //echo $mgr->getCol(27);
+  //exit;
   $mgr->setTitle($data["name"]."数据导入模板");
   
   $mgr->setHeaderForModel($data["fields"]["field"]);

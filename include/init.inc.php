@@ -4,6 +4,9 @@ if(MODULE=="myjs"){
 		$content = @file_get_contents(USER_ROOT."js/".MODEL);
 		echo $content;
 		exit;
+	}else{
+		
+		exit;
 	}
 }
 

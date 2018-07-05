@@ -148,16 +148,15 @@ function outResult($code,$message,$return=""){
 }
 
 function request_get($url) {
-
+	
+	
+	
       $ch = curl_init();
-
       $headers = array();
       $headers[] = 'Cache-Control: no-cache';
       $headers[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
       $headers[] = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0';
-
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
       curl_setopt($ch, CURLOPT_URL,$url);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
@@ -166,6 +165,16 @@ function request_get($url) {
       curl_close($ch);
       //echo $res;
       return $res;
+	  
+	  
+	  $ch = curl_init();
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	//curl_setopt($ch, CURLOPT_POST, TRUE);
+	//curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	$result = curl_exec($ch);
+    curl_close($ch);
+	return $result;
 }
 
    function setArrayNoNull($arr){

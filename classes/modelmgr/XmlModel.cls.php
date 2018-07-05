@@ -924,8 +924,9 @@ class XmlModel
 				if($condition==""){
 					$condition=" 1=1 ";
 				}
-				$searchfield=$field["displayfield"];
-				$sql=" select id from $tablename as $tname where $condition and $searchfield='".$field["value"]."' ";
+				$searchfield=explode(",",$field["displayfield"]);
+				$searchfield=$searchfield[0];
+				$sql=" select id from $tablename as $tname where $condition and `$searchfield`='".$field["value"]."' ";
 				
 				$query = $dbMgr->query($sql);
 				$result = $dbMgr->fetch_array($query); 

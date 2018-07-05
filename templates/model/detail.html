@@ -249,6 +249,9 @@
         {{if $action!="add" and $rs.type=="grid"}}
         var json_{{$rs.key}}={"parenturl":"{{$request_url_encode}}"};
         $("#content_{{$rs.key}}").load("{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&{{$rs.modelkey}}={{$id}}",json_{{$rs.key}},function(data){
+			if(griddata_loaded!=undefined){
+			griddata_loaded("{{$rs.key}}",data);
+			}
         });
         {{elseif $action!="add" and $rs.type=="flist"}}
         var fliststr{{$rs.key}} = $("#content_{{$rs.key}}").val();
@@ -322,9 +325,9 @@
                     {{if $parenturl!=""}}
                     self.location='{{$parenturl}}';
                     {{elseif $action=="add"}}
-                    infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转。");
+                    infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转到编辑。");
 					setTimeout(function(){
-						self.location='{{$PageName}}';
+						self.location='{{$PageName}}?action=edit&id='+id;
 					},3000);
                     {{/if}}
                 }else{

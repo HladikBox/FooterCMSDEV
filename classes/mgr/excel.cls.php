@@ -162,16 +162,15 @@ class ExcelMgr
 		exit;
 	}
 
-	public function getCol($num){
-		$num=$num;
-		//echo $num."—~";
+	public function getCol($a){
 		$ret="";
-		while($num>-1){
-			$yu=$num%26;
-			$ret=$ret.chr($yu+64+1);
-			$num-=26;
+		if($a>=26){
+			$c=$a/26;
+			$ret.=chr($c+64);
+			$a=$a%26;
 		}
-		//echo $ret."<br />";
+		$ret.=chr($a+64+1);
+		return $ret;
 		
 		return $ret;
 	}
