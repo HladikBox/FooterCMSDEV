@@ -132,7 +132,20 @@ function outputJson($result){
 	$str=json_encode($result);
 	if($CONFIG['solution_configuration']!="release"&&MODULE=="api"){
 		$length=strlen($str);
-		request_get("http://console.app-link.org/api/cms?action=apicalllog&login=".LOGIN."&alias=".ALIAS."&model=".MODEL."&func=".FUNC."&output_data_length=".$length);
+		$arr["action"]="apicalllog";
+		$arr["login"]=LOGIN;
+		$arr["alias"]=ALIAS;
+		$arr["model"]=MODEL;
+		$arr["func"]=FUNC;
+		$arr["output_data_length"]="$length";
+		$arr["input_data"]=json_encode($_REQUEST);
+		$arr["output_data"]=json_encode($result);
+		//print_r($arr);
+		$ret=request_post("http://console.app-link.org/api/cms?action=apicalllog",$arr);
+		if($_REQUEST["sl"]=="Y"){
+			//echo $ret;
+		}
+		//echo $ret;
 	}
     die( $str);
 }
@@ -177,6 +190,29 @@ function request_get($url) {
 	return $result;
 }
 
+function request_post($url,$postdata) {
+	
+	
+	
+      $ch = curl_init();
+      $headers = array();
+      $headers[] = 'Cache-Control: no-cache';
+      $headers[] = 'Content-Type: application/x-www-form-urlencoded; charset=utf-8';
+      $headers[] = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:28.0) Gecko/20100101 Firefox/28.0';
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_URL,$url);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+	  curl_setopt($ch, CURLOPT_POST, TRUE);
+	  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postdata));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+      $res= curl_exec($ch);
+      curl_close($ch);
+      //echo $res;
+      return $res;
+	  
+	  
+}
    function setArrayNoNull($arr){
     foreach($arr as $key=>$value){
         if(is_array($value)){

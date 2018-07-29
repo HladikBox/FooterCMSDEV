@@ -56,6 +56,30 @@ define('OSSBUCKET',$CONFIG['fileupload']['bucket']);
  		
  		
  	}
+	
+ 	function reset($fi,$rename,$folder,$is_full_path)
+ 	{
+ 		$this->file=$fi;
+ 		if($rename=="")
+ 		{
+ 			$this->name=$fi["name"];
+ 		}
+ 		else
+ 		{
+ 			$this->name=$rename;
+ 		}
+ 		
+ 		if($is_full_path==true)
+ 		{
+ 			$this->folder=$folder;
+ 		}
+ 		else
+ 		{
+ 			$this->folder=$folder;
+ 		}
+ 		
+ 		
+ 	}
  	
 	public function getType()
 	{

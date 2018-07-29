@@ -926,7 +926,7 @@ class XmlModel
 				}
 				$searchfield=explode(",",$field["displayfield"]);
 				$searchfield=$searchfield[0];
-				$sql=" select id from $tablename as $tname where $condition and `$searchfield`='".$field["value"]."' ";
+				$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".$field["value"]."%' ";
 				
 				$query = $dbMgr->query($sql);
 				$result = $dbMgr->fetch_array($query); 

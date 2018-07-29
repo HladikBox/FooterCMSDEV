@@ -245,7 +245,9 @@
                 ds=$('#searchResult').dataTable({"bRetrieve": true,
                     "sDom": "<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
                     "sPaginationType": "bootstrap",
-                    "oLanguage": dataOlanguage
+                    "oLanguage": dataOlanguage,
+				"aLengthMenu" : [100, 500, 1000],   
+				"iDisplayLength" : 500 
                 });
                 ds.fnAdjustColumnSizing(); 
                 $("#searchResult").width(oldwidth);
@@ -253,7 +255,9 @@
                 ds=$('#searchResult').dataTable({"bRetrieve": true,
                     "sDom": "<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
                     "sPaginationType": "bootstrap",
-                    "oLanguage": dataOlanguage
+                    "oLanguage": dataOlanguage,
+				"aLengthMenu" : [100, 500, 1000],   
+				"iDisplayLength" : 500 
                 });
                 ds.fnAdjustColumnSizing();
             }

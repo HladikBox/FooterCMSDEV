@@ -112,6 +112,12 @@
                                                 {{if $rs.filetype=="image"}}
                                                 <br />
                                                 <img id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;height:100px;" {{else}}style="height:100px;" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
+												{{elseif $rs.filetype=="audio"}}
+                                                <br />
+                                                <audio controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;" {{else}} src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
+												{{elseif $rs.filetype=="video"}}
+                                                <br />
+                                                <video controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;width:100%;" {{else}} stype="width:100%" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
                                                 {{else}}
                                                 <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
                                                 {{/if}}

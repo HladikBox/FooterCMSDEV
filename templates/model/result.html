@@ -1,8 +1,10 @@
-<thead><tr><th  class='checkboxl'></th>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th class="resulttitle_{{$rs.key}}">{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}</tr></thead>
+<thead class="nmth"><tr><th  class='checkboxl'></th><th></th>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th class="resulttitle_{{$rs.key}}">{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}</tr></thead>
 <tbody class='searchResult'>
 {{foreach from=$result item=row}}
 <tr class="rstr"><td class='checkboxl'><input type="checkbox" class="RowSelect result_id" value="{{$row.id}}" /></td>
-    {{foreach from=$row item=col key=key}}{{if $key!="id"}}{{foreach from=$ModelData.fields.field item=rs}}{{if $key==$rs.key && $rs.displayinlist=="1"}}<td class="result_{{$rs.key}}" {{if $rs.type=='select' || $rs.type=='fkey'}}sval='{{$col.value}}'{{/if}}>{{if $rs.gotodetail=="1"}}<a href="{{$PageName}}?action=edit&id={{$row.id}}">{{/if}}{{if $rs.type=="upload" && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}?height=50" alt="ÔÝÎÞÍ¼Æ¬"  />{{elseif $rs.type=="grid"}}<a href="javascript:showTableModel('{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&{{$rs.modelkey}}={{$row.id}}','{{$rs.name}}')">{{$col}}</a>{{elseif $rs.type=='select' || $rs.type=='fkey'}}{{$col.name}}{{else}}{{$col}}{{/if}}{{if $rs.gotodetail=="1"}}</a>{{/if}}</td>{{/if}}{{/foreach}}{{/if}}{{/foreach}}</tr>
+	<td><a href="{{$PageName}}?action=edit&id={{$row.id}}">è¯¦æƒ…</a></td>
+    {{foreach from=$row item=col key=key}}{{if $key!="id"}}{{foreach from=$ModelData.fields.field item=rs}}{{if $key==$rs.key && $rs.displayinlist=="1"}}<td class="result_{{$rs.key}}" {{if $rs.type=='select' || $rs.type=='fkey'}}sval='{{$col.value}}'{{/if}}>{{if $rs.type=="upload" && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}?height=50" alt="å›¾ç‰‡"  />{{elseif $rs.type=="grid"}}<a href="javascript:showTableModel('{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&{{$rs.modelkey}}={{$row.id}}','{{$rs.name}}')">{{$col}}</a>{{elseif $rs.type=='select' || $rs.type=='fkey'}}{{$col.name}}{{else}}{{$col}}{{/if}}</td>{{/if}}{{/foreach}}{{/if}}{{/foreach}}
+	</tr>
 {{/foreach}}
 </tbody>
 <script>
@@ -30,3 +32,11 @@
                 {{/foreach}}
             });
 </script>
+<style>
+.rstr td{
+	max-width:200px;
+}
+.nmth th{
+	max-width:200px;
+}
+</style>
