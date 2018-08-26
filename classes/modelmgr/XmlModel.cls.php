@@ -145,6 +145,8 @@ class XmlModel
 		$subsql=$this->GetLangTableSql($tablename,$tablerename);
 		$sql="select oid id,$displayfield as name from $subsql where ".(empty($condition)?"1=1":$condition)." ";
 	}else{
+		$displayfield=explode(",",$displayfield);
+		$displayfield=$displayfield[0];
 		$sql="select id,$displayfield as name from $tablename as `$tablerename` where ".(empty($condition)?"1=1":$condition)."";
 	}
 	$query = $dbMgr->query($sql);
@@ -685,7 +687,6 @@ class XmlModel
 	
 	if($request["primary_id"]==""){
 	
-		$id=$dbMgr->getNewId($this->XmlData["tablename"]);
 		if($this->XmlData["nolist"]=="1"){
 			$id=$this->GetNoListId();
 		}
@@ -711,7 +712,7 @@ class XmlModel
 			$sql=$sql.",`".$value["key"]."`";
 		}
 		$sql=$sql.",created_date,created_user,updated_date,updated_user ) values (";
-		$sql=$sql.$id;
+		$sql=$sql." absolutexxidxx ";
 		foreach ($fields as $value){
 			
 			
@@ -728,6 +729,9 @@ class XmlModel
 
 			if($value["type"]=="password"){
 				$sql=$sql.",'".md5($request[$value["key"]])."'";
+			}
+			if($value["type"]=="url"){
+				$sql=$sql.",'".str_replace("PRIMARY_ID","absolutexxidxx",$request[$value["key"]])."'";
 			}elseif($value["type"]=="number"){
 				$sql=$sql.",'".($request[$value["key"]]+0)."'";
 			}elseif($value["type"]=="datetime"
@@ -742,6 +746,8 @@ class XmlModel
 		}
 		$sql=$sql.",".$dbMgr->getDate().",$sysuser,".$dbMgr->getDate().",$sysuser )";
 		$sql=$this->fixInsertSql($sql);
+		$id=$dbMgr->getNewId($this->XmlData["tablename"]);
+		$sql=str_replace("absolutexxidxx",$id,$sql);
 		$query = $dbMgr->query($sql);
 		
 	}else{
@@ -769,6 +775,9 @@ class XmlModel
 			}
 			if($value["type"]=="number"){
 				$request[$value["key"]]=$request[$value["key"]]+0;
+			}
+			if($value["type"]=="url"){
+				$request[$value["key"]]=str_replace("PRIMARY_ID","$id",$request[$value["key"]]);
 			}
 
 			if($value["type"]=="datetime"

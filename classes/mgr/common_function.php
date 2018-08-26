@@ -17,11 +17,48 @@ function parameter_filter($param,$htmlchange=true)
       $param = trim($param);
 	$param = strtr($param,$arr);
 	$param = mysqli_real_escape_string($dbmgr->conn,$param);
-	$param=filter_Emoji($param);
+	$param=emoji_encode($param);
       if($htmlchange){
          $param = htmlspecialchars($param);
       }
 	return $param;
+}
+
+/**对emoji表情转义
+ * @param $nickname
+ * @return string
+ */
+function emoji_encode($nickname)
+{
+    $strEncode = '';
+    $length = mb_strlen($nickname, 'utf-8');
+    for ($i = 0; $i < $length; $i++) {
+        $_tmpStr = mb_substr($nickname, $i, 1, 'utf-8');
+        if (strlen($_tmpStr) >= 4) {
+            $strEncode .= '[[EMOJI:' . rawurlencode($_tmpStr) . ']]';
+        } else {
+            $strEncode .= $_tmpStr;
+        }
+    }
+    return $strEncode;
+}
+
+//对emoji表情转反义
+function emoji_decode($str)
+{
+    $strDecode = preg_replace_callback('|\[\[EMOJI:(.*?)\]\]|', function ($matches) {
+        return rawurldecode($matches[1]);
+    }, $str);
+
+    return $strDecode;
+}
+function emoji_empty($str)
+{
+    $strDecode = preg_replace_callback('|\[\[EMOJI:(.*?)\]\]|', function ($matches) {
+        return "";
+    }, $str);
+
+    return $strDecode;
 }
 
 function filter_Emoji($str)
@@ -124,11 +161,40 @@ function ResetNameWithLang($arr,$lang){
 
 }
 
+function doEmojiArray($result){
+	if($result==null){
+		return $result;
+	}
+	if(is_array($result[0])){
+		//二维数组
+		for($i=0;$i<count($result);$i++){
+			foreach($result[$i] as $k=>$v){
+				if(is_array($v)==false){
+					$result[$i][$k]=emoji_decode($result[$i][$k]);
+				}else{
+					$result[$i][$k]=doEmojiArray($result[$i][$k]);
+				}
+			}
+		}
+	}else{
+		foreach($result as $k=>$v){
+			if(is_array($v)==false){
+				$result[$k]=emoji_decode($result[$k]);
+			}else{
+				$result[$k]=doEmojiArray($result[$k]);
+			}
+		}
+	}
+	return $result;
+}
+
 function outputJson($result){
 	Global $CONFIG;
 
 	logger_mgr::logInfo($_SERVER["REQUEST_URI"]." output:".json_encode($result));
-
+	
+	$result=doEmojiArray($result);
+	
 	$str=json_encode($result);
 	if($CONFIG['solution_configuration']!="release"&&MODULE=="api"){
 		$length=strlen($str);
@@ -140,6 +206,8 @@ function outputJson($result){
 		$arr["output_data_length"]="$length";
 		$arr["input_data"]=json_encode($_REQUEST);
 		$arr["output_data"]=json_encode($result);
+		
+		
 		//print_r($arr);
 		$ret=request_post("http://console.app-link.org/api/cms?action=apicalllog",$arr);
 		if($_REQUEST["sl"]=="Y"){

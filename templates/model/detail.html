@@ -129,7 +129,27 @@
 											
 											<a href="javascript:void();"; class="{{if $action=="add" or $rs.disableindetail=="1"}}hide{{/if}} deleteupload" name="{{$rs.key}}"  id="uploaddelete_{{$rs.key}}"  >删除</a>
 											</div>
-                                        </div>                                                 
+                                        </div>                                                             
+                                        {{elseif $rs.type=="url"}}
+                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <div class="col-md-8">
+                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.defaultvalue}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" onchange="urlChange('{{$rs.key}}')" {{/if}} />
+                                                {{if $rs.filetype=="image"}}
+                                                <br />
+                                                <img id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;height:100px;" {{else}}style="height:100px;" src="{{$rs.value}}" {{/if}} />
+												{{elseif $rs.filetype=="audio"}}
+                                                <br />
+                                                <audio controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;" {{else}} src="{{$rs.value}}" {{/if}} />
+												{{elseif $rs.filetype=="video"}}
+                                                <br />
+                                                <video controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;width:100%;" {{else}} stype="width:100%" src="{{$rs.value}}" {{/if}} />
+                                                {{else}}
+                                                <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
+                                                {{/if}}
+												<span class='help-block'></span>
+                                            </div>
+                                        </div>                                             
                                         {{elseif $rs.type=="fkey"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
                                             <label class="col-md-4 control-label">{{$rs.name}}</label>
@@ -344,7 +364,16 @@
             
     }
 
-            
+    function urlChange(key){
+		var val=$("#content_"+key).val();
+		$("#view_"+key).attr("src",val).attr("href",val);
+		if(val==""){
+			$("#view_"+key).hide();
+		}else{
+			$("#view_"+key).show();
+		}
+		
+	}
 
     function saveValidate() {
 
