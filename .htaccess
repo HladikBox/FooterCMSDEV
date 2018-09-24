@@ -1,5 +1,5 @@
 RewriteEngine on
 
-RewriteRule ^((?:css|fonts|images|js|vendors|lang|htmleditupload|Users).*|favicon.ico|favicon.png|MP_verify_KgqlsKXr0h2oaKJ6.txt) $1 [NC,L]
+RewriteRule ^((?:css|fonts|images|js|vendors|lang|htmleditupload|Users|.well-known).*|favicon.ico|favicon.png|MP_verify_KgqlsKXr0h2oaKJ6.txt) $1 [NC,L]
 
 RewriteRule ^.*$ index.php

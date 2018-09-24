@@ -68,7 +68,7 @@
                                                 <select id="condition_{{$rs.key}}" class="form-control selectize-select">
                                                     <option value="no-value">--{{$SysLang.model.select}}--</option>
                                                     {{foreach from=$rs.options.option item=rsoption}}
-                                                    <option value="{{$rsoption.value}}">{{$rsoption.name}}</option>
+                                                    <option {{if $rsoption.default=='1' }}selected{{/if}} value="{{$rsoption.value}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
                                             </div>

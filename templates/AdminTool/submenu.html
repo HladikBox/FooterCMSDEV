@@ -51,6 +51,12 @@
                         <li {{if "userrole_add"==$MyMenuId}} class="active" {{/if}}>
                             <a href="{{$userpath}}Admin/user?action=add"><i class="glyphicon glyphicon-chevron-right"></i> {{$SysLang.common.userrole}}{{$SysLang.model.add}}</a>
                         </li>
+                        <li {{if "bug_list"==$MyMenuId}} class="active" {{/if}}>
+                            <a href="{{$userpath}}Admin/bug"><i class="glyphicon glyphicon-chevron-right"></i> Bug</a>
+                        </li>
+                        <li {{if "bug_add"==$MyMenuId}} class="active" {{/if}}>
+                            <a href="{{$userpath}}Admin/bug?action=add"><i class="glyphicon glyphicon-chevron-right"></i> Bug{{$SysLang.model.add}}</a>
+                        </li>
                         {{/if}}
                         {{/if}}
                     </ul>

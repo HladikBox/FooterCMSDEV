@@ -119,10 +119,10 @@ if($SysUser["is_admin"]!="Y"&&$CONFIG["nologincheck"]!=true){
 		$MenuArray["mainmenus"]["mainmenu"][$i]["submenucount"]=$subcount;
 	}
 	if($inaccessright==false){
-		if((MODULE=="nomodule"&&$_REQUEST["action"]=="getgrid")==false){
+		if(MODULE!="nomodule"){
 			if((MODULE!="admin"&&MODEL!="dashboard")||(MODULE!="admin"&&MODEL!="about")){
-				WindowRedirect(USER_PATH."Admin/About");
-				die("hack");
+				//WindowRedirect(USER_PATH."Admin/About");
+				die("hack".$_REQUEST["action"].MODULE);
 				exit;
 			}
 		}

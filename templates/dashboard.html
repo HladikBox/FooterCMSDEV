@@ -49,7 +49,7 @@
                     }
                     str += '<div class="col-md-' + item.size +'"><div class="box box-primary">';
                     str += '<div class="box-header">';
-                    str += '<h3 class="box-title">'+item.name+'</h3>';
+                    str += '<h3 class="box-title">'+item.name+'</h3><div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>';
                     str += '</div>';
                     str += '<div class="box-body">';
                     str += '<ul class="todo-list">';
@@ -74,7 +74,7 @@
                     }
                     str += '<div class="col-md-' + item.size + '"><div class="box box-primary">';
                     str += '<div class="box-header">';
-                    str += '<h3 class="box-title">' + item.name + '</h3>';
+                    str += '<h3 class="box-title">' + item.name + '</h3><div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>';
                     str += '</div>';
                     str += '<div class="box-body">';
                     str += '<table class="table table-condensed"><tr><th>' + item.firstfieldname + '</th><th>' + item.secondfieldname + '</th><th>' + item.thirdfieldname +'</th></tr>';
@@ -93,13 +93,25 @@
                     }
                     str += '<div class="col-md-' + item.size + '"><div class="box box-primary">';
                     str += '<div class="box-header">';
-                    str += '<h3 class="box-title">' + item.name + '</h3>';
+                    str += '<h3 class="box-title">' + item.name + '</h3><div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>';
                     str += '</div>';
                     str += '<div class="box-body">';
                     str += '<img src="' + item.src + '" style="width:100%;" />';
                     str += '</div>';
                     str += '</div></div>';
-                }
+                }else{
+                    if (item.size == undefined) {
+                        item.size = 6;
+                    }
+                    str += '<div class="col-md-' + item.size + '"><div class="box box-primary collapsed-box">';
+                    str += '<div class="box-header">';
+                    str += '<h3 class="box-title">' + item.name + '</h3><div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>';
+                    str += '</div>';
+                    str += '<div class="box-body">';
+                    str += item.openhtml;
+                    str += '</div>';
+                    str += '</div></div>';
+				}
                 
             }
             $("#databody").append(str);

@@ -729,8 +729,7 @@ class XmlModel
 
 			if($value["type"]=="password"){
 				$sql=$sql.",'".md5($request[$value["key"]])."'";
-			}
-			if($value["type"]=="url"){
+			}elseif($value["type"]=="url"){
 				$sql=$sql.",'".str_replace("PRIMARY_ID","absolutexxidxx",$request[$value["key"]])."'";
 			}elseif($value["type"]=="number"){
 				$sql=$sql.",'".($request[$value["key"]]+0)."'";
@@ -951,6 +950,31 @@ class XmlModel
 				}else{
 					$field["value"]=$result["id"];
 				}
+			}
+			if($field["type"]=="flist"){
+				$tablename=$field["tablename"];
+				$tname=$field["ntbname"];
+				$condition=$field["condition"];
+				if($condition==""){
+					$condition=" 1=1 ";
+				}
+				$searchfield=explode(",",$field["displayfield"]);
+				$searchfield=$searchfield[0];
+				
+				$flistvalues=explode(",",$field["value"]);
+				
+				$vs=[];
+				foreach($flistvalues as $v){
+					$v=parameter_filter($v);
+					 $sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".$v."%' ";
+					$query = $dbMgr->query($sql);
+					$result = $dbMgr->fetch_array($query); 
+					if(($result["id"]+0)>0){
+						$vs[]=$result["id"]+0;
+					}
+				}
+				//print_r($vs);
+				$field["value"]=join(",",$vs);
 			}
 			$r[$field["key"]]=$field;
 		}

@@ -209,7 +209,7 @@ function outputJson($result){
 		
 		
 		//print_r($arr);
-		$ret=request_post("http://console.app-link.org/api/cms?action=apicalllog",$arr);
+		//$ret=request_post("http://console.app-link.org/api/cms?action=apicalllog",$arr);
 		if($_REQUEST["sl"]=="Y"){
 			//echo $ret;
 		}
@@ -242,6 +242,7 @@ function request_get($url) {
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	  curl_setopt($ch, CURLOPT_ENCODING,"gzip,deflate");
       $res= curl_exec($ch);
       curl_close($ch);
       //echo $res;

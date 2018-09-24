@@ -173,7 +173,7 @@
                                                 {{foreach from=$FListArr item=flrs}}
                                                 {{if $rs.key==$flrs.key}}
                                                 {{foreach from=$flrs.value item=rsvalue}}
-                                                <div class="col-md-3">
+                                                <div class="col-md-3 input_flist_{{$rs.key}}">
                                                     <input class='uniform_on multicheckbox flist_{{$rs.key}}' type='checkbox' id='flist_{{$rs.key}}_{{$rsvalue.id}}' value='{{$rsvalue.id}}'> {{$rsvalue.name}}
                                                 </div>
                                                 {{/foreach}}
