@@ -733,9 +733,8 @@ class XmlModel
 				$sql=$sql.",'".str_replace("PRIMARY_ID","absolutexxidxx",$request[$value["key"]])."'";
 			}elseif($value["type"]=="number"){
 				$sql=$sql.",'".($request[$value["key"]]+0)."'";
-			}elseif($value["type"]=="datetime"
-				&&(strtolower($request[$value["key"]])=="null"||strtolower($request[$value["key"]])=="")){
-				$sql=$sql.",null";
+			}elseif($value["type"]=="datetime"){
+				$sql=$sql.",'".date("Y-m-d H:i:s",strtotime($request[$value["key"]]))."'";
 			}else{
 				$sql=$sql.",'".($request[$value["key"]])."'";
 			}
@@ -775,17 +774,17 @@ class XmlModel
 			if($value["type"]=="number"){
 				$request[$value["key"]]=$request[$value["key"]]+0;
 			}
+			if($value["type"]=="datetime"){
+				$request[$value["key"]]=date("Y-m-d H:i:s",$request[$value["key"]]);
+			}
 			if($value["type"]=="url"){
 				$request[$value["key"]]=str_replace("PRIMARY_ID","$id",$request[$value["key"]]);
 			}
 
-			if($value["type"]=="datetime"
-				&&(strtolower($request[$value["key"]])=="null"||strtolower($request[$value["key"]])=="")){
-				$sql=$sql.", `".$value["key"]."`= null ";
-			}else{
+			
 
-				$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
-			}
+			$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
+			
 
 		}
 		$sql=$sql." where id=$id";
@@ -934,10 +933,17 @@ class XmlModel
 				}
 				$searchfield=explode(",",$field["displayfield"]);
 				$searchfield=$searchfield[0];
-				$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".$field["value"]."%' ";
+				
+				$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'".$field["value"]."' ";
 				
 				$query = $dbMgr->query($sql);
 				$result = $dbMgr->fetch_array($query); 
+				
+				if(($result["id"]+0)==0){
+					$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".$field["value"]."%' ";
+					$query = $dbMgr->query($sql);
+					$result = $dbMgr->fetch_array($query); 
+				}
 				if(($result["id"]+0)==0){
 					if($field["notnull"]==1){
 						$field["error"]="1";
@@ -976,6 +982,12 @@ class XmlModel
 				//print_r($vs);
 				$field["value"]=join(",",$vs);
 			}
+			
+			
+			if($field["type"]=="check"){
+				$field["value"]=$field["value"]=="是"?"Y":"N";
+			}
+			
 			$r[$field["key"]]=$field;
 		}
 		$ret[]=$r;

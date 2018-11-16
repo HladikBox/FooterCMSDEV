@@ -4,8 +4,9 @@
     header('Access-Control-Allow-Credentials:true');  
     header('Access-Control-Allow-Origin:'.$_SERVER['HTTP_ORIGIN']);  
     header('Access-Control-Allow-Methods:POST,GET,OPTIONS,DELETE');  
-    header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str,lang,accesstoken,unicode,UT');  
+    header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str,lang,accesstoken,unicode,UT,TOKEN');  
     if(strtolower($_SERVER["REQUEST_METHOD"])=="options"){
+		echo "OK";
 		exit();
 	}
 	if($_SERVER["HTTP_ACCESSTOKEN"]!=""){

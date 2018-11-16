@@ -196,7 +196,7 @@
 </div>
 
 
-<script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
+<script type="text/javascript" src="/js/myjs.js"></script>
 <script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
 <script>
     var ds=null;
@@ -340,7 +340,8 @@
 			        $("#import_boxmsg").html(data);
 			        myjs_afterimportdataload();
 			        $("#import_boxBtnConfirm").click(function () {
-
+						
+						myjs_beforeImport(()=>{
                         $("#importList tr").each(function () {
                             if ($(this).find(".RowSelect").prop("checked")==true) {
                                 var json={action:"save"
@@ -359,6 +360,8 @@
                                 }
                             });
                         }
+						
+						});
                     });
 
 			        });

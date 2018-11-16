@@ -22,6 +22,13 @@ var myjs_afterResultLoad = function () {
 
 
 
+var myjs_beforeImport = function (callback) {
+	if(callback!=undefined){
+		//alert(1);
+		callback();
+	}
+};
+
 
 var myjs_beforeSave = function () {
 };

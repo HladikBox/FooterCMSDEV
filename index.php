@@ -42,6 +42,15 @@ if(file_exists(USER_ROOT."common/cms.inc.php")){
     }else{
       $model=new XmlModel(MODEL,CURRENT_PATH);
     }
+	
+	
+if($_REQUEST["action"]=="search"){
+	//$insts=$model->getModelField("inst_id");
+	$seq=$model->getModelField("seq");
+	if($seq!=null){
+		$_REQUEST["orderby"]=" r_main.seq,r_main.updated_date desc ";
+	}
+}
     
 if(file_exists(USER_ROOT."common/cms.inc.php")){
 	include USER_ROOT."common/cms.inc.php";

@@ -25,7 +25,6 @@
 	 
  }else{
 	 
-	 
 	require ROOT.'/classes/obj/upload.php';
 	 $folder=USER_ROOT.$CONFIG['fileupload']['upload_path'];
 	 if(!file_exists($folder)){

@@ -208,7 +208,7 @@
                                         {{/foreach}}
                                     </div>
                                     <hr />
-                                    <div class="text-center">
+                                    <div class="text-center" id="btnPanel" >
                                         <input type="hidden" id="content_id" value="{{$id}}" />
                                         {{if $ModelData.nosave!="1"}}
                                         <button class="btn btn-primary" id="btnSave"><i class="glyphicon glyphicon-pencil  glyphicon-white"></i> {{$SysLang.model.save}}</button>
@@ -446,6 +446,9 @@
                             .show();
                         
 						$("#uploaddelete_" + key).removeClass("hide");
+						if(UploadedCallback!=undefined){
+							UploadedCallback(key,module,"{{$uploadpath}}/"+module+"/" + str.split('|~~|')[1]);
+						}
 			        } else {
 			            errorDialog("{{$SysLang.model.uploaderror}}");
 			        }
