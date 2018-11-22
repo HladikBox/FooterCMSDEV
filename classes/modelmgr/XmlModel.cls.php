@@ -540,6 +540,7 @@ class XmlModel
   
   public function Edit($dbMgr,$smartyMgr,$id){
   	$id=$this->fixEditId($id);
+	
 	$sql="select * from ".$this->XmlData["tablename"]." where id=$id";
 	$sql=$this->fixEditSql($sql);
 	$query = $dbMgr->query($sql);
@@ -687,9 +688,7 @@ class XmlModel
 	
 	if($request["primary_id"]==""){
 	
-		if($this->XmlData["nolist"]=="1"){
-			$id=$this->GetNoListId();
-		}
+		
 
 		$haveMutilLang=false;
 
@@ -733,8 +732,9 @@ class XmlModel
 				$sql=$sql.",'".str_replace("PRIMARY_ID","absolutexxidxx",$request[$value["key"]])."'";
 			}elseif($value["type"]=="number"){
 				$sql=$sql.",'".($request[$value["key"]]+0)."'";
-			}elseif($value["type"]=="datetime"){
-				$sql=$sql.",'".date("Y-m-d H:i:s",strtotime($request[$value["key"]]))."'";
+			}elseif($value["type"]=="datetime"
+ 				&&(strtolower($request[$value["key"]])=="null"||strtolower($request[$value["key"]])=="")){
+ 				$sql=$sql.",null";
 			}else{
 				$sql=$sql.",'".($request[$value["key"]])."'";
 			}
@@ -744,7 +744,11 @@ class XmlModel
 		}
 		$sql=$sql.",".$dbMgr->getDate().",$sysuser,".$dbMgr->getDate().",$sysuser )";
 		$sql=$this->fixInsertSql($sql);
-		$id=$dbMgr->getNewId($this->XmlData["tablename"]);
+		if($this->XmlData["nolist"]=="1"){
+			$id=$this->GetNoListId();
+		}else{
+			$id=$dbMgr->getNewId($this->XmlData["tablename"]);
+		}
 		$sql=str_replace("absolutexxidxx",$id,$sql);
 		$query = $dbMgr->query($sql);
 		
@@ -774,16 +778,21 @@ class XmlModel
 			if($value["type"]=="number"){
 				$request[$value["key"]]=$request[$value["key"]]+0;
 			}
-			if($value["type"]=="datetime"){
-				$request[$value["key"]]=date("Y-m-d H:i:s",$request[$value["key"]]);
-			}
+			
 			if($value["type"]=="url"){
 				$request[$value["key"]]=str_replace("PRIMARY_ID","$id",$request[$value["key"]]);
 			}
 
 			
 
-			$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
+			if($value["type"]=="datetime"
+ 				&&(strtolower($request[$value["key"]])=="null"||strtolower($request[$value["key"]])=="")){
+ 				$sql=$sql.", `".$value["key"]."`= null ";
+ 			}else{
+ 			
+
+ 				$sql=$sql.", `".$value["key"]."`='".($request[$value["key"]])."'";
+ 			}
 			
 
 		}

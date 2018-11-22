@@ -101,6 +101,7 @@ for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
 if($SysUser["is_admin"]!="Y"&&$CONFIG["nologincheck"]!=true){
 	include_once ROOT."/classes/datamgr/user.cls.php";
 	$right=$userMgr->getAccessRight($SysUser["role_id"]);
+	
 	$inaccessright=false;
 	for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
 		$subcount=0;	
@@ -109,7 +110,7 @@ if($SysUser["is_admin"]!="Y"&&$CONFIG["nologincheck"]!=true){
 			if(in_array($val,$right)){
 				$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["right"]=1;
 				$subcount++;
-				if(MODULE."_".MODEL==$val){
+				if(strtolower(MODULE."_".MODEL)==strtolower($val)){
 					$inaccessright=true;
 				}
 			}else{
@@ -118,12 +119,14 @@ if($SysUser["is_admin"]!="Y"&&$CONFIG["nologincheck"]!=true){
 		}
 		$MenuArray["mainmenus"]["mainmenu"][$i]["submenucount"]=$subcount;
 	}
-	if($inaccessright==false){
-		if(MODULE!="nomodule"){
-			if((MODULE!="admin"&&MODEL!="dashboard")||(MODULE!="admin"&&MODEL!="about")){
-				//WindowRedirect(USER_PATH."Admin/About");
-				die("hack".$_REQUEST["action"].MODULE);
-				exit;
+	if(MODULE!=""&&MODEL!=""){
+		if($inaccessright==false){
+			if(MODULE!="nomodule"){
+				if((MODULE!="admin"&&MODEL!="dashboard")||(MODULE!="admin"&&MODEL!="about")){
+					//WindowRedirect(USER_PATH."Admin/About");
+					die(MODULE."hack".$_REQUEST["action"].MODEL);
+					exit;
+				}
 			}
 		}
 	}
