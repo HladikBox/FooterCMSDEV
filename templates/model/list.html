@@ -68,11 +68,11 @@
                                                 <select id="condition_{{$rs.key}}" class="form-control">
                                                     <option value="no-value">--{{$SysLang.model.select}}--</option>
                                                     {{foreach from=$rs.options.option item=rsoption}}
-                                                    <option  value="{{$rsoption.value}}">{{$rsoption.name}}</option>
+                                                    <option {{if $rsoption.default=='1'&&$rs.listfilter==1 }}  selected{{/if}} value="{{$rsoption.value}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
 												<!--  --> 
-												<!--{{if $rsoption.default=='1' }}  selected{{/if}}-->
+												<!---->
                                             </div>
 											</div>                                       
                                             {{elseif 1==2&&$rs.type=="check" }}
@@ -134,13 +134,18 @@
                                 <div class="panel-heading" id="searchPanelHeading">
                                     <div class="text-muted bootstrap-admin-box-title">{{$SysLang.model.result}}</div>
                                 </div>
+								<style>
+									.btn-group .btn-primary{
+									color:white;
+									}
+								</style>
 								{{foreach from=$ModelData.fields.field item=rs}}
 								{{if $rs.type=="select" && $rs.listfilter=="1" }}
 								<div class="btn-group {{if $rs.hidden==1}}hidden{{/if}}" id="searchtoobar_{{$rs.key}}">
-									<button type="button" class="btn btn-default btn-primary" status="no-value">全部</button>
-									{{foreach from=$rs.options.option item=rsoption}}
-									<button type="button" class="btn btn-default" status="{{$rsoption.value}}">{{$rsoption.name}}</button>
+									{{foreach from=$rs.options.option item=rsoption index=idx}}
+									<button type="button" class="btn btn-default  {{if $rsoption.default=='1'&&$rs.listfilter==1 }}  btn-primary{{/if}}" status="{{$rsoption.value}}">{{$rsoption.name}}</button>
 									{{/foreach}}
+									<button type="button" class="btn btn-default " status="no-value">全部</button>
 								</div>
 								<script>
 									$("#searchtoobar_{{$rs.key}} button").click(function(){
