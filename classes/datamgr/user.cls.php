@@ -26,7 +26,7 @@
 	public function getUserByName($loginname)
 	{
 		$loginname=parameter_filter($loginname);
-		$sql="select * from tb_user where login_id='$loginname' ";
+		$sql="select * from tb_user where login_id='$loginname' and status<>'D' ";
 		$query = $this->dbmgr->query($sql);
 		$result = $this->dbmgr->fetch_array_all($query); 
 		$result[0]["right"]=$this->getAccessRight($result[0]["role_id"]);
