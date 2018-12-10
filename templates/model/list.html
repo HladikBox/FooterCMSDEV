@@ -61,16 +61,18 @@
                                                 </select>
                                             </div>
 											</div>                                       
-                                            {{elseif $rs.type=="select" }}
-											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            {{elseif $rs.type=="select"   }}
+											<div class="form-group col-md-6 {{if $rs.hidden==1||$rs.listfilter==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}</label>
                                             <div class="col-md-8">
-                                                <select id="condition_{{$rs.key}}" class="form-control selectize-select">
+                                                <select id="condition_{{$rs.key}}" class="form-control">
                                                     <option value="no-value">--{{$SysLang.model.select}}--</option>
                                                     {{foreach from=$rs.options.option item=rsoption}}
-                                                    <option {{if $rsoption.default=='1' }}selected{{/if}} value="{{$rsoption.value}}">{{$rsoption.name}}</option>
+                                                    <option  value="{{$rsoption.value}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
+												<!--  --> 
+												<!--{{if $rsoption.default=='1' }}  selected{{/if}}-->
                                             </div>
 											</div>                                       
                                             {{elseif 1==2&&$rs.type=="check" }}
@@ -110,7 +112,7 @@
                         <div class="col-md-12">
                             {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
                             <div class="panel panel-default">
-                                <div class="panel-heading" id="searchPanelHeading">
+                                <div class="panel-heading" >
                                     <div class="text-muted bootstrap-admin-box-title">{{$rs.name}}</div>
                                 </div>
                                 <div class="bootstrap-admin-panel-content">
@@ -132,6 +134,29 @@
                                 <div class="panel-heading" id="searchPanelHeading">
                                     <div class="text-muted bootstrap-admin-box-title">{{$SysLang.model.result}}</div>
                                 </div>
+								{{foreach from=$ModelData.fields.field item=rs}}
+								{{if $rs.type=="select" && $rs.listfilter=="1" }}
+								<div class="btn-group {{if $rs.hidden==1}}hidden{{/if}}" id="searchtoobar_{{$rs.key}}">
+									<button type="button" class="btn btn-default btn-primary" status="no-value">全部</button>
+									{{foreach from=$rs.options.option item=rsoption}}
+									<button type="button" class="btn btn-default" status="{{$rsoption.value}}">{{$rsoption.name}}</button>
+									{{/foreach}}
+								</div>
+								<script>
+									$("#searchtoobar_{{$rs.key}} button").click(function(){
+										$("#searchtoobar_{{$rs.key}} button").removeClass("btn-primary");
+										$(this).addClass("btn-primary");
+										$("#condition_{{$rs.key}}").val($(this).attr("status"));
+										
+										try{
+											search();
+										}catch(e){
+											
+										}
+									});
+																</script>
+								{{/if}}
+								{{/foreach}}
                                 <div class="bootstrap-admin-panel-content">
                                     <table class="datatable table table-striped table-bordered" id="searchResult">
                                         <thead>
@@ -231,6 +256,7 @@
                 {{/foreach}}
                 };
                  json= myjs_searchClick(json);
+				 console.log(JSON.stringify(json));
 
         $("#searchResult").load("{{$PageName}}",json,function(data){
 
@@ -238,29 +264,13 @@
             
             $("#btnSearch").prop("disabled","");
             loadCharts();
-			
-            if(ds!=null){
-                var oldwidth=$("#searchResult").width();
-                ds.fnDestroy();
-                ds=$('#searchResult').dataTable({"bRetrieve": true,
-                    "sDom": "<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
+			$('#searchResult').dataTable({"bRetrieve": true,
+			retrieve:true,
                     "sPaginationType": "bootstrap",
                     "oLanguage": dataOlanguage,
 				"aLengthMenu" : [100, 500, 1000],   
 				"iDisplayLength" : 500 
                 });
-                ds.fnAdjustColumnSizing(); 
-                $("#searchResult").width(oldwidth);
-            }else{
-                ds=$('#searchResult').dataTable({"bRetrieve": true,
-                    "sDom": "<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
-                    "sPaginationType": "bootstrap",
-                    "oLanguage": dataOlanguage,
-				"aLengthMenu" : [100, 500, 1000],   
-				"iDisplayLength" : 500 
-                });
-                ds.fnAdjustColumnSizing();
-            }
 
         });
 	}
