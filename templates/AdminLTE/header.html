@@ -34,7 +34,7 @@
     <!-- Site wrapper -->
     <div class="wrapper">
 
-        <header class="main-header" id="headerbar">
+        <header class="main-header  {{if $viewonly=='Y'}}hide{{/if}}" id="headerbar">
     <!-- Logo -->
     <a href="{{$userpath}}Admin/about" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -81,7 +81,7 @@
 </header>
         <!-- =============================================== -->
 <!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar" id="mainsiderbar">
+<aside class="main-sidebar {{if $viewonly=='Y'}}hide{{/if}}" id="mainsiderbar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -147,7 +147,7 @@
 
 <!-- =============================================== -->
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper" id="bodycontent">
+<div class="{{if $viewonly!='Y'}}content-wrapper{{/if}}" id="bodycontent">
     <!-- Content Header (Page header) -->
     <section class="content">
 		<div class="row">

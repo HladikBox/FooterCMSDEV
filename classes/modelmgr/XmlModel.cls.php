@@ -1064,6 +1064,16 @@ class XmlModel
 	  }else if($action=="edit"){
 		$smarty->assign("MyMenuId",$menuId."_add");
 		$this->Edit($dbmgr,$smarty,$request["id"]+0);
+	  }else if($action=="view"){
+		$this->XmlData["nosave"]="1";
+		$this->XmlData["nolist"]="1";
+		
+		$fields=$this->XmlData["fields"]["field"];    
+		for($i=0;$i<count($this->XmlData["fields"]["field"]);$i++){
+			$this->XmlData["fields"]["field"][$i]["disableindetail"]="1";
+		}
+		$smarty->assign("viewonly","Y");
+		$this->Edit($dbmgr,$smarty,$request["id"]+0);
 	  }else if($action=="save"){
 		  
 		$request=$this->beforeSaveDataFix($request);

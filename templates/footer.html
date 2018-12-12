@@ -20,6 +20,24 @@
 </div>
 
 
+
+<div id="info_box" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog_boxtitle" aria-hidden="true" >
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="dialog_boxtitle" class="modal-title">数据详情</h4>
+            </div>
+            <div class="modal-body">
+                <iframe src="" id="infoboxurl" style="width:100%;height:500px;" border="0"  frameborder="no" ></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="dialog_password" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog_passwordtitle" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -185,6 +203,11 @@
         $("#dialog_boxmsg").html(msg);
         $("#dialog_box").modal('show');
     }
+	
+	function InfoDataShow(url){
+		$("#info_box #infoboxurl").attr("src",url);
+        $("#info_box").modal('show');
+	}
 
     function displayMutilLangPop(name, key) {
         $("#dialog_boxtitle").text(name);

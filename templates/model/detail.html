@@ -2,7 +2,7 @@
 
                 <!-- content -->
                 <div class="col-md-12" id="detailBody">
-                    <div class="row" id="detailHeader">
+                    <div class="row  {{if $viewonly=='Y'}}hide{{/if}}" id="detailHeader">
                         <div class="col-lg-12">
                             <div class="page-header bootstrap-admin-content-title">
                                 <h1 id="detailTitle">{{$ModelData.name}} - {{if $action=="add"}}{{$SysLang.model.add}}{{else}}{{$SysLang.model.edit}}{{/if}}</h1>                                
@@ -27,10 +27,7 @@
                     <div class="row" id="detailContent">
                         <div class="col-md-12">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="text-muted bootstrap-admin-box-title">{{$SysLang.model.contentedit}}</div>
-                                </div>
-                                <div class="bootstrap-admin-panel-content">
+                                <div class="bootstrap-admin-panel-content" style="padding-top:30px;">
                                     <div class="row form-horizontal" id="fieldContent">
                                         {{foreach from=$ModelData.fields.field item=rs}}                                        
                                         {{if $rs.type=="text"  }}
@@ -160,8 +157,10 @@
                                                     <option {{if $rs.value==$rsoption.id}}selected{{/if}} value="{{$rsoption.id}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
+												<a id="view_{{$rs.key}}" href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$rs.viewmodel}}?action=view&id={{$rs.value}}')" class='{{if $rs.showview!="1"}}hide{{/if}}' >查看详情</a>
 												<span class='help-block'></span>
                                             </div>
+											
                                         </div>                                              
                                         {{elseif $rs.type=="flist"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
