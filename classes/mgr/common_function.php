@@ -188,12 +188,13 @@ function doEmojiArray($result){
 	return $result;
 }
 
-function outputJson($result){
+function outputJson($result,$emoji=true){
 	Global $CONFIG;
 
 	logger_mgr::logInfo($_SERVER["REQUEST_URI"]." output:".json_encode($result));
-	
-	$result=doEmojiArray($result);
+	if($emoji==true){
+		$result=doEmojiArray($result);
+	}
 	
 	$str=json_encode($result);
 	if($CONFIG['solution_configuration']!="release"&&MODULE=="api"){
@@ -390,6 +391,10 @@ function request_post($url,$postdata) {
 	  Global $CONFIG;
 	  $sessionname=$CONFIG["SessionName"];
 	  return $_SESSION[$sessionname][$key];
+  }
+  function getCMSUser(){
+	  
+	  return getCMSSession("SysUser");
   }
   function setCMSSession($key,$val){
 	  

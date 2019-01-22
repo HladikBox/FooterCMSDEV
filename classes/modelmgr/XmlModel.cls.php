@@ -337,9 +337,16 @@ class XmlModel
 		$sql=$sql." and r_main.updated_date > '$lastupdatecalltime' ";
 	}
 
+	$groupby=parameter_filter($request["groupby"]);
+	if($groupby!=""){
+		$groupby=" group by $groupby";	
+	}
+	
 
 	$orderby=parameter_filter($request["orderby"]);
 	if($orderby==""){
+		//echo "a";
+		//exit();
 		$orderby="r_main.updated_date desc";	
 	}
 	$limit=parameter_filter($request["limit"]);
@@ -347,13 +354,13 @@ class XmlModel
 		$limit=" limit $limit 0,65535";
 	}else{
 		if($limit!=""){
-			$limit=" limit $limit";
+			$limit=" $groupby limit $limit";
 		}
 	}
 	  
-	$sql=$sql." order by $orderby  
+	 $sql=$sql." $groupby order by $orderby  
 	$limit ";
-
+	//die();
 	  
 	return $sql;
   }
@@ -410,7 +417,6 @@ class XmlModel
     $smartyMgr->assign("ModelData",$this->XmlData);
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("result",$result);
-    $smartyMgr->display(ROOT.'/templates/model/result.html');
 
   }
 
@@ -541,7 +547,7 @@ class XmlModel
   public function Edit($dbMgr,$smartyMgr,$id){
   	$id=$this->fixEditId($id);
 	
-	$sql="select * from ".$this->XmlData["tablename"]." where id=$id";
+	$sql="select * from ".$this->XmlData["tablename"]." r_main where id=$id";
 	$sql=$this->fixEditSql($sql);
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
@@ -911,6 +917,7 @@ class XmlModel
 					$field["display"]=$col;
 				}
 			}
+			$field["value"]=trim($field["value"]);
 			
 			$field["error"]="0";
 			if($field["notnull"]==1&&$field["value"]==""){
@@ -930,6 +937,7 @@ class XmlModel
 					$field["display"]=$field["display"]." 错误值";
 					$field["value"]=$opval;
 				}else{
+					//$field["display"]=$opval;
 					$field["value"]=$opval;
 				}
 			}
@@ -943,13 +951,13 @@ class XmlModel
 				$searchfield=explode(",",$field["displayfield"]);
 				$searchfield=$searchfield[0];
 				
-				$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'".$field["value"]."' ";
+				$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'".trim($field["value"])."' ";
 				
 				$query = $dbMgr->query($sql);
-				$result = $dbMgr->fetch_array($query); 
+				$result = $dbMgr->fetch_array($query);
 				
 				if(($result["id"]+0)==0){
-					$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".$field["value"]."%' ";
+					$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".trim($field["value"])."%' ";
 					$query = $dbMgr->query($sql);
 					$result = $dbMgr->fetch_array($query); 
 				}
@@ -1052,6 +1060,18 @@ class XmlModel
 
 	  }else if($action=="search"){
 		$this->ShowSearchResult($dbmgr,$smarty,$request);
+		$smarty->display(ROOT.'/templates/model/result.html');
+	  }else if($action=="print"){
+		$this->XmlData["nosave"]="1";
+		$this->XmlData["nolist"]="1";
+		
+		$fields=$this->XmlData["fields"]["field"];    
+		for($i=0;$i<count($this->XmlData["fields"]["field"]);$i++){
+			$this->XmlData["fields"]["field"][$i]["displayinlist"]=$this->XmlData["fields"]["field"][$i]["hidden"]=="1"?"0":"1";
+		}
+		$smarty->assign("viewonly","Y");
+		$this->ShowSearchResult($dbmgr,$smarty,$request);
+		$smarty->display(ROOT.'/templates/model/print.html');
 	  }else if($action=="getgrid"){
 
 		$this->ShowGridResult($dbmgr,$smarty,$request,$request["parenturl"]);
