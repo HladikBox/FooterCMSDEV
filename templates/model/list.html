@@ -110,6 +110,19 @@
                         </div>
                     </div>
                     </form>
+					<div class="row hide" id="datasummary">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="text-muted bootstrap-admin-box-title" id="datasummaryHeading">数据统计</div>
+                                </div>
+								<div class="bootstrap-admin-panel-content" >
+									<div class="row form-horizontal" id="datasummaryrow">
+									</div>
+								</div>		
+							</div>
+						</div>
+					</div>
                     <div class="row">
                         <div class="col-md-12">
                             {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
@@ -129,7 +142,6 @@
                             {{/foreach}}
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="panel panel-default">
@@ -165,6 +177,8 @@
 								{{/if}}
 								{{/foreach}}
                                 <div class="bootstrap-admin-panel-content" id="searchTablerContenter">
+									<div class="row">
+									<div class="col-md-12">
                                     <table class="datatable table table-striped table-bordered" id="searchResult" style="width:100%">
                                         <thead>
                                             <tr>
@@ -180,6 +194,8 @@
                                            
                                         </tbody>
                                     </table>
+									</div>
+									</div>
                                 </div>
                             </div>
                         </div>
@@ -226,10 +242,75 @@
         </div>
     </div>
 </div>
-
-
+<script>
+var needlistopennew=false;
+            function resultload() {
+			
+                {{foreach from=$ModelData.fields.field item=rs}}
+                {{if $rs.type=="flist"}}
+                $(".result_{{$rs.key}}").each(function () {
+                    var str = $(this).text();
+                    var arr = str.split(",");
+                    var nstr = "";
+                    var isFirst = true;
+                    for (var i = 0; i < arr.length; i++) {
+                        if ($.trim(arr[i]) !="" ) {
+                            if (isFirst == false) {
+                                nstr = nstr + ",";
+                            }
+                            var id=Number(arr[i]);
+                            isFirst = false;
+                            nstr = nstr + flistarr{{$rs.key}}[id];
+                        }
+                    }
+                    $(this).text(nstr);
+                });
+                {{/if}}
+                {{/foreach}}
+				
+				$("#result_selectall").change(function(){
+					var val=$("#result_selectall").prop("checked");
+					console.log(val);
+					$(".result_id").prop("checked",val);
+				});
+            }
+			function listopennew(url){
+				if(needlistopennew==true){
+					window.open(url);
+				}else{
+					window.href.location=url;
+				}
+			}
+</script>
+<style>
+.rstr td{
+	max-width:200px;
+}
+.nmth th{
+	max-width:200px;
+}
+{{foreach from=$ModelData.fields.field item=rs}}
+	{{if $rs.type=='select'}}
+		{{foreach from=$rs.options.option item=option}}
+			{{if $option.color!=""}}
+			.{{$rs.key}}_{{$option.value}}{
+				background:{{$option.color}};
+				color:white;
+				padding:3px 6px 3px 6px;
+				border-radius:3px;
+				white-space: nowrap;
+			}
+			{{/if}}
+		{{/foreach}}
+	{{/if}}
+{{/foreach}}
+</style>
+<script>
+var notusedatatable=false;
+</script>
 <script type="text/javascript" src="/js/myjs.js"></script>
 <script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
+<link rel="stylesheet" type="text/css" href="{{$userpath}}myjs/{{$ModelData.model}}.css"></link>
 <script>
     var ds=null;
 	var oldwidth=0;
@@ -246,10 +327,12 @@
         self.location='{{$PageName}}?action=add';
     }
 	function search(){
-	
-			$("#searchResult_wrapper").remove();
-			$("#searchTablerContenter").append($('<table class="datatable table table-striped table-bordered" id="searchResult" style="width:100%"></table>'));
-            $("#btnSearch").prop("disabled","disabled");
+			
+			if(notusedatatable!=true){
+				$("#searchResult_wrapper").remove();
+				$("#searchTablerContenter").append($('<table class="datatable table table-striped table-bordered" id="searchResult" style="width:100%"></table>'));
+            }
+			$("#btnSearch").prop("disabled","disabled");
             var json={
                 "action":"search"
                 {{foreach from=$ModelData.fields.field item=rs}}
@@ -269,11 +352,13 @@
 				 console.log(JSON.stringify(json));
 
         $("#searchResult").load("{{$PageName}}",json,function(data){
-
+			resultload();
             myjs_afterResultLoad();
             
             $("#btnSearch").prop("disabled","");
             loadCharts();
+			//alert(notusedatatable);
+			if(notusedatatable!=true){
 			$('#searchResult').DataTable({
 						"bRetrieve": true,
 	                    "oLanguage": dataOlanguage,
@@ -281,6 +366,8 @@
 					"iDisplayLength" : 500 ,
 					bSort:true,
 					aaSorting:[]});
+			}
+			
         });
 	}
 
@@ -403,148 +490,239 @@
 			title="{{$rs.name}}";
             subtitle = "{{$rs.description}}";
             var seriesdata = new Array();
-			{{if $rs.type=="timeline"}}
-			var xAxisName=$(".resulttitle_{{$rs.datetimefield}}").first().text();
-            var yAxisName = $(".resulttitle_{{$rs.numberfield}}").first().text();
-            var min = 0;
-			{{if $rs.statusfield==""}}
-            $(".rstr").each(function () {
-                var series = null;
-                if (seriesdata.length > 0) {
-                    series = seriesdata[0];
-                } else {
-                    series = { name: xAxisName, data: [], datetimename: xAxisName, numbername: yAxisName };
-                }
-                var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
-                var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
-                if (nb < min) {
-                    min = nb;
-                }
-                console.log(dt);
-                console.log(nb);
-                var dcourse = -1;
-                for (var i = 0; i < series.data.length; i++) {
-                    var dtt = series.data[i];
-                    if (dtt[0] == dt) {
-                        dcourse = i;
-                        break;
-                    }
-                }
-                if (dcourse == -1) {
-                    series.data.push([dt, nb,1]);
-                } else {
-                    var dtt = series.data[i];
-                    dtt[1] = dtt[1] + nb;
-                    dtt[2] = dtt[2] + 1;
-                    series.data[i] = dtt;
-                }
-                seriesdata[0] = series;
-            });
-			{{else}}
-            $(".rstr").each(function () {
-                var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
-                var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
-                if (nb < min) {
-                    min = nb;
-                }
-                var sv = $(this).find(".result_{{$rs.statusfield}}").attr("sval");
-                var svn = $(this).find(".result_{{$rs.statusfield}}").text();
-                var series = null;
-                var sindex = -1;
-                for (var i = 0; i < seriesdata.length; i++) {
-                    if (seriesdata[i].val == sv) {
-                        sindex = i;
-                        break;;
-                    }
-                }
-                if (sindex == -1) {
-                    series = { name: svn, data: [], val: sv, datetimename: xAxisName, numbername: yAxisName };
-                    seriesdata.push(series);
-                    sindex = seriesdata.length - 1;
-                } else {
-                    series = seriesdata[sindex];
-				}
-				console.log(dt);
-				console.log(nb);
-				var dcourse=-1;
-				for(var i=0;i<series.data.length;i++){
-					var dtt=series.data[i];
-					if(dtt[0]==dt){
-						dcourse=i;
-						break;
+			{{if $rs.type=="timeline" || $rs.type=="timecolumn"}}
+				var onlydate='0';
+				{{foreach from=$ModelData.fields.field item=prs}}
+					{{if $prs.key==$rs.datetimefield}}
+					onlydate='{{$prs.onlydate}}';
+					{{/if}}
+				{{/foreach}}
+				//alert(onlydate);
+				var xAxisName=$(".resulttitle_{{$rs.datetimefield}}").first().text();
+				var yAxisName = $(".resulttitle_{{$rs.numberfield}}").first().text();
+				var min = 0;
+				{{if $rs.statusfield==""}}
+				$(".rstr").each(function () {
+					var series = null;
+					if (seriesdata.length > 0) {
+						series = seriesdata[0];
+					} else {
+						series = { name: xAxisName, data: [], datetimename: xAxisName, numbername: yAxisName };
 					}
-				}
-				if(dcourse==-1){
-					series.data.push([dt,nb,1]);
-				}else{
-					var dtt=series.data[i];
-                    dtt[1] = dtt[1] + nb;
-                    dtt[2] = dtt[2] + 1;
-					series.data[i]=dtt;
-				}
-                seriesdata[sindex]=series;
-			});
-			{{/if}}
-                for (var i = 0; i < seriesdata.length; i++) {
-                    var series = seriesdata[i];
-                    var data = series.data;
-                    data.sort(function (a, b) {
-                        return a[0] > b[0];
-                    });
-                    series.data = data;
-                    seriesdata[i] = series;
-                }
+					var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
+					var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+					if (nb < min) {
+						min = nb;
+					}
+					console.log(dt);
+					console.log(nb);
+					var dcourse = -1;
+					for (var i = 0; i < series.data.length; i++) {
+						var dtt = series.data[i];
+						if (dtt[0] == dt) {
+							dcourse = i;
+							break;
+						}
+					}
+					if (dcourse == -1) {
+						series.data.push([dt, nb,1]);
+					} else {
+						var dtt = series.data[i];
+						dtt[1] = dtt[1] + nb;
+						dtt[2] = dtt[2] + 1;
+						series.data[i] = dtt;
+					}
+					seriesdata[0] = series;
+				});
+				{{else}}
+				$(".rstr").each(function () {
+					var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
+					var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+					if (nb < min) {
+						min = nb;
+					}
+					var sv = $(this).find(".result_{{$rs.statusfield}}").attr("sval");
+					var svn = $(this).find(".result_{{$rs.statusfield}}").text();
+					var series = null;
+					var sindex = -1;
+					for (var i = 0; i < seriesdata.length; i++) {
+						if (seriesdata[i].val == sv) {
+							sindex = i;
+							break;;
+						}
+					}
+					if (sindex == -1) {
+						series = { name: svn, data: [], val: sv, datetimename: xAxisName, numbername: yAxisName };
+						seriesdata.push(series);
+						sindex = seriesdata.length - 1;
+					} else {
+						series = seriesdata[sindex];
+					}
+					console.log(dt);
+					console.log(nb);
+					var dcourse=-1;
+					for(var i=0;i<series.data.length;i++){
+						var dtt=series.data[i];
+						if(dtt[0]==dt){
+							dcourse=i;
+							break;
+						}
+					}
+					if(dcourse==-1){
+						series.data.push([dt,nb,1]);
+					}else{
+						var dtt=series.data[i];
+						dtt[1] = dtt[1] + nb;
+						dtt[2] = dtt[2] + 1;
+						series.data[i]=dtt;
+					}
+					seriesdata[sindex]=series;
+				});
+				{{/if}}
+					for (var i = 0; i < seriesdata.length; i++) {
+						var series = seriesdata[i];
+						var data = series.data;
+						data.sort(function (a, b) {
+							return a[0] > b[0];
+						});
+						series.data = data;
+						seriesdata[i] = series;
+					}
+					var type="spline";
+					{{if $rs.type=="timecolumn"}}
+						type="column";
+						//alert(type);
+					{{/if}}
+					$('#chart{{$chartindex}}').highcharts({
+					chart: {
+						type: type
+					},
+					title: {
+						text: title
+					},
+					subtitle: {
+						text: subtitle
+					},
+					tooltip: {
+						headerFormat: '<b>{series.name}</b><br>',
+						pointFormat: onlydate=='1'?'{point.x:%Y-%m-%d}: {point.y} ':'{point.x:%Y-%m-%d %H:%M}: {point.y} '
+					},
+					xAxis: {
+						type: 'datetime',
+						title: {
+							text: xAxisName
+						},
+						labels: {
+							formatter:function(){
+								var datetime=new Date(this.value);
+								var year=datetime.getFullYear().toString();
+								var month=datetime.getMonth()+1;
+								month=month>9?month.toString():"0"+month.toString();
+								var date=datetime.getDate();
+								date=date>9?date.toString():"0"+date.toString();
+								
+								var hour=datetime.getHours();
+								hour=hour>9?hour.toString():"0"+hour.toString();
+								var second=datetime.getSeconds();
+								second=second>9?second.toString():"0"+second.toString();
+								var minute=datetime.getMinutes();
+								minute=minute>9?minute.toString():"0"+minute.toString();
+								var d="";
+								if(onlydate=='1'){
+									d=year+"-"+month+"-"+date;
+								}else{
+									d=year+"-"+month+"-"+date+" "+hour+":"+minute;
+								}
+								return d;
+							}
+						}
+					},
+					yAxis: {
+						title: {
+							text: yAxisName
+						},
+						min: min
+					},
+					series: seriesdata
+				});
+					var strs = "";
+					for (var i = 0; i < seriesdata.length; i++) {
+						var series = seriesdata[i];
+						var data = series.data;
+						var total = 0;
+						var totalrecord = 0;
+						strs += "<div class='col-md-12'><h3>" + series.name + "</h3>";
+						strs += "<table class='table table-condensed'>";
+						strs += "<tr><th>" + series.datetimename + "</th><th>数据条数</th><th>" + series.numbername + "</th></tr>";
+						for (var j = 0; j < data.length; j++) {
+							var utctime = new Date(data[j][0]);
+							strs += "<tr><td>" + utctime.format() + "</td><td>"+ data[j][2] +"</td><td>" + data[j][1] + "</td></tr>";
+							total += data[j][1];
+							totalrecord += data[j][2];
+						}
+						strs += "<tr><th style='text-align:right'>总计：</th><th>" + totalrecord + "</th><th>" + total + "</th></tr>";
+						
+						strs += "</table></div>";
+					}
+					$('#chart{{$chartindex}}_tables').empty().append(strs);
+			{{elseif $rs.type=="column"}}
 			
-                $('#chart{{$chartindex}}').highcharts({
-                chart: {
-                    type: 'line'
-                },
-                title: {
-                    text: title
-                },
-                subtitle: {
-                    text: subtitle
-                },
-                xAxis: {
-                    type: 'datetime',
-                    dateTimeLabelFormats: { // don't display the dummy year
-                        month: '%m-%d',
-                        year: '%Y'
-                    },
-                    title: {
-                        text: xAxisName
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: yAxisName
-                    },
-                    min: min
-                },
-                series: seriesdata
-            });
-                var strs = "";
-                for (var i = 0; i < seriesdata.length; i++) {
-                    var series = seriesdata[i];
-                    var data = series.data;
-                    var total = 0;
-                    var totalrecord = 0;
-                    strs += "<div class='col-md-12'><h3>" + series.name + "</h3>";
-                    strs += "<table class='table table-condensed'>";
-                    strs += "<tr><th>" + series.datetimename + "</th><th>数据条数</th><th>" + series.numbername + "</th></tr>";
-                    for (var j = 0; j < data.length; j++) {
-                        var utctime = new Date(data[j][0]);
-                        strs += "<tr><td>" + utctime.format() + "</td><td>"+ data[j][2] +"</td><td>" + data[j][1] + "</td></tr>";
-                        total += data[j][1];
-                        totalrecord += data[j][2];
-                    }
-                    strs += "<tr><th style='text-align:right'>总计：</th><th>" + totalrecord + "</th><th>" + total + "</th></tr>";
-                    
-                    strs += "</table></div>";
-                }
-                $('#chart{{$chartindex}}_tables').empty().append(strs);
-
+				var xAxisName=$(".resulttitle_{{$rs.field}}").first().text();
+				var yAxisName = $(".resulttitle_{{$rs.numberfield}}").first().text();
+				
+			$(".rstr").each(function () {
+					var series = null;
+					if (seriesdata.length > 0) {
+						series = seriesdata[0];
+					} else {
+						series = { name: xAxisName, data: [], datetimename: xAxisName, numbername: yAxisName };
+					}
+					var dt = ($(this).find(".result_{{$rs.field}}").text());
+					var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+					if (nb < min) {
+						min = nb;
+					}
+					console.log(dt);
+					console.log(nb);
+					series.data.push([dt, nb]);
+					seriesdata[0] = series;
+				});
+				console.log(seriesdata);
+			
+				var min = 0;
+			$('#chart{{$chartindex}}').highcharts({
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: title
+				},
+				subtitle: {
+					text: subtitle
+				},
+				xAxis: {
+					type: 'category',
+					labels: {
+						rotation: -45  // 设置轴标签旋转角度
+					},
+						title: {
+							text: xAxisName
+						}
+				},
+				yAxis: {
+					min: min,
+					title: {
+						text: yAxisName
+					}
+				},
+				legend: {
+					enabled: false
+				},
+				series: seriesdata
+			});
+			
 			{{/if}}
+			
 			{{/foreach}}
         }
    function stringToDate(fDate){  

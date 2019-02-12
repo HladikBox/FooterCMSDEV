@@ -1,5 +1,5 @@
 {{include  file="$smarty_root/$CmsStyle/header.html" }}
-
+<script src="{{$rootpath}}vendors/highcharts/highcharts.js"></script>
                 <!-- content -->
                 <div class="col-md-12" id="detailBody">
                     <div class="row  {{if $viewonly=='Y'}}hide{{/if}}" id="detailHeader">
@@ -14,7 +14,7 @@
                                         <button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
                                     </a>
                                         {{elseif $rs.type=="function"}}
-                                    <a href="javascript:{{$rs.function}}" class="action">
+                                    <a href="javascript:{{$rs.function}}" class="action btnfunc{{$rs.name}} " >
                                         <button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
                                     </a>
                                         {{/if}}                                 
@@ -91,7 +91,7 @@
                                                 <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{$rs.minvalue+0}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'></span>
                                             </div>
-											<div class="col-md-2">{{$rs.unit}}</div>
+											<div class="col-md-2" style="margin-top:10px;">{{$rs.unit}}</div>
                                         </div>                                            
                                         {{elseif $rs.type=="check"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
@@ -223,10 +223,11 @@
                     </div>
                 </div>
 
+<link rel="stylesheet" type="text/css" href="{{$userpath}}myjs/{{$ModelData.model}}.css?now={{$now}}" />
 <script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
 <script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
 <script>
-
+CKEDITOR.env.isCompatible = true;
     {{foreach from=$FListArr item=rs}}
     flistarr{{$rs.key}} = new Array();
     {{foreach from=$rs.value item=rsvalue}}

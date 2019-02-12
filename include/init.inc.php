@@ -1,6 +1,14 @@
 <?php
 if(MODULE=="myjs"){
 	if(file_exists(USER_ROOT."js/".MODEL)){
+		$ext=explode(".",MODEL);
+		$ext=$ext[1];
+		if($ext=="js"){
+			header('Content-type: text/javascript');
+		}
+		if($ext=="css"){
+			header('Content-type: text/css');
+		}
 		$content = @file_get_contents(USER_ROOT."js/".MODEL);
 		echo $content;
 		exit;
@@ -93,6 +101,8 @@ for($i=0;$i<count($MenuArray["mainmenus"]["mainmenu"]);$i++){
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["name"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["name"];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["nolist"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["nolist"];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["nosave"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["nosave"];
+        $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["noaddnew"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["noaddnew"];
+        $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["canselectall"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]]["canselectall"];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["ndh"]=$modellist[$MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["model"]];
         $MenuArray["mainmenus"]["mainmenu"][$i]["submenus"]["submenu"][$j]["right"]=1;
     }

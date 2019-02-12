@@ -124,7 +124,7 @@
 									<li {{if $sub.model|cat:"_list"==$MyMenuId}} class="active" {{/if}}>
 										<a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}"> {{$sub.name}}</a>
 									</li>
-									{{if $sub.nosave!="1"}}
+									{{if $sub.nosave!="1"&&$sub.noaddnew!="1"}}
 									<li {{if $sub.model|cat:"_add"==$MyMenuId}} class="active" {{/if}}>
 										<a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}?action=add">{{$sub.name}}{{$SysLang.model.add}}</a>
 									</li>
