@@ -2,17 +2,17 @@
 require ROOT.'/libs/PHPExcel/Classes/PHPExcel.php';
 class ExcelMgr
 {
-	private $objPHPExcel;
+	public $objPHPExcel;
 	public function __construct()
 	{
 		$this->objPHPExcel = new PHPExcel();
-		$this->objPHPExcel->getProperties()->setCreator("Helpfooter")
-							 ->setLastModifiedBy("Helpfooter")
-							 ->setTitle("数据导入模板")
-							 ->setSubject("数据导入模板")
-							 ->setDescription("数据导入模板")
-							 ->setKeywords("数据导入模板")
-							 ->setCategory("数据导入模板");
+		//$this->objPHPExcel->getProperties()->setCreator("Helpfooter")
+		//					 ->setLastModifiedBy("Helpfooter")
+		//					 ->setTitle("数据导入模板")
+		//					 ->setSubject("数据导入模板")
+		//					 ->setDescription("数据导入模板")
+		//					 ->setKeywords("数据导入模板")
+		//					 ->setCategory("数据导入模板");
 
 	}
 

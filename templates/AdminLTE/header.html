@@ -30,7 +30,7 @@
 
     {{include  file="$smarty_root/header.inc.html" }}
 </head>
-<body class="hold-transition skin-green-light sidebar-mini hide fixed">
+<body class="hold-transition skin-blue sidebar-mini hide fixed">
     <!-- Site wrapper -->
     <div class="wrapper">
 
@@ -90,11 +90,11 @@
 			<li class="treeview {{if "admin"==$MyModule}}active{{/if}}"">
 			  <a href="#">
 				<i class="fa fa-files-o"></i>
-				<span>{{$SysLang.common.systemmanage}}</span>
+				<span>总览</span>
 			  </a>
 			  <ul class="treeview-menu">
-				<li><a href="{{$userpath}}Admin/dashboard"><i class="fa fa-circle-o"></i> {{$SysLang.common.dashboard}}</a></li>
-				<li><a href="{{$userpath}}Admin/about"><i class="fa fa-circle-o"></i> {{$SysLang.common.aboutus}}</a></li>
+				<li><a href="{{$userpath}}Admin/dashboard"><i class="fa fa-circle-o"></i> 总览</a></li>
+				<!--<li><a href="{{$userpath}}Admin/about"><i class="fa fa-circle-o"></i> {{$SysLang.common.aboutus}}</a></li>-->
 				{{if $SysUser.is_admin=="Y"}}
 				<li><a href="{{$userpath}}Admin/User"><i class="fa fa-circle-o"></i> {{$SysLang.common.user}}</a></li>
 				<li><a href="{{$userpath}}Admin/User?action=add"><i class="fa fa-circle-o"></i> {{$SysLang.common.user}}{{$SysLang.model.add}}</a></li>

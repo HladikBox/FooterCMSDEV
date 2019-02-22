@@ -402,4 +402,16 @@ function request_post($url,$postdata) {
 	  $sessionname=$CONFIG["SessionName"];
 	  $_SESSION[$sessionname][$key]=$val;
   }
+  
+  function downloadFile($url){
+    $d="ymdhis";
+	$f=explode(".",$url);
+	$f=$f[count($f)-1];
+    $filename=USER_ROOT.'logs/'.md5($url).".".$f;
+    if(!file_exists($filename)){
+        $image = file_get_contents($url); 
+        file_put_contents($filename, $image);
+    }
+    return $filename;
+}
 ?>

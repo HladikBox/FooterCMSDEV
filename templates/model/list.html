@@ -1,5 +1,15 @@
 {{include  file="$smarty_root/$CmsStyle/header.html" }}
-
+<style>
+.checkboxl,.dt{
+	width:40px;
+}
+.th_select,.th_number,.th_upload,.th_url.th_datetime{
+	width:50px;
+}
+.nmth th{
+	white-space:nowrap;
+}
+</style>
                 <!-- content -->
                 <div class="col-md-12">
 
@@ -22,15 +32,32 @@
                             </div>
                         </div>
                     </div>
+					<div class="row hide" id="datasummary">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="text-muted bootstrap-admin-box-title" id="datasummaryHeading">数据统计</div>
+                                </div>
+								<div class="bootstrap-admin-panel-content" >
+									<div class="row form-horizontal" id="datasummaryrow">
+									</div>
+								</div>		
+							</div>
+						</div>
+					</div>
 					<form >
 					<input name="action" value="print" type="hidden" />
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="text-muted bootstrap-admin-box-title">{{$SysLang.model.condition}}</div>
+                            <div class="box box-default collapsed-box box-solid">
+                                <div class="box-header with-border">
+                                    <div class="box-title">{{$SysLang.model.condition}}</div>
+									<div class="box-tools pull-right">
+										<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+										</button>
+									  </div>
                                 </div>
-                                <div class="bootstrap-admin-panel-content">
+                                <div class="box-body">
                                     <div class="row form-horizontal">
                                         {{foreach from=$ModelData.fields.field item=rs}}
                                         {{if $rs.search=="1"}}
@@ -110,19 +137,6 @@
                         </div>
                     </div>
                     </form>
-					<div class="row hide" id="datasummary">
-                        <div class="col-lg-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="text-muted bootstrap-admin-box-title" id="datasummaryHeading">数据统计</div>
-                                </div>
-								<div class="bootstrap-admin-panel-content" >
-									<div class="row form-horizontal" id="datasummaryrow">
-									</div>
-								</div>		
-							</div>
-						</div>
-					</div>
                     <div class="row">
                         <div class="col-md-12">
                             {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
@@ -322,7 +336,6 @@ var notusedatatable=false;
     flistarr{{$rs.key}}[{{$rsvalue.id}}] = "{{$rsvalue.name}}";
     {{/foreach}}
     {{/foreach}}
-
     function addNew(){
         self.location='{{$PageName}}?action=add';
     }
@@ -350,7 +363,6 @@ var notusedatatable=false;
                 };
                  json= myjs_searchClick(json);
 				 console.log(JSON.stringify(json));
-
         $("#searchResult").load("{{$PageName}}",json,function(data){
 			resultload();
             myjs_afterResultLoad();
@@ -365,19 +377,18 @@ var notusedatatable=false;
 					"aLengthMenu" : [100, 500, 1000],   
 					"iDisplayLength" : 500 ,
 					bSort:true,
+					responsive: true,
 					aaSorting:[]});
 			}
 			
         });
 	}
-
     function btnDeleteInList(){
        
         var isGo=deleteValidate();
         if(isGo==false){
             return;
         }
-
         confirmDialog("{{$SysLang.common.notice}}",deleteTips,function(){
                 var idlist="0";
                 $("#searchResult input:checkbox:checked.RowSelect").each(function(){
@@ -389,7 +400,6 @@ var notusedatatable=false;
                         if(myjs_afterdelete(data)==false){
                             return;
                         }
-
                         if(data=="success")
                         {
                             $("#btnSearch").click();
@@ -405,7 +415,6 @@ var notusedatatable=false;
     }
     function deleteValidate(){
         var message="";
-
         var idlist="0";
         $("#searchResult input:checkbox:checked.RowSelect").each(function(){
             idlist+=","+$(this).val();
@@ -414,16 +423,12 @@ var notusedatatable=false;
             message+="<p>{{$SysLang.model.atleastselectone}}</p>";
         }
         message+myjs_delevalidate();
-
         if(message!=""){
             //infoDialog(message);
             warningDialog(message);
             return false;
         }
-
-
         return true;
-
     }
 	function showTableModel(dataurl,title){
 		$("#listGridTable").html();
@@ -442,7 +447,6 @@ var notusedatatable=false;
 			    "fileElementId": "file_" + key,
 			    "dataType": 'text',
 			    "success": function (data, status) {
-
 			        $("#import_boxmsg").html(data);
 			        myjs_afterimportdataload();
 			        $("#import_boxBtnConfirm").click(function () {
@@ -469,7 +473,6 @@ var notusedatatable=false;
 						
 						});
                     });
-
 			        });
                     
 			        $("#import_box").modal("show");
@@ -480,7 +483,6 @@ var notusedatatable=false;
 			}
 		);
     }
-
         function loadCharts()
         {
 			var title="";
@@ -748,10 +750,7 @@ var notusedatatable=false;
 			window.print();
 		});
     });
-
 </script>
 
  {{include  file="$smarty_root/footer.html" }}
 
-
-<script src="{{$rootpath}}vendors/highcharts/highcharts.js"></script>
