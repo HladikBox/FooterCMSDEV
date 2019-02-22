@@ -32,14 +32,14 @@
                             </div>
                         </div>
                     </div>
-					<div class="row hide" id="datasummary">
+					<div class="row hide" id="datasummaryHeader">
                         <div class="col-lg-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <div class="text-muted bootstrap-admin-box-title" id="datasummaryHeading">数据统计</div>
+                                    <div class="text-muted bootstrap-admin-box-title" id="datasummaryHeadingHeader">数据统计</div>
                                 </div>
 								<div class="bootstrap-admin-panel-content" >
-									<div class="row form-horizontal" id="datasummaryrow">
+									<div class="row form-horizontal" id="datasummaryrowHeader">
 									</div>
 								</div>		
 							</div>
@@ -137,6 +137,19 @@
                         </div>
                     </div>
                     </form>
+					<div class="row hide" id="datasummary">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="text-muted bootstrap-admin-box-title" id="datasummaryHeading">数据统计</div>
+                                </div>
+								<div class="bootstrap-admin-panel-content" >
+									<div class="row form-horizontal" id="datasummaryrow">
+									</div>
+								</div>		
+							</div>
+						</div>
+					</div>
                     <div class="row">
                         <div class="col-md-12">
                             {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
@@ -292,7 +305,7 @@ var needlistopennew=false;
 				if(needlistopennew==true){
 					window.open(url);
 				}else{
-					window.href.location=url;
+					window.location.href.=url;
 				}
 			}
 </script>
@@ -372,6 +385,7 @@ var notusedatatable=false;
 			//alert(notusedatatable);
 			if(notusedatatable!=true){
 			$('#searchResult').DataTable({
+			"searching":false,
 						"bRetrieve": true,
 	                    "oLanguage": dataOlanguage,
 					"aLengthMenu" : [100, 500, 1000],   
