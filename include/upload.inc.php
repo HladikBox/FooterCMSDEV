@@ -14,6 +14,11 @@
 	//exit;
  }
  $filename=md5($file["name"])."_".date('ymdHIs').".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
+ $refilename=$_REQUEST["refilename"];
+ if($refilename!=""){
+	 $filename=$refilename;
+ }
+ //echo $filename;
  if($CONFIG['fileupload']['oss']==true){
 	$type=$CONFIG['fileupload']['type'];
 	if($type==""){

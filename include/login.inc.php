@@ -58,5 +58,22 @@
         WindowRedirect(USER_PATH);
 
 
+      }elseif(MODULE=="downloadlogo"){
+			$filename=$_REQUEST["filename"];
+			if($filename==""){
+				exit;
+			}
+			
+			$logofile=$CONFIG['fileupload']['upload_path']."/".USER_PATH2."logo/".$filename;
+			$filepath=downloadFile($logofile);
+			$size=filesize($filepath);
+			if($size>0){
+				 $dd=USER_ROOT."js/CMSGlobalLogo.png";
+				unlink($dd);
+				copy($filepath,$dd);
+				outputJSON(outResult(0,"SUCCESS"));
+			}
+			
+			exit;
       }
 ?>

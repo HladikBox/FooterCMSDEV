@@ -1,10 +1,34 @@
 {{include  file="$smarty_root/$CmsStyle/header.html" }}
+<style>
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: white;
+    opacity: 1;
+	cursor: not-allowed; 
+	border:0px;
+}
+.selectize-control .selectize-input.disabled{
+
+    opacity: 1;
+}
+.selectize-input.disabled, .selectize-input.disabled * {
+    opacity: 1;
+	cursor: not-allowed; 
+	border:0px;
+}
+.selectize-control.single .selectize-input.disabled:after {
+	border-color:transparent  !important;
+}
+.selectize-input.disabled input, .selectize-input.disabled * {
+	cursor: not-allowed; 
+	color:#000000;
+}
+</style>
                 <!-- content -->
                 <div class="col-md-12" id="detailBody">
                     <div class="row  {{if $viewonly=='Y'}}hide{{/if}}" id="detailHeader">
                         <div class="col-lg-12">
                             <div class="page-header bootstrap-admin-content-title">
-                                <h1 id="detailTitle">{{$ModelData.name}} - {{if $action=="add"}}{{$SysLang.model.add}}{{else}}{{$SysLang.model.edit}}{{/if}}</h1>                                
+                                <h1 id="detailTitle">{{$ModelData.name}} - {{if $action=="add"}}{{$SysLang.model.add}}{{else}}{{/if}}</h1>                                
                                 
                                 {{foreach from=$ModelData.options.option item=rs}}                                
                                     {{if $rs.detail=="1"}}
@@ -31,22 +55,22 @@
                                         {{foreach from=$ModelData.fields.field item=rs}}                                        
                                         {{if $rs.type=="text"  }}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}" {{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 {{if $rs.ismutillang=="1"}}
                                                 {{foreach from=$SysLangConfig.langs.lang item=rslang}}
                                                 <input type="{{if $rslang.code==$SysLangCode}}text{{else}}hidden{{/if}}" {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} class="form-control" value="{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}" id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
                                                 {{/foreach}}
-                                                <button {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
+                                                <button {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
                                                 {{else}}
-                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}readonly="readonly"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
                                                 {{/if}}
 												<span class='help-block'></span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="password"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label">{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <input type="password" class="form-control" value="{{$rs.value}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="必填项" {{/if}} />
 												<span class='help-block'></span>
@@ -54,22 +78,22 @@
                                         </div>                
                                         {{elseif $rs.type=="longtext"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-2 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-10">                                                
                                                 {{if $rs.ismutillang=="1"}}
                                                 {{foreach from=$SysLangConfig.langs.lang item=rslang}}
-                                                <textarea rows="5" {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} class="form-control {{if $rslang.code!=$SysLangCode}}hide{{/if}}"  id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}</textarea>
+                                                <textarea rows="5" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} class="form-control {{if $rslang.code!=$SysLangCode}}hide{{/if}}"  id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}</textarea>
                                                 {{/foreach}}
-                                                <button {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
+                                                <button {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
                                                 {{else}}
-                                                <textarea rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
+                                                <textarea rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
                                                 {{/if}}
 												<span class='help-block'></span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="html"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-2 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-10">
                                                 <textarea id="content_{{$rs.key}}" class="ckeditor">{{$rs.value}}</textarea>
 												<span class='help-block'></span>
@@ -77,7 +101,7 @@
                                         </div>                                            
                                         {{elseif $rs.type=="datetime"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control datepicker" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} id="content_{{$rs.key}}" value="{{if $action=="add"}}{{if $rs.default=='now'}}{{$now}}{{else}}{{$rs.default}}{{/if}}{{else}}{{$rs.value}}{{/if}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'></span>
@@ -85,7 +109,7 @@
                                         </div>                                            
                                         {{elseif $rs.type=="number"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-6">
                                                 <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{$rs.minvalue+0}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'></span>
@@ -94,7 +118,7 @@
                                         </div>                                            
                                         {{elseif $rs.type=="check"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <input id="content_{{$rs.key}}" type="checkbox" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  {{if $rs.value=="Y"||($action=="add"&&$rs.default=="1")}}checked{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
 												<span class='help-block'></span>
@@ -102,9 +126,11 @@
                                         </div>                                                      
                                         {{elseif $rs.type=="upload"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}</label>
                                             <div class="col-md-8">
-                                                <input  {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  class="form-control uniform_on" name="file_{{$rs.key}}" id="file_{{$rs.key}}" onchange="upload('{{$rs.key}}', '{{$rs.uploadmodule}}')" type="file" />
+												{{if ($action!="add" and $rs.disableindetail=="1")==false}}
+                                                <input class="form-control uniform_on" name="file_{{$rs.key}}" id="file_{{$rs.key}}" onchange="upload('{{$rs.key}}', '{{$rs.uploadmodule}}')" type="file" />
+												{{/if}}
                                                 {{if $rs.filetype=="image"}}
                                                 <br />
                                                 <img id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;height:100px;" {{else}}style="height:100px;" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
@@ -128,7 +154,7 @@
                                         </div>                                                             
                                         {{elseif $rs.type=="url"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.defaultvalue}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" onchange="urlChange('{{$rs.key}}')" {{/if}} />
                                                 {{if $rs.filetype=="image"}}
@@ -148,7 +174,7 @@
                                         </div>                                             
                                         {{elseif $rs.type=="fkey"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label">{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control selectize-select">
                                                     <option value="0">--{{$SysLang.model.select}}--</option>
@@ -163,7 +189,7 @@
                                         </div>                                              
                                         {{elseif $rs.type=="flist"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-2 control-label">
+                                            <label class="col-md-2 control-label"  id="title_{{$rs.key}}">
                                             {{$rs.name}}
                                                 <input class="uniform_on multicheckbox flist_all" type="checkbox" ref="flist_{{$rs.key}}" />
                                             </label>
@@ -183,7 +209,7 @@
                                         </div>                            
                                         {{elseif $rs.type=="select"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}</label>
                                             <div class="col-md-8">
                                                 <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control selectize-select">
                                                     <option value="no-value">--{{$SysLang.model.select}}--</option>
@@ -196,9 +222,11 @@
                                         </div>                                           
                                         {{elseif $action!="add" and $rs.type=="grid"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}"  id="block_{{$rs.key}}">
-                                            <label class="col-md-2 control-label">{{$rs.name}}{{$SysLang.model.list}}</label>
+                                            <label class="col-md-2 control-label"  id="title_{{$rs.key}}">{{$rs.name}}{{$SysLang.model.list}}</label>
                                             <div class="col-md-10">
+												{{if ($action!="add" and $rs.disableindetail=="1")==false}}
                                                 <button class="btn btn-primary btnGridAdd" onclick="window.location.href='{{$userpath}}nomodule/{{$rs.model}}?action=add&key={{$rs.modelkey}}&id={{$id}}&parenturl={{$request_url_encode}}';"><i class="glyphicon glyphicon-plus  glyphicon-white"></i> {{$SysLang.model.add}}{{$rs.name}}</button>
+												{{/if}}
                                                 <table class="table table-striped gridResult" id="content_{{$rs.key}}"></table>
                                             </div>
                                         </div>             
