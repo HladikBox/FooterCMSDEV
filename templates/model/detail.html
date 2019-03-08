@@ -52,10 +52,11 @@
                             <div class="panel panel-default">
                                 <div class="bootstrap-admin-panel-content" style="padding-top:30px;">
                                     <div class="row form-horizontal" id="fieldContent">
+									<input type="password" style="position:absolute; top:-999px" />
                                         {{foreach from=$ModelData.fields.field item=rs}}                                        
                                         {{if $rs.type=="text"  }}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}" {{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}" {{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 {{if $rs.ismutillang=="1"}}
                                                 {{foreach from=$SysLangConfig.langs.lang item=rslang}}
@@ -69,8 +70,8 @@
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="password"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <input type="password" class="form-control" value="{{$rs.value}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="必填项" {{/if}} />
 												<span class='help-block'></span>
@@ -78,7 +79,7 @@
                                         </div>                
                                         {{elseif $rs.type=="longtext"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-10">                                                
                                                 {{if $rs.ismutillang=="1"}}
                                                 {{foreach from=$SysLangConfig.langs.lang item=rslang}}
@@ -93,23 +94,23 @@
                                         </div>                                            
                                         {{elseif $rs.type=="html"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-10">
                                                 <textarea id="content_{{$rs.key}}" class="ckeditor">{{$rs.value}}</textarea>
 												<span class='help-block'></span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="datetime"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control datepicker" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} id="content_{{$rs.key}}" value="{{if $action=="add"}}{{if $rs.default=='now'}}{{$now}}{{else}}{{$rs.default}}{{/if}}{{else}}{{$rs.value}}{{/if}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'></span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="number"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-6">
                                                 <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{$rs.minvalue+0}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'></span>
@@ -117,16 +118,16 @@
 											<div class="col-md-2" style="margin-top:10px;">{{$rs.unit}}</div>
                                         </div>                                            
                                         {{elseif $rs.type=="check"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <input id="content_{{$rs.key}}" type="checkbox" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  {{if $rs.value=="Y"||($action=="add"&&$rs.default=="1")}}checked{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
 												<span class='help-block'></span>
                                             </div>
                                         </div>                                                      
                                         {{elseif $rs.type=="upload"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
 												{{if ($action!="add" and $rs.disableindetail=="1")==false}}
                                                 <input class="form-control uniform_on" name="file_{{$rs.key}}" id="file_{{$rs.key}}" onchange="upload('{{$rs.key}}', '{{$rs.uploadmodule}}')" type="file" />
@@ -153,8 +154,8 @@
 											</div>
                                         </div>                                                             
                                         {{elseif $rs.type=="url"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.defaultvalue}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" onchange="urlChange('{{$rs.key}}')" {{/if}} />
                                                 {{if $rs.filetype=="image"}}
@@ -173,8 +174,8 @@
                                             </div>
                                         </div>                                             
                                         {{elseif $rs.type=="fkey"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control selectize-select">
                                                     <option value="0">--{{$SysLang.model.select}}--</option>
@@ -208,8 +209,8 @@
                                             </div>
                                         </div>                            
                                         {{elseif $rs.type=="select"}}
-                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
-                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}</label>
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control selectize-select">
                                                     <option value="no-value">--{{$SysLang.model.select}}--</option>

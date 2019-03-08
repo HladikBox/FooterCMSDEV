@@ -62,18 +62,19 @@
                                 </div>
                                 <div class="box-body">
                                     <div class="row form-horizontal">
+										<input type="password" style="position:absolute; top:-999px" />
                                         {{foreach from=$ModelData.fields.field item=rs}}
                                         {{if $rs.search=="1"}}
                                             {{if $rs.type=="text" || $rs.type=="longtext" || $rs.type=="html"}}
-											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+											<div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" id="condition_{{$rs.key}}" name="{{$rs.key}}">
+                                                <input type="text" class="form-control" id="condition_{{$rs.key}}" name="{{$rs.key}}"  autocomplete="off">
                                             </div>
 											</div>
                                             {{elseif $rs.type=="datetime"}}
-											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+											<div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}" name="{{$rs.key}}_from"></div>
                                                 <div class="col-md-2" style="padding:3px;text-align:center">-</div>
@@ -81,8 +82,8 @@
                                             </div>
 											</div>                                                     
                                             {{elseif $rs.type=="fkey"}}
-											<div class="form-group col-md-6  {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+											<div class="form-group col-md-4  {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <select id="condition_{{$rs.key}}" class="form-control selectize-select"  name="{{$rs.key}}">
                                                     <option value="0">--{{$SysLang.model.select}}--</option>
@@ -93,8 +94,8 @@
                                             </div>
 											</div>                                       
                                             {{elseif $rs.type=="select"   }}
-											<div class="form-group col-md-6 {{if $rs.hidden==1||$rs.listfilter==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+											<div class="form-group col-md-4 {{if $rs.hidden==1||$rs.listfilter==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <select id="condition_{{$rs.key}}" class="form-control" name="{{$rs.key}}">
                                                     <option value="no-value">--{{$SysLang.model.select}}--</option>
@@ -107,8 +108,8 @@
                                             </div>
 											</div>                                       
                                             {{elseif 1==2&&$rs.type=="check" }}
-											<div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}</label>
+											<div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
                                             <div class="col-md-8 ">
                                                 <input id="condition_{{$rs.key}}"  name="{{$rs.key}}" type="checkbox" value="Y" {{if $rs.default=="1"}}checked="checked"{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
                                             </div>
@@ -244,9 +245,14 @@
                 <h4 id="import_boxtitle" class="modal-title">数据导入</h4>
             </div>
             <div class="modal-body">
-                <p id="import_boxmsg"></p>
+                <div id="import_boxmsg" style="height:600px;overflow: auto;"></div>
             </div>
             <div class="modal-footer">
+				<div class="progress">
+					<div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%" id="inprogress">
+					  <span class="sr-only">40% Complete (success)</span>
+					</div>
+				</div>
                 <button type="button" id="import_boxBtnConfirm" class="btn btn-success">导入</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
             </div>
@@ -464,10 +470,28 @@ var notusedatatable=false;
 			    "fileElementId": "file_" + key,
 			    "dataType": 'text',
 			    "success": function (data, status) {
+					
+					$("#file_import").val("");
 			        $("#import_boxmsg").html(data);
 			        myjs_afterimportdataload();
+						$("#inprogress").css("width","0%");
 			        $("#import_boxBtnConfirm").click(function () {
-						
+					//aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+						var totlaimportrow=0;
+						$("#importList tr").each(function () {
+                            if ($(this).find(".RowSelect").prop("checked")==true) {
+							totlaimportrow++;
+							}
+						});
+					
+					
+						$("#inprogress").attr("aria-valuemax",totlaimportrow);
+						$("#inprogress").attr("aria-valuemin",0);
+						$("#inprogress").attr("aria-valuenow",0);
+						$("#inprogress").css("width","0%");
+						var currentimportrow=0;
+						$("#inprogress").attr("aria-valuenow",0);
+						$("#import_boxBtnConfirm").attr("disabled",true);
 						myjs_beforeImport(()=>{
                         $("#importList tr").each(function () {
                             if ($(this).find(".RowSelect").prop("checked")==true) {
@@ -480,8 +504,17 @@ var notusedatatable=false;
                                     };
                             var tcc=$(this);
                             $.post("{{$PageName}}",json,function(data){
+								currentimportrow++;
+						$("#inprogress").attr("aria-valuenow",currentimportrow);
+						$("#inprogress").css("width",(currentimportrow*100.0/totlaimportrow)+"%");
+								
+								if(currentimportrow>=totlaimportrow){
+									$("#import_boxBtnConfirm").attr("disabled",false);
+									search();
+								}
                                 if(data.substring(0,5)=="right"){
                                     tcc.find(".checkdd").html("<i class='text-success glyphicon glyphicon-ok'></i>");
+									tcc.remove();
                                 }else{
                                     tcc.find(".checkdd").append("<i class='text-warning glyphicon glyphicon-exclamation-sign'></i><span>"+data+"</span>");
                                 }
@@ -495,6 +528,7 @@ var notusedatatable=false;
 			        $("#import_box").modal("show");
 			    },
 			    "error": function (data, status, e) {
+					$("#file_import").val("");
 			        errorDialog("{{$SysLang.model.uploaderror}}");
 			    }
 			}

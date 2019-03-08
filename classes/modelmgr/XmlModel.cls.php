@@ -885,8 +885,9 @@ class XmlModel
 	if($file["error"]!="0"){
 		return "UPLOADERROR";
 	}
+	//echo $file["type"];
 	if ($file["type"] != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
-		return "FILETYPEERROR";
+		//return "FILETYPEERROR";
 	}
 	$excelMgr=new ExcelMgr();
 	$excelarr=$excelMgr->read($file["tmp_name"]);
