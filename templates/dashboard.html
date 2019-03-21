@@ -34,7 +34,7 @@
                     if (item.size == undefined) {
                         item.size = 3;
                     }
-                    str += '<div class="col-md-'+item.size+'"><div class="small-box '+item.color+' " >';
+                    str += '<div class="col-md-'+item.size+ ' col-xs-' + item.msize + '"><div class="small-box '+item.color+' " >';
                     str += '<div class="inner">';
                     str += '<h3>' + item.value+'</h3>';
                     str += '<p>' + item.name + '</p>';
@@ -47,7 +47,7 @@
                     if (item.size == undefined) {
                         item.size = 4;
                     }
-                    str += '<div class="col-md-' + item.size +'"><div class="box box-primary">';
+                    str += '<div class="col-md-' + item.size + ' col-xs-' + item.msize + '"><div class="box box-primary">';
                     str += '<div class="box-header">';
                     str += '<h3 class="box-title">'+item.name+'</h3><div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>';
                     str += '</div>';
@@ -72,7 +72,7 @@
                     if (item.size == undefined) {
                         item.size = 6;
                     }
-                    str += '<div class="col-md-' + item.size + '"><div class="box box-primary">';
+                    str += '<div class="col-md-' + item.size + ' col-xs-' + item.msize + '"><div class="box box-primary">';
                     str += '<div class="box-header">';
                     str += '<h3 class="box-title">' + item.name + '</h3><div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>';
                     str += '</div>';
@@ -103,7 +103,7 @@
                     if (item.size == undefined) {
                         item.size = 6;
                     }
-                    str += '<div class="col-md-' + item.size + '"><div class="box box-primary collapsed-box">';
+                    str += '<div class="col-md-' + item.size + ' col-xs-' + item.msize + '"><div class="box box-primary collapsed-box">';
                     str += '<div class="box-header">';
                     str += '<h3 class="box-title">' + item.name + '</h3><div class="box-tools pull-right"><button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button></div>';
                     str += '</div>';

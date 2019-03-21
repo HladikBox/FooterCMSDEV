@@ -117,15 +117,15 @@
 										{{foreach from=$rs.submenus.submenu item=sub}}
 										{{if $SysUser.is_admin=="Y"||$sub.right>0}}
 									{{if $sub.nolist=="1"}}
-									<li {{if $sub.model|cat:"_add"==$MyMenuId}} class="active" {{/if}}>
+									<li  id="mn_{{$rs.module}}_{{$sub.model}}" {{if $sub.model|cat:"_add"==$MyMenuId}} class="active" {{/if}}>
 										<a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}"> {{$sub.name}}</a>
 									</li>
 									{{else}}
-									<li {{if $sub.model|cat:"_list"==$MyMenuId}} class="active" {{/if}}>
+									<li  id="mn_{{$rs.module}}_{{$sub.model}}" {{if $sub.model|cat:"_list"==$MyMenuId}} class="active" {{/if}}>
 										<a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}"> {{$sub.name}}</a>
 									</li>
 									{{if $sub.nosave!="1"&&$sub.noaddnew!="1"}}
-									<li {{if $sub.model|cat:"_add"==$MyMenuId}} class="active" {{/if}}>
+									<li id="mn_{{$rs.module}}_{{$sub.model}}_add" {{if $sub.model|cat:"_add"==$MyMenuId}} class="active" {{/if}}>
 										<a href="{{$userpath}}{{$rs.module}}/{{$sub.model}}?action=add">{{$sub.name}}{{$SysLang.model.add}}</a>
 									</li>
 									{{/if}}

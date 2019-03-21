@@ -52,6 +52,7 @@
 					<input name="action" value="print" type="hidden" />
                     <div class="row">
                         <div class="col-md-12">
+									<input type="password" style="position:absolute; top:-999px" />
                             <div class="box box-default collapsed-box box-solid">
                                 <div class="box-header with-border">
                                     <div class="box-title">{{$SysLang.model.condition}}</div>
@@ -226,6 +227,11 @@
                                         </tbody>
                                     </table>
 									</div>
+									{{if $ModelData.export=='1'}}
+									<div class='col-md-12'>
+										<button class="btn btn-info" onclick='tableToExcel("searchResult", "{{$ModelData.name}}", "{{$ModelData.name}}"+now+".xls")'  >导出</button>
+									</div>
+									{{/if}}
 									</div>
                                 </div>
                             </div>

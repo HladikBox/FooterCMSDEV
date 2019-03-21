@@ -716,7 +716,7 @@ class XmlModel
 			}
 			$sql=$sql.",`".$value["key"]."`";
 		}
-		$sql=$sql.",created_date,created_user,updated_date,updated_user ) values (";
+		$sql=$sql.",created_date,created_user,updated_date,updated_user ) values ( ";
 		$sql=$sql." absolutexxidxx ";
 		foreach ($fields as $value){
 			
@@ -753,11 +753,19 @@ class XmlModel
 		if($this->XmlData["nolist"]=="1"){
 			$id=$this->GetNoListId();
 		}else{
+			//$id="ifnull(max(id),0)+1";
 			$id=$dbMgr->getNewId($this->XmlData["tablename"]);
 		}
 		$sql=str_replace("absolutexxidxx",$id,$sql);
 		$query = $dbMgr->query($sql);
-		
+		if($this->XmlData["nolist"]!="1"){
+			
+			//$sql="select last_insert_id() lastid";
+			//$query = $dbMgr->query($sql);
+			//$csr=$dbMgr->fetch_array($query);
+			//print_r($csr);
+			//$id=$csr["lastid"]+0;
+		}
 	}else{
 		$haveMutilLang=false;
 		$id=$request["primary_id"];
@@ -1129,6 +1137,18 @@ class XmlModel
  	return $result;
  }
 
+ public function setDisplayInList($isshow,$arr){
+	 
+        $arr=explode(",",$arr);
+        foreach($arr as $a){
+            $field=$this->getModelField($a);
+            $field["displayinlist"]=$isshow?"1":"0";
+            $this->setModelField($a,$field);
+        }
+    
+	
+
+ }
  
   private function ShowAPIList($dbMgr,$request){
   	$request=$this->fixApiListRequest($dbMgr,$request);
