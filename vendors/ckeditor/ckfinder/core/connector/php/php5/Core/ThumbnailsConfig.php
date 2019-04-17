@@ -62,14 +62,14 @@ class CKFinder_Connector_Core_ThumbnailsConfig
      * @var int
      * @access private
      */
-    private $_maxWidth = 100;
+    private $_maxWidth = 10000;
     /**
      * Max height for thumbnails
      *
      * @var int
      * @access private
      */
-    private $_maxHeight = 100;
+    private $_maxHeight = 10000;
     /**
      * Quality of thumbnails
      *
@@ -84,7 +84,6 @@ class CKFinder_Connector_Core_ThumbnailsConfig
      * @access private
      */
     private $_bmpSupported = false;
-
     function __construct($thumbnailsNode)
     {
         if(extension_loaded('gd') && isset($thumbnailsNode['enabled'])) {

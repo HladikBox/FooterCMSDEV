@@ -52,7 +52,7 @@
         <link rel="stylesheet" media="screen" href="{{$rootpath}}vendors/selectize/dist/css/selectize.bootstrap3.css">
         <link rel="stylesheet" media="screen" href="{{$rootpath}}vendors/bootstrap-wysihtml5-rails-b3/vendor/assets/stylesheets/bootstrap-wysihtml5/core-b3.css">
         <link rel="stylesheet" media="screen" href="{{$rootpath}}css/DT_bootstrap.css">        
-        
+		<link href="https://cdn.bootcss.com/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
         <!-- Bootstrap Switch (the On-Off buttons) -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <link rel="stylesheet" href="{{$rootpath}}vendors/bootstrap-switch/build/css/bootstrap3/bootstrap-switch.min.css">
@@ -76,7 +76,8 @@
         <script type="text/javascript" src="{{$rootpath}}js/twitter-bootstrap-hover-dropdown.min.js"></script>
         <script type="text/javascript" src="{{$rootpath}}js/bootstrap-admin-theme-change-size.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/uniform/jquery.uniform.min.js"></script>
-        <script type="text/javascript" src="{{$rootpath}}vendors/chosen.jquery.min.js"></script>
+        <script type="text/javascript" src="{{$rootpath}}vendors/chosen.jquery.min.js"></script><!-- bootstrap color picker -->
+		<script src="https://cdn.bootcss.com/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.min.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/selectize/dist/js/standalone/selectize.min.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
         <script type="text/javascript" src="{{$rootpath}}vendors/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
@@ -103,3 +104,9 @@
         var primary_id="{{$id}}";
 		var now="{{$now}}";
     </script>
+	
+	<style>
+	body{
+		font-size:12px;
+	}
+	</style>

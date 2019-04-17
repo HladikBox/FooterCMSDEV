@@ -28,7 +28,7 @@
                     <div class="row  {{if $viewonly=='Y'}}hide{{/if}}" id="detailHeader">
                         <div class="col-lg-12">
                             <div class="page-header bootstrap-admin-content-title">
-                                <h1 id="detailTitle">{{$ModelData.name}} {{if $action=="add"}}- {{$SysLang.model.add}}{{else}}{{/if}}</h1>                                
+                                <h1 id="detailTitle">{{$ModelData.name}} {{if $action=="add"}}- {{if $incopy==1}}复制的{{/if}}{{$SysLang.model.add}}{{else}}{{/if}}</h1>                                
                                 
                                 {{foreach from=$ModelData.options.option item=rs}}                                
                                     {{if $rs.detail=="1"}}
@@ -142,7 +142,7 @@
                                                 <audio controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;" {{else}} src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
 												{{elseif $rs.filetype=="video"}}
                                                 <br />
-                                                <video controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;width:100%;" {{else}} stype="width:100%" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
+                                                <video controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;width:200px;" {{else}} style="width:200px" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
                                                 {{else}}
                                                 <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
                                                 {{/if}}
@@ -232,7 +232,20 @@
 												{{/if}}
                                                 <table class="table table-striped gridResult" id="content_{{$rs.key}}"></table>
                                             </div>
-                                        </div>             
+                                        </div>                                
+                                        {{elseif $rs.type=="color"  }}
+                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}" {{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-8">
+												<div class="input-group color-picker">
+                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}readonly="readonly"{{/if}} class="form-control " value="{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												  <div class="input-group-addon">
+													<i></i>
+												  </div>
+												 </div>
+												<span class='help-block'></span>
+                                            </div>
+                                        </div>           
                                         {{/if}}
                                         {{/foreach}}
                                     </div>
@@ -240,12 +253,31 @@
                                     <div class="text-center" id="btnPanel" >
                                         <input type="hidden" id="content_id" value="{{$id}}" />
                                         {{if $ModelData.nosave!="1"}}
-                                        <button class="btn btn-primary" id="btnSave"><i class="glyphicon glyphicon-pencil  glyphicon-white"></i> {{$SysLang.model.save}}</button>
+                                        <button class="btn btn-primary btnSave" onclick='save(1)'><i class="glyphicon  glyphicon-save glyphicon-white"></i> {{$SysLang.model.save}}</button>
+											{{if $ModelData.nolist!='1'&&$parenturl==""}}
+											<button class="btn btn-primary btnSave"  onclick='save(2)'><i class="glyphicon  glyphicon-file-plus  glyphicon-white"></i> 保存并新增</button>
+											<button class="btn btn-primary btnSave"  onclick='save(3)'><i class="glyphicon  glyphicon-clipboard  glyphicon-white"></i> 保存并复制</button>
+											<button class="btn btn-primary" onclick='copynew()' ><i class="glyphicon glyphicon-copy  glyphicon-white"></i> 复制</button>
+											{{/if}}
                                         {{/if}}
                                         {{if $parenturl!=""}}
                                         <button class="btn btn-primary" onclick="window.location.href='{{$parenturl}}';"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.back}}</button>
                                         {{elseif $ModelData.nolist!="1"}}<button class="btn btn-primary" id="btnReturnToList"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.backtolist}}</button>
                                         {{/if}}
+										
+										{{foreach from=$ModelData.options.option item=rs}}                                
+											{{if $rs.detail=="1"}}
+												{{if $rs.type=="link"}}    
+											<a href="{{$rs.function}}" class="action">
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+											</a>
+												{{elseif $rs.type=="function"}}
+											<a href="javascript:{{$rs.function}}" class="action btnfunc{{$rs.name}} " >
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+											</a>
+												{{/if}}                                 
+											{{/if}} 
+										{{/foreach}}
                                     </div>
                                </div>
                             </div>
@@ -267,6 +299,7 @@ CKEDITOR.env.isCompatible = true;
 
     $(function () {
         // CKEditor Full
+		$('.color-picker').colorpicker();
         $('textarea.ckeditor').ckeditor({
             height: '200px',
             allowedContent: true,
@@ -297,7 +330,7 @@ CKEDITOR.env.isCompatible = true;
 			 $(this).addClass("hide");
 		});
         
-        $('#btnSave').click(save);
+        //$('#btnSave').click(save);
         $("#btnReturnToList").click(function(){
             self.location="{{$PageName}}";
         });
@@ -327,7 +360,7 @@ CKEDITOR.env.isCompatible = true;
 
     });
 
-    function save(){
+    function save(backtype){
 
         {{foreach from=$ModelData.fields.field item=rs}}
         {{if  $rs.type=="flist"}}
@@ -350,7 +383,7 @@ CKEDITOR.env.isCompatible = true;
         if(isGo==false){
             return;
         }
-        $("#btnSave").prop("disabled","disabled");
+        $(".btnSave").prop("disabled","disabled");
         var json={action:"save"
         ,"primary_id":"{{$id}}"
         {{foreach from=$ModelData.fields.field item=rs}}
@@ -378,14 +411,26 @@ CKEDITOR.env.isCompatible = true;
                 if(data.substring(0,5)=="right"){
                     id=data.substring(5,data.length);
                     infoDialog("{{$SysLang.model.savesuccess}}");
-                    {{if $parenturl!=""}}
-                    self.location='{{$parenturl}}';
-                    {{elseif $action=="add"}}
-                    infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转到编辑。");
-					setTimeout(function(){
-						self.location='{{$PageName}}?action=edit&id='+id;
-					},3000);
-                    {{/if}}
+					if(backtype==1){
+						{{if $parenturl!=""}}
+						self.location='{{$parenturl}}';
+						{{elseif $action=="add"}}
+						infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转到编辑。");
+						setTimeout(function(){
+							self.location='{{$PageName}}?action=edit&id='+id;
+						},3000);
+						{{/if}}
+					}else if(backtype==2){
+						infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转。");
+						setTimeout(function(){
+							self.location='{{$PageName}}?action=add';
+						},3000);
+					}else if(backtype==3){
+						infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转。");
+						setTimeout(function(){
+							self.location='{{$PageName}}?action=add&copyid='+id;
+						},3000);
+					}
                 }else{
                         errorDialog(data,"保存失败");
                 }
@@ -497,6 +542,9 @@ CKEDITOR.env.isCompatible = true;
     function addNew(){
         self.location='{{$PageName}}?action=add';
     }
+	function copynew(){
+        self.location='{{$PageName}}?action=add&copyid='+primary_id;
+	}
 
     function btnDeleteInList(){
            
@@ -516,7 +564,12 @@ CKEDITOR.env.isCompatible = true;
 
                             if(data=="success")
                             {
-                                $("#btnReturnToList").click();
+                                //
+								{{if $parenturl!=""}}
+								self.location='{{$parenturl}}';
+								{{else}}
+								window.location.href="{{$PageName}}";
+								{{/if}}
                             }
                             else
                             {

@@ -33,42 +33,46 @@ class CKFinder_Connector_Core_ImagesConfig
      * @var int
      * @access private
      */
-    private $_maxWidth = 0;
+    private $_maxWidth = 100000;
     /**
      * Max height for images, 0 to disable resizing
      *
      * @var int
      * @access private
      */
-    private $_maxHeight = 0;
+    private $_maxHeight = 100000;
     /**
      * Quality of thumbnails
      *
      * @var int
      * @access private
      */
-    private $_quality = 80;
+    private $_quality = 100;
 
     function __construct($imagesNode)
     {
         if(isset($imagesNode['maxWidth'])) {
             $_maxWidth = intval($imagesNode['maxWidth']);
             if($_maxWidth>=0) {
-                $this->_maxWidth = $_maxWidth;
+               // $this->_maxWidth = $_maxWidth;
             }
         }
         if(isset($imagesNode['maxHeight'])) {
             $_maxHeight = intval($imagesNode['maxHeight']);
             if($_maxHeight>=0) {
-                $this->_maxHeight = $_maxHeight;
+               // $this->_maxHeight = $_maxHeight;
             }
         }
         if(isset($imagesNode['quality'])) {
             $_quality = intval($imagesNode['quality']);
             if($_quality>0 && $_quality<=100) {
-                $this->_quality = $_quality;
+              //  $this->_quality = $_quality;
             }
         }
+		//print_r($imagesNode);
+	//echo $this->_maxWidth;
+	//echo $this->_maxHeight;
+	//exit;
     }
 
     /**

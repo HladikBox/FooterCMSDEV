@@ -521,8 +521,30 @@ class XmlModel
 
   
   public function Add($dbMgr,$smartyMgr,$request){
-   $dataWithFKey=$this->loadFKeyValue($dbMgr,$this->XmlData);
+	 
+	$copyid=$request["copyid"]+0;
+	
+	$sql="select * from ".$this->XmlData["tablename"]." r_main where id=$copyid";
+	$sql=$this->fixEditSql($sql);
+	$query = $dbMgr->query($sql);
+	$result = $dbMgr->fetch_array_all($query);
+
+	$result=$this->ClearData($result);
+	$result=$this->ReloadFListData($dbMgr,$result);
+
+	$result=$result[0];
+	$copyid=$result["id"]+0;
+	if($copyid>0){
+		$XmlDataWithInfo=$this->assignWithInfo($this->XmlData,$result,$langresult);
+		$dataWithFKey=$this->loadFKeyValue($dbMgr,$XmlDataWithInfo);
+		$smartyMgr->assign("incopy",1);
+	}else{
+		
+		$dataWithFKey=$this->loadFKeyValue($dbMgr,$this->XmlData);
+	}
+	
 	$this->GetFListData($dbMgr,$smartyMgr);
+	  
 
 	$smartyMgr->assign("ParentKey",$request["key"]);
 	$smartyMgr->assign("ParentId",$request["id"]);
@@ -532,6 +554,10 @@ class XmlModel
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("action","add");
     $smartyMgr->display(ROOT.'/templates/model/detail.html');
+	
+	
+	
+	
   }
 
   public function fixEditId($id){
@@ -591,6 +617,7 @@ class XmlModel
 			$fields[$i]["value"]=$valarray;
 		}else{
 			$fields[$i]["value"]=$info[$fields[$i]["key"]];
+			$fields[$i]["default"]=$info[$fields[$i]["key"]];
 		}
 	}
 	$XmlDataEx["fields"]["field"]=$fields;

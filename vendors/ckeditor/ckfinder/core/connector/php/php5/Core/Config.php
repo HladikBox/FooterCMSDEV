@@ -142,7 +142,7 @@ class CKFinder_Connector_Core_Config
      *
      * @var boolean
      */
-    private $_checkSizeAfterScaling = true;
+    private $_checkSizeAfterScaling = false;
     /**
      * For security, HTML is allowed in the first Kb of data for files having the following extensions only
      *
