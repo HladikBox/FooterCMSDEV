@@ -223,6 +223,7 @@ class XmlModel
 				}
 
 				$sql=$sql." ,UNIX_TIMESTAMP(r_main.".$value["key"].") as ".$value["key"]."_timespan";
+					$sql=$sql." ,DATE_FORMAT(r_main.".$value["key"] .",'%Y-%m-%d') as ".$value["key"]."_dateformat";
 			}else if($value["type"]=="grid"){
 			}else{
 
@@ -618,6 +619,9 @@ class XmlModel
 		}else{
 			$fields[$i]["value"]=$info[$fields[$i]["key"]];
 			$fields[$i]["default"]=$info[$fields[$i]["key"]];
+			if($fields[$i]["type"]=="number"){
+				$fields[$i]["default"]=$info[$fields[$i]["key"]];
+			}
 		}
 	}
 	$XmlDataEx["fields"]["field"]=$fields;

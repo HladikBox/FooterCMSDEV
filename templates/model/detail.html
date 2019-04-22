@@ -114,7 +114,7 @@
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
                                             <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-6">
-                                                <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{$rs.minvalue+0}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+                                                <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{if $rs.default==''}}{{$rs.minvalue+0}}{{else}}{{$rs.default+0}}{{/if}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'></span>
                                             </div>
 											<div class="col-md-2" style="margin-top:10px;">{{$rs.unit}}</div>
@@ -342,7 +342,7 @@ CKEDITOR.env.isCompatible = true;
 			griddata_loaded("{{$rs.key}}",data);
 			}
         });
-        {{elseif $action!="add" and $rs.type=="flist"}}
+        {{elseif  $rs.type=="flist"}}
         var fliststr{{$rs.key}} = $("#content_{{$rs.key}}").val();
         var arr = fliststr{{$rs.key}}.split(",");
         for (var i = 0; i < arr.length; i++) {
@@ -404,7 +404,7 @@ CKEDITOR.env.isCompatible = true;
 
             $.post("{{$PageName}}",json,function(data){
                 
-                $("#btnSave").prop("disabled","");
+                $(".btnSave").prop("disabled","");
                 if(myjs_aftersave(data)==false){
                     return;
                 }
