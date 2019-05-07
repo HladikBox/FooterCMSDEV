@@ -1,7 +1,7 @@
 <thead class="nmth">{{if $ModelData.nosave!="1"}}<tr><th  class='checkboxl' >{{if $ModelData.canselectall=='1'}}<input type="checkbox" name="ckb" id="result_selectall" class="RowSelect"  />{{else}}选中{{/if}}</th>{{/if}}<th class='dt'>详情</th>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th class="resulttitle_{{$rs.key}} th_{{$rs.type}}">{{$rs.name}}</th>{{/if}}{{/foreach}}</tr></thead>
 <tbody class='searchResult'>
 {{foreach from=$result item=row}}
-<tr class="rstr"  primary_id="{{$row.id}}">{{if $ModelData.nosave!="1"}}<td class='checkboxl'><input type="checkbox" class="RowSelect result_id" value="{{$row.id}}" /></td>{{/if}}
+<tr class="rstr" id="rstr_{{$row.id}}" primary_id="{{$row.id}}">{{if $ModelData.nosave!="1"}}<td class='checkboxl'><input type="checkbox" class="RowSelect result_id" value="{{$row.id}}" /></td>{{/if}}
 	<td class="dt" ><a  onclick='listopennew("{{$PageName}}?action=edit&id={{$row.id}}")' class='gotodetail'>详情</a></td>
     {{foreach from=$row item=col key=key}}{{if $key!="id"}}{{foreach from=$ModelData.fields.field item=rs}}{{if $key==$rs.key && $rs.displayinlist=="1"}}<td class="result_{{$rs.key}}" {{if $rs.type=='select' || $rs.type=='fkey'}}sval='{{$col.value}}'{{/if}}>{{if ($rs.type=="upload"  ) && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}" style="max-width:150px;" alt="图片"  />
 	{{elseif ( $rs.type=="url" ) && $rs.filetype=="image"}}<img src="{{$col}}" style="max-width:150px;" alt="图片"  />
