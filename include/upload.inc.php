@@ -13,7 +13,7 @@
 	//echo "Fils is empty";
 	//exit;
  }
- $filename=md5($file["name"])."_".date('ymdHIs').".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
+ $filename=md5($file["name"].rand())."_".date('ymdHIs')."_".rand().".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
  $refilename=$_REQUEST["refilename"];
  if($refilename!=""){
 	 $filename=$refilename;

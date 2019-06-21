@@ -284,6 +284,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 <script>
 var needlistopennew=false;
             function resultload() {
@@ -796,6 +800,22 @@ var notusedatatable=false;
 		var fullDate = dateandtime[0].split("-");  
         return Date.UTC(fullDate[0], fullDate[1] - 1, fullDate[2], 0, 0, 0) - 3600 * 1000 * 8;  
 	}
+  }
+  function quickUpdate(key,primary_id){
+	
+	 $.post("{{$PageName}}",{"action":"editone","key":key,val:$("#kvc_"+key+"_"+primary_id).val(),primary_id},function(ret){
+                        
+                        if(ret==""){
+							$("#kvc_"+key+"_"+primary_id).popover();
+						}else{
+						
+							warningDialog(ret);
+						}
+						
+			
+                    });
+	
+	
   }
     $(document).ready(function(){
 		$("#btnSearch").click(search);

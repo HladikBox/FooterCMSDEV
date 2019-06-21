@@ -323,8 +323,12 @@ class XmlModel
 			}else{
 				if($request[$value["key"]]!=""
 				&&$request[$value["key"]]!="no-value"){
-
-					$sql=$sql." and r_main.".$value["key"]." like '%".parameter_filter($request[$value["key"]])."%'";
+					if($value["strict"]=="1"){
+						$sql=$sql." and r_main.".$value["key"]." = '".parameter_filter($request[$value["key"]])."'";
+					}else{
+						$sql=$sql." and r_main.".$value["key"]." like '%".parameter_filter($request[$value["key"]])."%'";
+					}
+					
 					
 				}
 			}
@@ -701,7 +705,15 @@ class XmlModel
     }
 	return $request;
   }
-
+	public function editone($dbMgr,$request,$sysuser=-1){
+		$key=$request["key"];
+		$val=parameter_filter( $request["val"]);
+		$primary_id=parameter_filter( $request["primary_id"]);
+		
+		$sql="update ".$this->XmlData["tablename"]." set `$key`='$val' where id=$primary_id ";
+		$dbMgr->query($sql);
+		return "";
+	}
   public function Save($dbMgr,$request,$sysuser=-1){
 	Global $SysLang,$Config;
 
@@ -847,7 +859,7 @@ class XmlModel
 	}
 
 		foreach ($fields as $value){
-			if($value["type"]=="password"){
+			if($value["type"]=="password"&&$value["nosave"]!='1'){
 				$sql="update `".$this->XmlData["tablename"]."` set ";
 				$sql=$sql." `".$value["key"]."`='".md5($request[$value["key"]])."'";
 				$sql=$sql." where id=$id and `".$value["key"]."`<>'".($request[$value["key"]])."'";
@@ -1152,9 +1164,13 @@ class XmlModel
 	  }else if($action=="import"){
 		$result=$this->Import($dbmgr,$smarty,$request,$SysUser["id"]);
 		echo $result;
+	  }else if($action=="editone"){
+		$result=$this->editone($dbmgr,$request,$SysUser["id"]);
+		echo $result;
 	  }
-
  }
+ 
+ 
 
  public function fixApiListRequest($dbMgr,$request){
  	return $request;

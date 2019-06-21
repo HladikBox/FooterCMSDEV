@@ -253,11 +253,11 @@
                                     <div class="text-center" id="btnPanel" >
                                         <input type="hidden" id="content_id" value="{{$id}}" />
                                         {{if $ModelData.nosave!="1"}}
-                                        <button class="btn btn-primary btnSave" onclick='save(1)'><i class="glyphicon  glyphicon-save glyphicon-white"></i> {{$SysLang.model.save}}</button>
+                                        <button class="btn btn-primary btnSave" onclick='save(1)' id='btnSave' ><i class="glyphicon  glyphicon-save glyphicon-white"></i> {{$SysLang.model.save}}</button>
 											{{if $ModelData.nolist!='1'&&$parenturl==""}}
-											<button class="btn btn-primary btnSave"  onclick='save(2)'><i class="glyphicon  glyphicon-file-plus  glyphicon-white"></i> 保存并新增</button>
-											<button class="btn btn-primary btnSave"  onclick='save(3)'><i class="glyphicon  glyphicon-clipboard  glyphicon-white"></i> 保存并复制</button>
-											<button class="btn btn-primary" onclick='copynew()' ><i class="glyphicon glyphicon-copy  glyphicon-white"></i> 复制</button>
+											<button class="btn btn-primary btnSave"  id='btnSaveNew' onclick='save(2)'><i class="glyphicon  glyphicon-file-plus  glyphicon-white"></i> 保存并新增</button>
+											<button class="btn btn-primary btnSave"  id='btnSaveCopy' onclick='save(3)'><i class="glyphicon  glyphicon-clipboard  glyphicon-white"></i> 保存并复制</button>
+											<button class="btn btn-primary" onclick='copynew()' id='btnCopy' ><i class="glyphicon glyphicon-copy  glyphicon-white"></i> 复制</button>
 											{{/if}}
                                         {{/if}}
                                         {{if $parenturl!=""}}

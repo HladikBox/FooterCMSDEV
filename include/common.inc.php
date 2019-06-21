@@ -77,9 +77,9 @@ header("Content-type:text/html;charset=utf-8");
 
 //log start
 require ROOT.'/classes/mgr/logger_mgr.cls.php';
-define('LOGGER_INFO_FILE', USER_ROOT."/logs/info/log_%y%m%d.txt");
-define('LOGGER_ERROR_FILE', USER_ROOT."/logs/error/log_%y%m%d.txt");
-define('LOGGER_DEBUG_FILE', USER_ROOT."/logs/debug/log_%y%m%d.txt");
+define('LOGGER_INFO_FILE', USER_ROOT."/logs/info/log_%y%m%d-%H.txt");
+define('LOGGER_ERROR_FILE', USER_ROOT."/logs/error/log_%y%m%d-%H.txt");
+define('LOGGER_DEBUG_FILE', USER_ROOT."/logs/debug/log_%y%m%d-%H.txt");
 define('LOGGER_IS_DEBUG', $CONFIG['solution_configuration']=="debug"?true:false);
 set_error_handler('error_handler');//,$CONFIG['error_handler']
 
