@@ -13,6 +13,7 @@
 	//echo "Fils is empty";
 	//exit;
  }
+ //print_r($_FILES);
  $filename=md5($file["name"].rand())."_".date('ymdHIs')."_".rand().".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
  $refilename=$_REQUEST["refilename"];
  if($refilename!=""){
@@ -26,7 +27,7 @@
 	}
 	
 	 require ROOT.'/classes/obj/ossupload.'.$type.'.php';
-	 $file=new OssUpload($file,$filename,USER_PATH2."$module/",false);
+	 $file=new OssUpload($file,$filename,USER_PATH2.$CONFIG['fileupload']['bucket_path']."$module/",false);
 	 
  }else{
 	 

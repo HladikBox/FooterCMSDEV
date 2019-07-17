@@ -30,6 +30,7 @@
                             <div class="page-header bootstrap-admin-content-title">
                                 <h1 id="detailTitle">{{$ModelData.name}} {{if $action=="add"}}- {{if $incopy==1}}复制的{{/if}}{{$SysLang.model.add}}{{else}}{{/if}}</h1>                                
                                 
+                                        <button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> 后退</button>
                                 {{foreach from=$ModelData.options.option item=rs}}                                
                                     {{if $rs.detail=="1"}}
                                         {{if $rs.type=="link"}}    
@@ -263,6 +264,7 @@
                                         {{if $parenturl!=""}}
                                         <button class="btn btn-primary" onclick="window.location.href='{{$parenturl}}';"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.back}}</button>
                                         {{elseif $ModelData.nolist!="1"}}<button class="btn btn-primary" id="btnReturnToList"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.backtolist}}</button>
+                                        <button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> 后退</button>
                                         {{/if}}
 										
 										{{foreach from=$ModelData.options.option item=rs}}                                
