@@ -130,8 +130,17 @@ class XmlModel
 	$count=count($fields);
 	for($i=0;$i<$count;$i++){
 		if($fields[$i]["type"]=="fkey"){
-			$options=$this->GetFKeyData($dbMgr,$fields[$i]["displayfield"],$fields[$i]["tablename"],$fields[$i]["ntbname"],$fields[$i]["condition"],$fields[$i]["fmutillang"]);
-			$fields[$i]["options"]=$options;
+            if($fields[$i]["ajax"]!='1'){
+                $options=$this->GetFKeyData($dbMgr,$fields[$i]["displayfield"],$fields[$i]["tablename"],$fields[$i]["ntbname"],$fields[$i]["condition"],$fields[$i]["fmutillang"]);
+                $fields[$i]["options"]=$options;
+            }else{
+                $id=$fields[$i]["value"];
+                if($id>0){
+                    $options=$this->GetFKeyData($dbMgr,$fields[$i]["displayfield"],$fields[$i]["tablename"],$fields[$i]["ntbname"]," id=$id ",$fields[$i]["fmutillang"]);
+                    $fields[$i]["datavalue"]=$options[0];
+                }
+                
+            }
 		}
 	}
 	$XmlDataEx["fields"]["field"]=$fields;
@@ -139,15 +148,21 @@ class XmlModel
 	return $XmlDataEx;
   }
 
-  private function GetFKeyData($dbMgr,$displayfield,$tablename,$tablerename,$condition,$ismutillang){
-	Global $CONFIG;
+  private function GetFKeyData($dbMgr,$displayfield,$tablename,$tablerename,$condition,$ismutillang,$q=""){
+    Global $CONFIG;
+    if($q!=""){
+        $q=parameter_filter($q);
+		$f=explode(",",$displayfield);
+		$f=$f[0];
+        $q=" and `$f` like '%$q%' ";
+    }
 	if($ismutillang=="1"){
 		$subsql=$this->GetLangTableSql($tablename,$tablerename);
-		$sql="select oid id,$displayfield as name from $subsql where ".(empty($condition)?"1=1":$condition)." ";
+		$sql="select oid id,$displayfield as name from $subsql where ".(empty($condition)?"1=1":$condition)." $q";
 	}else{
 		$displayfield=explode(",",$displayfield);
 		$displayfield=$displayfield[0];
-		$sql="select id,$displayfield as name from $tablename as `$tablerename` where ".(empty($condition)?"1=1":$condition)."";
+		$sql="select id,$displayfield as name from $tablename as `$tablerename`  where ".(empty($condition)?"1=1":$condition)." $q";
 	}
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
@@ -596,7 +611,8 @@ class XmlModel
 
 	$XmlDataWithInfo=$this->assignWithInfo($this->XmlData,$result,$langresult);
     $dataWithFKey=$this->loadFKeyValue($dbMgr,$XmlDataWithInfo);
-	
+	//print_r($dataWithFKey);
+	//exit;
 	$this->GetFListData($dbMgr,$smartyMgr);
 	$dataWithFKey=$this->fixEditData($dataWithFKey);
     $smartyMgr->assign("ModelData",$dataWithFKey);
@@ -710,7 +726,7 @@ class XmlModel
 		$val=parameter_filter( $request["val"]);
 		$primary_id=parameter_filter( $request["primary_id"]);
 		
-		$sql="update ".$this->XmlData["tablename"]." set `$key`='$val' where id=$primary_id ";
+		 $sql="update ".$this->XmlData["tablename"]." set `$key`='$val' where id=$primary_id ";
 		$dbMgr->query($sql);
 		return "";
 	}
@@ -1167,6 +1183,13 @@ class XmlModel
 	  }else if($action=="editone"){
 		$result=$this->editone($dbmgr,$request,$SysUser["id"]);
 		echo $result;
+	  }else if($action=="fkeysearch"){
+        $key=$request["key"];
+        $q=$request["q"];
+        $field=$this->getModelField($key);
+        $result=$this->GetFKeyData($dbmgr,$field["displayfield"],$field["tablename"],$field["ntbname"],$field["condition"],$field["fmutillang"],$q);
+        
+		outputJSON($result);
 	  }
  }
  
@@ -1186,15 +1209,12 @@ class XmlModel
 
  public function setDisplayInList($isshow,$arr){
 	 
-        $arr=explode(",",$arr);
-        foreach($arr as $a){
-            $field=$this->getModelField($a);
-            $field["displayinlist"]=$isshow?"1":"0";
-            $this->setModelField($a,$field);
-        }
-    
-	
-
+    $arr=explode(",",$arr);
+    foreach($arr as $a){
+        $field=$this->getModelField($a);
+        $field["displayinlist"]=$isshow?"1":"0";
+		$this->setModelField($a,$field);
+    }
  }
  
   private function ShowAPIList($dbMgr,$request){

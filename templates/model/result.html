@@ -5,8 +5,9 @@
 	<td class="dt" ><a  onclick='listopennew("{{$PageName}}?action=edit&id={{$row.id}}")' class='gotodetail'>详情</a></td>
     {{foreach from=$row item=col key=key}}{{if $key!="id"}}{{foreach from=$ModelData.fields.field item=rs}}{{if $key==$rs.key && $rs.displayinlist=="1"}}
 	<td class="result_{{$rs.key}}" {{if $rs.type=='select' || $rs.type=='fkey'}}sval='{{$col.value}}'{{/if}}>
-	{{if  $rs.type=="text" && $rs.canedit=='1' }}<input value='{{$col}}'  data-show='500' data-delay='500' data-content="修改成功" type='text' id='kvc_{{$rs.key}}_{{$row.id}}' onchange='quickUpdate("{{$rs.key}}",{{$row.id}})' />
-	{{elseif  $rs.type=="number" && $rs.canedit=='1' }}<input value='{{$col}}'  data-show='500' data-delay='500' data-content="修改成功" type='number' id='kvc_{{$rs.key}}_{{$row.id}}' onchange='quickUpdate("{{$rs.key}}",{{$row.id}})' />
+	{{if  $rs.type=="text" && $rs.canedit=='1' }}<input value='{{$col}}'  data-show='500' data-delay='500' data-content="修改成功" type='text' id='kvc_{{$rs.key}}_{{$row.id}}' onchange='quickUpdate("{{$rs.key}}",{{$row.id}},"{{$rs.type}}",this)' />
+	{{elseif  $rs.type=="number" && $rs.canedit=='1' }}<input value='{{$col}}'  data-show='500' data-delay='500' data-content="修改成功" type='number' id='kvc_{{$rs.key}}_{{$row.id}}' onchange='quickUpdate("{{$rs.key}}",{{$row.id}},"{{$rs.type}}",this)' />
+	{{elseif  $rs.type=="check" && $rs.canedit=='1' }}<input {{if $col=='是'}}checked{{/if}}  data-show='500' data-delay='500' data-content="修改成功" type='checkbox' id='kvc_{{$rs.key}}_{{$row.id}}' onchange='quickUpdate("{{$rs.key}}",{{$row.id}},"{{$rs.type}}",this)' />
 	{{elseif ($rs.type=="upload"  ) && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}" style="max-width:150px;" alt="图片"  />
 	{{elseif ( $rs.type=="url" ) && $rs.filetype=="image"}}<img src="{{$col}}" style="max-width:150px;" alt="图片"  />
 	{{elseif ( $rs.type=="url" ) && $rs.filetype=="file"}}<a target="__blank" href="{{$col}}"  alt="图片"  >下载</a>

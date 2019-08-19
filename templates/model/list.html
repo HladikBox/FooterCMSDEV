@@ -86,11 +86,13 @@
 											<div class="form-group col-md-4  {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
-                                                <select id="condition_{{$rs.key}}" class="form-control selectize-select"  name="{{$rs.key}}">
-                                                    <option value="0">--{{$SysLang.model.select}}--</option>
-                                                    {{foreach from=$rs.options item=rsoption}}
-                                                    <option value="{{$rsoption.id}}">{{$rsoption.name}}</option>
-                                                    {{/foreach}}
+                                                <select id="condition_{{$rs.key}}" class="form-control {{if $rs.ajax!='1'}}selectize-select{{/if}}"  name="{{$rs.key}}">
+                                                    {{if $rs.ajax!='1'}}
+														<option value="0">--{{$SysLang.model.select}}--</option>
+                                                        {{foreach from=$rs.options item=rsoption}}
+                                                        <option value="{{$rsoption.id}}">{{$rsoption.name}}</option>
+                                                        {{/foreach}}
+                                                    {{/if}}
                                                 </select>
                                             </div>
 											</div>                                       
@@ -404,7 +406,7 @@ var notusedatatable=false;
 			//alert(notusedatatable);
 			if(notusedatatable!=true){
 			$('#searchResult').DataTable({
-			"searching":false,
+			"searching":true,
 						"bRetrieve": true,
 	                    "oLanguage": dataOlanguage,
 					"aLengthMenu" : [100, 500, 1000],   
@@ -520,7 +522,7 @@ var notusedatatable=false;
 								
 								if(currentimportrow>=totlaimportrow){
 									$("#import_boxBtnConfirm").attr("disabled",false);
-									search();
+									window.location.reload();
 								}
                                 if(data.substring(0,5)=="right"){
                                     tcc.find(".checkdd").html("<i class='text-success glyphicon glyphicon-ok'></i>");
@@ -646,11 +648,16 @@ var notusedatatable=false;
 						var series = seriesdata[i];
 						var data = series.data;
 						data.sort(function (a, b) {
+							//alert(a[0]);
+							//alert(b[0]);
 							return a[0] > b[0];
 						});
+						
+						console.log("kvc",data);
 						series.data = data;
 						seriesdata[i] = series;
 					}
+					
 					var type="spline";
 					{{if $rs.type=="timecolumn"}}
 						type="column";
@@ -723,7 +730,7 @@ var notusedatatable=false;
 							total += data[j][1];
 							totalrecord += data[j][2];
 						}
-						strs += "<tr><th style='text-align:right'>总计：</th><th>" + totalrecord + "</th><th>" + total + "</th></tr>";
+						strs += "<tr><th style='text-align:right'>总计：</th><th>" + totalrecord + "</th><th>" + total.toFixed(2) + "</th></tr>";
 						
 						strs += "</table></div>";
 					}
@@ -801,9 +808,12 @@ var notusedatatable=false;
         return Date.UTC(fullDate[0], fullDate[1] - 1, fullDate[2], 0, 0, 0) - 3600 * 1000 * 8;  
 	}
   }
-  function quickUpdate(key,primary_id){
-	
-	 $.post("{{$PageName}}",{"action":"editone","key":key,val:$("#kvc_"+key+"_"+primary_id).val(),primary_id},function(ret){
+  function quickUpdate(key,primary_id,type,obj){
+	var val=$("#kvc_"+key+"_"+primary_id).val();
+	if(type=='check'){
+		val=obj.checked?"Y":"N";
+	}
+	 $.post("{{$PageName}}",{"action":"editone","key":key,val:val,primary_id},function(ret){
                         
                         if(ret==""){
 							$("#kvc_"+key+"_"+primary_id).popover();
@@ -817,7 +827,43 @@ var notusedatatable=false;
 	
 	
   }
+
+  function setAjaxSelect2(){
+    {{foreach from=$ModelData.fields.field item=rs}}
+    {{if $rs.type=='fkey'&&$rs.ajax==1}}
+    $("#condition_{{$rs.key}}").select2({
+	debug:true,
+		width:"100%",
+        placeholder: "输入搜索关键字",
+        minimumInputLength: 1,
+        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+            url: '{{$PageName}}?action=fkeysearch&key={{$rs.key}}'  ,
+            dataType: 'json',
+            quietMillis: 250,
+            data: function (term, page) {
+                return {
+                    q: term.term, // search term
+                };
+            },
+			processResults: function (data) {
+			  // Transforms the top-level key of the response object from 'items' to 'results'
+			  for(var i=0;i<data.length;i++){
+				data[i].text=data[i].name;
+			  }
+			  return {
+				results: data
+			  };
+			},
+            cache: true
+        }
+    });
+    {{/if}}
+    {{/foreach}}
+  }
+
+
     $(document).ready(function(){
+        setAjaxSelect2();
 		$("#btnSearch").click(search);
         myjs_listPageLoad();
 		if(searchincomming){

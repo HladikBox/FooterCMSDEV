@@ -180,11 +180,16 @@
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
                                             <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
-                                                <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control selectize-select">
-                                                    <option value="0">--{{$SysLang.model.select}}--</option>
+                                                <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control {{if $rs.ajax!='1'}} selectize-select{{/if}}">
+                                                    
+													{{if $rs.ajax!='1'}}
+													<option value="0">--{{$SysLang.model.select}}--</option>
                                                     {{foreach from=$rs.options item=rsoption}}
                                                     <option {{if $rs.value==$rsoption.id}}selected{{/if}} value="{{$rsoption.id}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
+													{{else}}
+													<option value="{{$rs.value}}">{{$rs.datavalue.name}}</option>
+													{{/if}}
                                                 </select>
 												<a id="view_{{$rs.key}}" href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$rs.viewmodel}}?action=view&id={{$rs.value}}')" class='{{if $rs.showview!="1"}}hide{{/if}}' >查看详情</a>
 												<span class='help-block'></span>
@@ -359,7 +364,7 @@ CKEDITOR.env.isCompatible = true;
             $("#content_{{$ParentKey}}").val({{$ParentId}});
             {{/if}}
 
-
+		setAjaxSelect2();
     });
 
     function save(backtype){
@@ -598,6 +603,39 @@ CKEDITOR.env.isCompatible = true;
 
     }
 	
+	
+  function setAjaxSelect2(){
+    {{foreach from=$ModelData.fields.field item=rs}}
+    {{if $rs.type=='fkey'&&$rs.ajax==1}}
+    $("#content_{{$rs.key}}").select2({
+	debug:true,
+		width:"100%",
+        placeholder: "输入搜索关键字",
+        minimumInputLength: 1,
+        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+            url: '{{$PageName}}?action=fkeysearch&key={{$rs.key}}'  ,
+            dataType: 'json',
+            quietMillis: 250,
+            data: function (term, page) {
+                return {
+                    q: term.term, // search term
+                };
+            },
+			processResults: function (data) {
+			  // Transforms the top-level key of the response object from 'items' to 'results'
+			  for(var i=0;i<data.length;i++){
+				data[i].text=data[i].name;
+			  }
+			  return {
+				results: data
+			  };
+			},
+            cache: true
+        }
+    });
+    {{/if}}
+    {{/foreach}}
+  }
 	
     $(document).ready(function(){
         myjs_detailPageLoad();
