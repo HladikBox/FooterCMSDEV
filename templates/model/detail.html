@@ -47,7 +47,15 @@
                             </div>
                         </div>
                     </div>
-
+                    {{if $ModelData.recording==1}}
+                    <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab_1" data-toggle="tab">数据</a></li>
+                        <li><a href="#tab_2" data-toggle="tab">操作记录</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                    {{/if}}
                     <div class="row" id="detailContent">
                         <div class="col-md-12">
                             <div class="panel panel-default">
@@ -290,6 +298,86 @@
                             </div>
                         </div>
                     </div>
+                    {{if $ModelData.recording==1}}
+                    </div>
+                    <div class="tab-pane" id="tab_2">
+                        <!--zhelikaishi-->
+                            <div class="row" id="operationContent">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="bootstrap-admin-panel-content" style="padding-top:30px;">
+                                            <div class="row form-horizontal" >
+
+                                            <div class="form-group col-md-6" >
+                                                <label class="col-md-4 control-label"  >创建人:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" readonly="readonly" class="form-control"  value="{{$operator.created_user_name}}"   />
+                                                </div>
+                                            </div>         
+                                            <div class="form-group col-md-6" >
+                                                <label class="col-md-4 control-label"  >创建时间:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" readonly="readonly" class="form-control"   value="{{$operator.created_date}}"   />
+                                                </div>
+                                            </div>         
+                                            <div class="form-group col-md-6" >
+                                                <label class="col-md-4 control-label"  >最后修改人:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" readonly="readonly" class="form-control"  value="{{$operator.updated_user_name}}"   />
+                                                </div>
+                                            </div>         
+                                            <div class="form-group col-md-6" >
+                                                <label class="col-md-4 control-label"  >最后修改时间:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" readonly="readonly" class="form-control" value="{{$operator.updated_date}}"  />
+                                                </div>
+                                            </div>        
+                                            <div class="form-group col-md-12 " >
+                                                <label class="col-md-2 control-label">操作历史</label>
+                                                <div class="col-md-10">
+                                                    <table class="table table-striped gridOperation">
+                                                        
+
+                                                    <thead >
+                                                        <tr>
+                                                            <th>操作时间</th>
+                                                            <th>操作人</th>
+                                                            <th>修改方式</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+<tbody class='gridResult'>{{foreach from=$oplogs item=row}}
+<tr>
+
+<td>{{$row.op_time}}</td>
+                                                            <td>{{$row.user_name}}</td>
+                                                            <td>{{$row.kdesc}}</td>
+                                                            <td >
+                                                            <a  href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$ModelData.model}}?action=viewlog&logid={{$row.id}}')"  >查看详情</a>
+
+                                                            </td>
+{{/foreach}}
+</tbody>
+
+
+                                                    </table>
+                                                </div>
+                                            </div>     
+   
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        <!--zhelijieshu-->
+                    </div>
+                    </div>
+                    </div>
+                    {{/if}}
                 </div>
 
 <link rel="stylesheet" type="text/css" href="{{$userpath}}myjs/{{$ModelData.model}}.css?now={{$now}}" />
@@ -640,6 +728,8 @@ CKEDITOR.env.isCompatible = true;
     $(document).ready(function(){
         myjs_detailPageLoad();
     });
+
+   
 	
 </script>
 

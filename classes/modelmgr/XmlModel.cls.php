@@ -590,18 +590,28 @@ class XmlModel
   	return $result;
   }
   
-  public function Edit($dbMgr,$smartyMgr,$id){
-  	$id=$this->fixEditId($id);
+  public function Edit($dbMgr,$smartyMgr,$id,$logdata=null){
+
+    if($logdata!=null){
+		//print_r($logdata);
+		//exit;
+        $result=$logdata;
+    }else{
+        $id=$this->fixEditId($id);
+        
+        $sql="select * from ".$this->XmlData["tablename"]." r_main where id=$id";
+        
+        $sql=$this->fixEditSql($sql);
+        $query = $dbMgr->query($sql);
+        $result = $dbMgr->fetch_array_all($query); 
+
+    }
 	
-	$sql="select * from ".$this->XmlData["tablename"]." r_main where id=$id";
-	$sql=$this->fixEditSql($sql);
-	$query = $dbMgr->query($sql);
-	$result = $dbMgr->fetch_array_all($query); 
+	
+    $result=$this->ClearData($result);
+    $result=$this->ReloadFListData($dbMgr,$result);
 
-	$result=$this->ClearData($result);
-	$result=$this->ReloadFListData($dbMgr,$result);
-
-	$result=$result[0];
+    $result=$result[0];
 
 	if($this->XmlData["ismutillang"]=="1"){
 	$sql="select * from ".$this->XmlData["tablename"]."_lang where oid=$id";
@@ -617,6 +627,33 @@ class XmlModel
 	$dataWithFKey=$this->fixEditData($dataWithFKey);
     $smartyMgr->assign("ModelData",$dataWithFKey);
     $smartyMgr->assign("PageName",$this->PageName);
+
+    if($this->XmlData["recording"]=="1"){
+
+        $sql="select *,a.user_name created_user_name,b.user_name updated_user_name from ".$this->XmlData["tablename"]." r_main
+        left join tb_user a on r_main.created_user=a.id
+        left join tb_user b on r_main.updated_user=b.id
+        where r_main.id=$id";
+        $query = $dbMgr->query($sql);
+        $user = $dbMgr->fetch_array($query); 
+        $smartyMgr->assign("operator",$user);
+
+        if(!$dbMgr->checkHave("information_schema.TABLES"," TABLE_NAME='applink_operation_log' ")){
+            $sql="CREATE TABLE `applink_operation_log` (`id`  int auto_increment,`module` varchar(20),`pid` int,user_id  int,op_time datetime,kdesc varchar(200),kdata longtext,
+            primary key (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
+            $dbMgr->query($sql);
+        }
+
+        $name=$this->XmlData["tablename"];
+
+        $query = $dbMgr->query("select a.*,b.user_name user_name from applink_operation_log a
+        left join tb_user b on a.user_id=b.id
+        where a.`module`='$name' and a.`pid`=$id order by op_time desc ");
+        $oplogs = $dbMgr->fetch_array_all($query); 
+        $smartyMgr->assign("oplogs",$oplogs);
+
+    }
+
     $smartyMgr->assign("id",$id);
     $smartyMgr->assign("action","edit");
     $smartyMgr->display(ROOT.'/templates/model/detail.html');
@@ -756,7 +793,7 @@ class XmlModel
 		
 
 		$haveMutilLang=false;
-
+        
 		$sql="insert into ".$this->XmlData["tablename"]." (id";
 		$fields=$this->XmlData["fields"]["field"];
 		foreach ($fields as $value){
@@ -938,9 +975,45 @@ class XmlModel
 
 	$this->afterSave($dbMgr,$id);
 
-	$dbMgr->commit_trans();
+    $dbMgr->commit_trans();
+    
+    if($this->XmlData["recording"]=="1"){
+
+        if($request["primary_id"]==""){
+            $op="新增";
+        }else{
+            $op="修改";
+        }
+
+        if(!$dbMgr->checkHave("information_schema.TABLES"," TABLE_NAME='applink_operation_log'")){
+            $sql="CREATE TABLE `applink_operation_log` (`id`  int auto_increment,`module` varchar(20),`pid` int,user_id  int,op_time datetime,kdesc varchar(200),kdata longtext ,
+            primary key (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;";
+            $dbMgr->query($sql);
+        }
+
+        $name=$this->XmlData["tablename"];
+        
+        $sql="select * from ".$this->XmlData["tablename"]." r_main where id=$id";
+        $query = $dbMgr->query($sql);
+        $result = $dbMgr->fetch_array($query); 
+
+        $rt=json_encode($result);
+		//exit;
+		 $rt=str_replace("\\","\\\\",$rt);
+        $query = $dbMgr->query("insert into applink_operation_log 
+        (`module`,`pid`,`user_id`,`op_time`,`kdesc`,`kdata`) values 
+        ('$name',$id, $sysuser , now(),'$op','$rt') ");
+        //$oplogs = $dbMgr->fetch_array_all($query); 
+        //$smartyMgr->assign("oplogs",$oplogs);
+
+    }
+    
+
+
+
 	return "right".$id;
   }
+
 
   public function GetNoListId(){
   	return 0;
@@ -1162,6 +1235,28 @@ class XmlModel
 		}
 		$smarty->assign("viewonly","Y");
 		$this->Edit($dbmgr,$smarty,$request["id"]+0);
+	  }else if($action=="viewlog"){
+		$this->XmlData["nosave"]="1";
+		$this->XmlData["nolist"]="1";
+		
+		$fields=$this->XmlData["fields"]["field"];    
+		for($i=0;$i<count($this->XmlData["fields"]["field"]);$i++){
+			$this->XmlData["fields"]["field"][$i]["disableindetail"]="1";
+		}
+        $smarty->assign("viewonly","Y");
+        
+		$id=$request["logid"]+0;
+        $query = $dbmgr->query("select a.*,b.user_name user_name from applink_operation_log a
+        left join tb_user b on a.user_id=b.id 
+        where a.id=$id ");
+        $log = $dbmgr->fetch_array($query);  
+		//echo $log["kdata"];
+        $log=json_decode($log["kdata"],true);
+        //print_r($log);
+		//exit;
+		$r=[];
+		$r[]=$log;
+		$this->Edit($dbmgr,$smarty,0,$r);
 	  }else if($action=="save"){
 		  
 		$request=$this->beforeSaveDataFix($request);
