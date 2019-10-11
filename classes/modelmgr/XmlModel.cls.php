@@ -189,7 +189,8 @@ class XmlModel
 	Global $CONFIG;
 	//echo "a";
 	//print_r($request);
-	$sql="select r_main.id,r_main.updated_date,r_main.created_date";
+	$selectfield=parameter_filter($request["selectfield"]);
+	$sql="select r_main.id ,r_main.updated_date,r_main.created_date $selectfield ";
 	$fields=$this->XmlData["fields"]["field"];
 	foreach ($fields as $value){
 		if($value["displayinlist"]=="1"||$allfieldshow){
@@ -916,6 +917,7 @@ class XmlModel
 				$sql="update `".$this->XmlData["tablename"]."` set ";
 				$sql=$sql." `".$value["key"]."`='".md5($request[$value["key"]])."'";
 				$sql=$sql." where id=$id and `".$value["key"]."`<>'".($request[$value["key"]])."'";
+				//echo $sql;
 				$query = $dbMgr->query($sql);
 			}
 			if($value["type"]=="flist"&&$value["relatetable"]!=""){
@@ -1144,6 +1146,9 @@ class XmlModel
 			
 			if($field["type"]=="check"){
 				$field["value"]=$field["value"]=="是"?"Y":"N";
+			}
+			if($field["type"]=="number"){
+				$field["value"]=round($field["value"],2)+0;
 			}
 			
 			$r[$field["key"]]=$field;

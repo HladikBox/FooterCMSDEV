@@ -342,6 +342,10 @@ function request_post($url,$postdata) {
     
   }
   
+  function spid($ids){
+	  
+	  return formatIDSplit($ids);
+  }
   function formatIDSplit($ids){
 	  $ret=array();
 	  $ret[]=0;
