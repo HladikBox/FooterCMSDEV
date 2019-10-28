@@ -304,7 +304,7 @@ class XmlModel
 					
 				}else{
 					if($request[$value["key"]]!="0"&&$request[$value["key"]]!=""){
-						$sql=$sql." and r_main.".$value["key"]."=".parameter_filter($request[$value["key"]])."";
+						$sql=$sql." and r_main.".$value["key"]."=".(parameter_filter($request[$value["key"]])+0)."";
 					}
 				}
 				if($request[$value["key"]."_name"]!=""){
