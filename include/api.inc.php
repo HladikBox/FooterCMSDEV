@@ -6,8 +6,8 @@
     header('Access-Control-Allow-Methods:POST,GET,OPTIONS,DELETE');  
     header('Access-Control-Allow-Headers:x-requested-with,content-type,TokenKey,Sign,Fmd5str,lang,accesstoken,unicode,UT,TOKEN');  
 	
-	$_REQUEST["limit"]="";
-	unset($_REQUEST["limit"]);
+	//$_REQUEST["limit"]="";
+	//unset($_REQUEST["limit"]);
 	$_REQUEST["groupby"]="";
 	unset($_REQUEST["groupby"]);
 	$_REQUEST["selectfield"]="";
@@ -58,7 +58,7 @@
         if($api["model"]==MODEL&&$api["func"]==FUNC){
 
             if($api["type"]!=""&&$api["active"]!="1"){
-
+				Header("HTTP/1.1 404 Not Found");
                 outputJSON(outResult("401","Api not active"));    
 
             }
@@ -97,11 +97,13 @@
                     include USER_ROOT."api/".$api["model"]."/".$api["func"].".php";
                 }
             }catch(Exception $ex){
+				Header("HTTP/1.1 500 ERROR");
                 outputJSON(outResult("500",$ex->getMessage()));
             }
             break;
         }
     }
+				Header("HTTP/1.1 404 Not Found");
     outputJSON(outResult("404","Api not found"));
 
 }

@@ -292,6 +292,11 @@ class XmlModel
 					$sql=$sql." and r_main.".$value["key"]."<='".parameter_filter($request[$value["key"]."_to"])."'";
 
 				}
+				if($request[$value["key"]]!=""){
+
+					$sql=$sql." and r_main.".$value["key"]."='".parameter_filter($request[$value["key"]])."'";
+
+				}
 
 			}else if($value["type"]=="fkey"){
 				$csr=explode(",",$request[$value["key"]]);
@@ -370,6 +375,7 @@ class XmlModel
 		//exit();
 		$orderby="r_main.updated_date desc";	
 	}
+	//print_r($request);
 	$limit=parameter_filter($request["limit"]);
 	if(MODULE!="api"&&$limit==""){
 		$limit=" limit $limit 0,65535";
