@@ -182,6 +182,7 @@ class XmlModel
 	$sql=$this->GetSearchSqlField($request);
 	$sql.=$this->GetSearchSqlCondition($request);
 	//echo $sql;
+	//exit;
 	return $sql;
   }
   public function GetSearchSqlField($request,$allfieldshow=false){

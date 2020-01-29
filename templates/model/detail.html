@@ -75,7 +75,7 @@
                                                 {{else}}
                                                 <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}readonly="readonly"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
                                                 {{/if}}
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="password"}}
@@ -83,7 +83,7 @@
                                             <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <input type="password" class="form-control" value="{{$rs.value}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="必填项" {{/if}} />
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                
                                         {{elseif $rs.type=="longtext"}}
@@ -98,7 +98,7 @@
                                                 {{else}}
                                                 <textarea rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
                                                 {{/if}}
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="html"}}
@@ -108,7 +108,7 @@
                                             <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-10">
                                                 <textarea {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}}  id="content_{{$rs.key}}" class="ckeditor">{{$rs.value}}</textarea>
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="datetime"}}
@@ -116,15 +116,15 @@
                                             <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control datepicker" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} id="content_{{$rs.key}}" value="{{if $action=="add"}}{{if $rs.default=='now'}}{{$now}}{{else}}{{$rs.default}}{{/if}}{{else}}{{$rs.value}}{{/if}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                            
                                         {{elseif $rs.type=="number"}}
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
                                             <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-6">
-                                                <input type="number" class="form-control col-md-9" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{if $rs.default==''}}{{$rs.minvalue+0}}{{else}}{{$rs.default+0}}{{/if}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
-												<span class='help-block'></span>
+                                                <input type="number" class="form-control col-md-9 text-right" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{if $rs.default==''}}{{$rs.minvalue+0}}{{else}}{{$rs.default+0}}{{/if}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
 											<div class="col-md-2" style="margin-top:10px;">{{$rs.unit}}</div>
                                         </div>                                            
@@ -133,7 +133,7 @@
                                             <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
                                                 <input id="content_{{$rs.key}}" type="checkbox" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  {{if $rs.value=="Y"||($action=="add"&&$rs.default=="1")}}checked{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                                      
                                         {{elseif $rs.type=="upload"}}
@@ -156,7 +156,7 @@
                                                 <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
                                                 {{/if}}
                                                 <input class="uniform_on" type="hidden" id="content_{{$rs.key}}" value="{{$rs.value}}" />
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
 											<div class="col-md-4"></div>
 											<div class="col-md-8">
@@ -181,7 +181,7 @@
                                                 {{else}}
                                                 <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
                                                 {{/if}}
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                             
                                         {{elseif $rs.type=="fkey"}}
@@ -200,7 +200,7 @@
 													{{/if}}
                                                 </select>
 												<a id="view_{{$rs.key}}" href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$rs.viewmodel}}?action=view&id={{$rs.value}}')" class='{{if $rs.showview!="1"}}hide{{/if}}' >查看详情</a>
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
 											
                                         </div>                                              
@@ -221,7 +221,7 @@
                                                 {{/if}}
                                                 {{/foreach}}
                                                 <input type="hidden" class="form-control"  id="content_{{$rs.key}}" value="{{$rs.value}}"  />
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                            
                                         {{elseif $rs.type=="select"}}
@@ -234,7 +234,7 @@
                                                 <option {{if $rs.value==$rsoption.value or ($action=="add" and $rsoption.default=='1' )}}selected{{/if}} value="{{$rsoption.value}}">{{$rsoption.name}}</option>
                                                     {{/foreach}}
                                                 </select>
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                           
                                         {{elseif $action!="add" and $rs.type=="grid"}}
@@ -257,7 +257,7 @@
 													<i></i>
 												  </div>
 												 </div>
-												<span class='help-block'></span>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>           
                                         {{/if}}

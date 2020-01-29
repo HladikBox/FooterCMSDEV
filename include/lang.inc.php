@@ -1,17 +1,18 @@
 <?php
 
 $SysLangCode=$CONFIG['lang'];
-if(isset($_REQUEST["lang"])){
-	$SysLangCode=$_REQUEST["lang"];
-	$_SESSION[SESSIONNAME]["LangCode"]=$SysLangCode;
-}
+//if(isset($_REQUEST["lang"])){
+//	$SysLangCode=$_REQUEST["lang"];
+//	$_SESSION[SESSIONNAME]["LangCode"]=$SysLangCode;
+//}
 
-if(isset($_SESSION[SESSIONNAME]["LangCode"])){
-	$SysLangCode=$_SESSION[SESSIONNAME]["LangCode"];
-}
+//if(isset($_SESSION[SESSIONNAME]["LangCode"])){
+//	$SysLangCode=$_SESSION[SESSIONNAME]["LangCode"];
+//}
+
 
 //lang init
-if($CONFIG['solution_configuration']!="debug"&&isset($_SESSION[SESSIONNAME]["Lang"])){
+if(1==2&&$CONFIG['solution_configuration']!="debug"&&isset($_SESSION[SESSIONNAME]["Lang"])){
 	$SysLang=$_SESSION[SESSIONNAME]["Lang"];
 }else{
 $path=ROOT."/lang/$SysLangCode.xml";
