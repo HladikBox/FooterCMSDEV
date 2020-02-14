@@ -32,6 +32,9 @@ function emoji_encode($nickname)
 {
     $strEncode = '';
     $length = mb_strlen($nickname, 'utf-8');
+	if($length>1000){
+		return $nickname;
+	}
     for ($i = 0; $i < $length; $i++) {
         $_tmpStr = mb_substr($nickname, $i, 1, 'utf-8');
         if (strlen($_tmpStr) >= 4) {
