@@ -237,12 +237,12 @@
 												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                           
-                                        {{elseif $action!="add" and $rs.type=="grid"}}
+                                        {{elseif  $rs.type=="grid"}}
                                         <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}"  id="block_{{$rs.key}}">
                                             <label class="col-md-2 control-label"  id="title_{{$rs.key}}">{{$rs.name}}{{$SysLang.model.list}}</label>
                                             <div class="col-md-10">
-												{{if ($action!="add" and $rs.disableindetail=="1")==false}}
-                                                <button class="btn btn-primary btnGridAdd" onclick="window.location.href='{{$userpath}}nomodule/{{$rs.model}}?action=add&key={{$rs.modelkey}}&id={{$id}}&parenturl={{$request_url_encode}}';"><i class="glyphicon glyphicon-plus  glyphicon-white"></i> {{$SysLang.model.add}}{{$rs.name}}</button>
+												{{if $rs.cannotnew!="1" }}
+                                                <button class="btn btn-primary btnGridAdd" onclick="window.location.href='{{$userpath}}nomodule/{{$rs.model}}?action=add&key={{$rs.modelkey}}&id={{if $id==''}}{{$tempid}}{{else}}{{$id}}{{/if}}&parenturl={{$request_url_encode}}';"><i class="glyphicon glyphicon-plus  glyphicon-white"></i> {{$SysLang.model.add}}{{$rs.name}}{{($id+0)>0?'k':$id}}</button>
 												{{/if}}
                                                 <table class="table table-striped gridResult" id="content_{{$rs.key}}"></table>
                                             </div>
@@ -430,9 +430,14 @@ CKEDITOR.env.isCompatible = true;
             self.location="{{$PageName}}";
         });
         {{foreach from=$ModelData.fields.field item=rs}}
-        {{if $action!="add" and $rs.type=="grid"}}
+        {{if  $rs.type=="grid"}}
+		var tempid="{{$tempid}}";
+		
         var json_{{$rs.key}}={"parenturl":"{{$request_url_encode}}"};
-        $("#content_{{$rs.key}}").load("{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&{{$rs.modelkey}}={{$id}}",json_{{$rs.key}},function(data){
+		var {{$rs.key}}_modelkey={{$id+0}}==0?tempid:{{$id+0}};
+		var {{$rs.key}}_src="{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&candelete={{$rs.candelete}}&{{$rs.modelkey}}="+{{$rs.key}}_modelkey;
+		console.log({{$rs.key}}_src,"{{$rs.key}}_src");
+        $("#content_{{$rs.key}}").load({{$rs.key}}_src,json_{{$rs.key}},function(data){
 			if(griddata_loaded!=undefined){
 			griddata_loaded("{{$rs.key}}",data);
 			}
@@ -449,7 +454,9 @@ CKEDITOR.env.isCompatible = true;
         {{/foreach}}
 
             {{if $ParentKey!=""}}
-            $("#content_{{$ParentKey}}").val({{$ParentId}});
+				
+				$("#block_{{$ParentKey}}").hide();
+				$("#content_{{$ParentKey}}").val({{$ParentId}});
             {{/if}}
 
 		setAjaxSelect2();
@@ -481,6 +488,7 @@ CKEDITOR.env.isCompatible = true;
         $(".btnSave").prop("disabled","disabled");
         var json={action:"save"
         ,"primary_id":"{{$id}}"
+		,"tempid":"{{$tempid}}"
         {{foreach from=$ModelData.fields.field item=rs}}
         {{if $rs.type!="grid"}}
             {{if $rs.type=="check"}}
@@ -489,6 +497,8 @@ CKEDITOR.env.isCompatible = true;
             {{foreach from=$SysLangConfig.langs.lang item=rslang}}
             ,"{{$rs.key}}_{{$rslang.code}}":$("#content_{{$rs.key}}_{{$rslang.code}}").val()
             {{/foreach}}
+            {{elseif $rs.key==$ParentKey}}
+            ,"{{$rs.key}}":{{$ParentId}}
             {{else}}
             ,"{{$rs.key}}":$("#content_{{$rs.key}}").val()=="no-value"?"":$("#content_{{$rs.key}}").val()
             {{/if}}
@@ -533,6 +543,14 @@ CKEDITOR.env.isCompatible = true;
 
             
     }
+	
+	function deletegridrow(page,id,obj){
+	alert(page+id);
+		$.post(page,{action:"delete",idlist:id},function(){
+			console.log(obj);
+			$(obj).parent().parent().remove();
+		});
+	}
 
     function urlChange(key){
 		var val=$("#content_"+key).val();

@@ -31,7 +31,11 @@ $smarty->right_delimiter="}}";
 	 
 	$smarty->assign('uploadpath',USER_PATH.$CONFIG['fileupload']['upload_path']);
  }
- $smarty->assign('request_url_encode',base64_encode($_SERVER["REQUEST_URI"]));
+ $curl=$_SERVER["REQUEST_URI"];
+ if($_REQUEST["tempid"]==''){
+	 $curl.="&tempid=-".time();
+ }
+ $smarty->assign('request_url_encode',base64_encode($curl));
  $smarty->assign('parenturl',base64_decode($_REQUEST["parenturl"]));
  $smarty->assign('support_multilang',$CONFIG["SupportMultiLanguage"]?"1":"0");
  if($CONFIG["CmsStyle"]==""){

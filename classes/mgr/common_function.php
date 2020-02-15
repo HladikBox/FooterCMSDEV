@@ -301,7 +301,6 @@ function request_post($url,$postdata) {
 
   function GenerateTokenSign($token,$tokenkey_id,$mdsalt){
 	$url="http://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	//$url="http://szpc2057.morningstar.com/alucard263096/bbsignal/api/member/get";
 	$arr=$_POST;
 	ksort($arr);
 	$arrpost=array();

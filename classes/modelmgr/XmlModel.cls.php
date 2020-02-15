@@ -526,6 +526,7 @@ class XmlModel
   	return $result;
   }
   private function ShowGridResult($dbMgr,$smartyMgr,$request,$parenturl){
+	  
 	$sql=$this->GetSearchSql($request);
 	$sql=$this->fixGridSearchSql($sql);
 
@@ -853,7 +854,8 @@ class XmlModel
 			}
 		}
 		$sql=$sql.",".$dbMgr->getDate().",$sysuser,".$dbMgr->getDate().",$sysuser )";
-		$sql=$this->fixInsertSql($sql);
+		//print_r($request);
+		 $sql=$this->fixInsertSql($sql);
 		if($this->XmlData["nolist"]=="1"){
 			$id=$this->GetNoListId();
 		}else{
@@ -918,6 +920,8 @@ class XmlModel
 		$query = $dbMgr->query($sql);
 
 	}
+	//print_r($request);
+	$tempid=$request["tempid"]+0;
 
 		foreach ($fields as $value){
 			if($value["type"]=="password"&&$value["nosave"]!='1'){
@@ -944,6 +948,17 @@ class XmlModel
 					}
 					$query = $dbMgr->query($sql);
 				}
+			}
+			if($value["type"]=="grid"){
+				//print_r($value);
+				//exit;
+				$model=$value["model"];
+				$key=$value["modelkey"];
+				$xmlstr=$this->loadXmlFile($model);
+				$modelinfo=$this->xmlToArray($xmlstr);
+				 $tablename=$modelinfo["tablename"];
+				 $sql="update $tablename set $key=$id where $key=$tempid ";
+				$dbMgr->query($sql);
 			}
 		}
 		
@@ -1226,12 +1241,18 @@ class XmlModel
 		$this->ShowSearchResult($dbmgr,$smarty,$request);
 		$smarty->display(ROOT.'/templates/model/print.html');
 	  }else if($action=="getgrid"){
-
+		
+		$smarty->assign("candelete",$request["candelete"]);
 		$this->ShowGridResult($dbmgr,$smarty,$request,$request["parenturl"]);
 
 	  }else if($action=="add"){
 
 		$smarty->assign("MyMenuId",$menuId."_add");
+		$tempid=-1*time();
+		if($request["tempid"]!=""){
+			$tempid=$request["tempid"];
+		}
+		$smarty->assign("tempid",$tempid);
 		$this->Add($dbmgr,$smarty,$request);
 
 	  }else if($action=="edit"){
