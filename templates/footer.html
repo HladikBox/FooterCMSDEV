@@ -107,7 +107,7 @@ var tableToExcel = (function () {
 
     $(function () {
         $('input[type="checkbox"],[type="radio"]').not('#create-switch').not('.multicheckbox').bootstrapSwitch();
-        $('.datepicker').datetimepicker({ format: "yyyy-mm-dd hh:ii", language: "zh-CN", autoclose: true, todayhightline: true });
+        $('.datepicker').datepicker({ format: "yyyy-mm-dd", language: "zh-CN", autoclose: true, todayhightline: true });
         $('.uniform_on').uniform();
         $('.chzn-select').chosen();
         $('.selectize-select').selectize();

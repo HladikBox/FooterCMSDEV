@@ -1,4 +1,6 @@
 <?php
+
+
 if(MODULE=="myjs"){
 	if(file_exists(USER_ROOT."js/".MODEL)){
 		$ext=explode(".",MODEL);

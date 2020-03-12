@@ -447,6 +447,33 @@ class XmlModel
     $smartyMgr->assign("result",$result);
 
   }
+  
+  private function SearchResultExport($dbMgr,$smartyMgr,$request){
+	
+	$sql=$this->GetSearchSql($request);
+	$sql=$this->fixListSearchSql($sql);
+	$query = $dbMgr->query($sql);
+	$result = $dbMgr->fetch_array_all($query);
+	$result=$this->ClearData($result);
+
+	$result=$this->ReloadFListData($dbMgr,$result);
+	$result=$this->ReloadFKeyData($dbMgr,$result);
+	$result=$this->ReloadSelectData($dbMgr,$result);
+
+	$result=$this->fixListSearchResult($result);
+	
+	$data=$this->XmlData;
+	
+	$mgr=new ExcelMgr();
+	  //echo $mgr->getCol(27);
+	  //exit;
+	  $mgr->setTitle($data["name"]."数据");
+	  
+	  $mgr->setResult($data["fields"]["field"],$result);
+
+	  $mgr->download($data["name"]."数据导出-".date("YmdHi"));
+	exit;
+  }
 
   private function ReloadFListData($dbMgr,$result){
 	$fields=$this->XmlData["fields"]["field"];
@@ -1229,6 +1256,9 @@ class XmlModel
 	  }else if($action=="search"){
 		$this->ShowSearchResult($dbmgr,$smarty,$request);
 		$smarty->display(ROOT.'/templates/model/result.html');
+	  }else if($action=="export"){
+		$this->SearchResultExport($dbmgr,$smarty,$request);
+		
 	  }else if($action=="print"){
 		$this->XmlData["nosave"]="1";
 		$this->XmlData["nolist"]="1";

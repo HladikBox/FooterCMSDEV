@@ -52,7 +52,8 @@
 						</div>
 					</div>
 					
-					<input name="action" value="print" type="hidden" />
+					<form name="action" value="print" type="hidden" >
+					<input name='action' value='export' class='hide' />
                     <div class="row">
                         <div class="col-md-12">
 									<input type="password" style="position:absolute; top:-999px" />
@@ -139,14 +140,17 @@
 												{{/if}}                                 
 											{{/if}} 
 										{{/foreach}}   
-                                        <button class="btn btn-info hide" type="submit"><i class="glyphicon glyphicon-print glyphicon-white"></i>打印</button>
+										
+										{{if $ModelData.export=='1'}}
+                                        <button class="btn btn-info" type="submit"><i class="glyphicon glyphicon-print glyphicon-white"></i>导出</button>
+										{{/if}}
                                         <button class="btn btn-info" id="btnSearch" type="button"><i class="glyphicon glyphicon-refresh glyphicon-white"></i> {{$SysLang.model.search}}</button>
                                     </div>
                                </div>
                             </div>
                         </div>
                     </div>
-                    
+                    </form>
 					<div class="row hide" id="datasummary">
                         <div class="col-lg-12">
                             <div class="panel panel-default">
@@ -232,11 +236,6 @@
                                         </tbody>
                                     </table>
 									</div>
-									{{if $ModelData.export=='1'}}
-									<div class='col-md-12'>
-										<button class="btn btn-info" onclick='tableToExcel("searchResult", "{{$ModelData.name}}", "{{$ModelData.name}}"+now+".xls")'  >导出</button>
-									</div>
-									{{/if}}
 									</div>
                                 </div>
                             </div>
