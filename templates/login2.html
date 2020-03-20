@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <title>{{$Title}} {{$SysLang.index.systemlogin}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <link rel="stylesheet" href="https://cmsdev.oss-cn-hangzhou.aliyuncs.com/css/login.css">
+	<style>
+	.login-box-msg{
+		color:red;
+	}
+	</style>
+  
+</head>
+<body class="d-flex flex-column justify-content-center align-items-center signed-out">
+
+  <div>
+    <div class="header">
+      <div class="text-center m-b-15">
+        <a ><img src="/static/images/redash_icon_small.png"></a>
+      </div>
+      
+        <h3 class="text-center m-t-0 m-b-25"><b>{{$Title}}</b>{{$SysLang.index.systemlogin}}</h3>
+      
+    </div>
+    
+<div class="fixed-width-page">
+  <div class="bg-white tiled">
+	{{if $ErrorMsg==""}}<p >{{$SysLang.index.submittips}}{{else}}<p class="login-box-msg">{{$ErrorMsg}}{{/if}}</p>
+	<form  method="post" >
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" name="login_id" value="{{$login_id}}" placeholder="{{$SysLang.common.loginname}}">
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" name="password" value="{{$password}}" placeholder="{{$SysLang.common.password}}">
+      </div>
+      <div class="row"  >
+        <!-- /.col -->
+        <div class="col-xs-12" style="text-align:center;">
+                        <input type="hidden" name="action" value="login">
+          <button type="submit" class="btn btn-primary btn-block btn-flat">{{$SysLang.common.login}}</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+    <div class="m-t-25">
+      <p>欢迎使用易创云云服务后台管理系统.</p>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+
+
+<script type="text/javascript" src="{{$userpath}}myjs/SystemGlobal.js"></script>
+<script>
+$(document).ready(function(){
+
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+                // Setting focus
+                $('input[name="login_id"]').focus();
+
+                // Setting width of the alert box
+});
+        </script>
+
+
+</body>
+</html>
