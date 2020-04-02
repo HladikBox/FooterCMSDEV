@@ -198,6 +198,8 @@ class ExcelMgr
 	}
 
 	public function download($filename){
+		ob_end_clean();
+		ob_start();
 		// Redirect output to a client’s web browser (Excel2007)
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment;filename="'.$filename.'.xlsx"');

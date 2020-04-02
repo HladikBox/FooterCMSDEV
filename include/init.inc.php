@@ -5,6 +5,8 @@ if(MODULE=="myjs"){
 	if(file_exists(USER_ROOT."js/".MODEL)){
 		$ext=explode(".",MODEL);
 		$ext=$ext[1];
+		ob_end_clean();
+		ob_start();
 		if($ext=="js"){
 			header('Content-type: text/javascript');
 		}

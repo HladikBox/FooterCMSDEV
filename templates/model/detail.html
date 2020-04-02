@@ -92,11 +92,11 @@
                                             <div class="col-md-10">                                                
                                                 {{if $rs.ismutillang=="1"}}
                                                 {{foreach from=$SysLangConfig.langs.lang item=rslang}}
-                                                <textarea rows="5" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} class="form-control {{if $rslang.code!=$SysLangCode}}hide{{/if}}"  id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}</textarea>
+                                                <textarea maxlength="1000" rows="5" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} class="form-control {{if $rslang.code!=$SysLangCode}}hide{{/if}}"  id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}</textarea>
                                                 {{/foreach}}
                                                 <button {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
                                                 {{else}}
-                                                <textarea rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
+                                                <textarea  maxlength="1000" rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
                                                 {{/if}}
 												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
