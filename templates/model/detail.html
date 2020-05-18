@@ -92,11 +92,11 @@
                                             <div class="col-md-10">                                                
                                                 {{if $rs.ismutillang=="1"}}
                                                 {{foreach from=$SysLangConfig.langs.lang item=rslang}}
-                                                <textarea maxlength="1000" rows="5" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} class="form-control {{if $rslang.code!=$SysLangCode}}hide{{/if}}"  id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}</textarea>
+                                                <textarea maxlength="4000" rows="5" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} class="form-control {{if $rslang.code!=$SysLangCode}}hide{{/if}}"  id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}</textarea>
                                                 {{/foreach}}
                                                 <button {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
                                                 {{else}}
-                                                <textarea  maxlength="1000" rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
+                                                <textarea  maxlength="4000" rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
                                                 {{/if}}
 												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
@@ -115,7 +115,11 @@
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
                                             <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
+												{{if $rs.onlydate=='1'}}
+                                                <input type="date" class="form-control" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} id="content_{{$rs.key}}" value="{{if $action=="add"}}{{if $rs.default=='now'}}{{$now}}{{else}}{{$rs.default}}{{/if}}{{else}}{{$rs.value}}{{/if}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												{{else}}
                                                 <input type="text" class="form-control datepicker" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} id="content_{{$rs.key}}" value="{{if $action=="add"}}{{if $rs.default=='now'}}{{$now}}{{else}}{{$rs.default}}{{/if}}{{else}}{{$rs.value}}{{/if}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												{{/if}}
 												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                                            

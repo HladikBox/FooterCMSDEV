@@ -169,6 +169,7 @@ class XmlModel
 
 	return $result;
   }
+  
 
   private function GetLangTableSql($tablename,$tablenickname){
 	Global $CONFIG;
@@ -271,6 +272,8 @@ class XmlModel
 			}
 		}
 	}
+	//echo $sql;
+	//exit;
 	return $sql;
   }
   public function GetSearchSqlCondition($request){
@@ -418,6 +421,35 @@ class XmlModel
 	
     $smartyMgr->assign("FListArr",$Array);
   }
+  
+  
+  public function GetFListDataValue($dbMgr){
+	Global $CONFIG;
+
+	$Array=Array();
+	$fields=$this->XmlData["fields"]["field"];
+	foreach ($fields as $value){
+		if($value["type"]=="flist"){
+			//ismutillang
+			$tablename=$value["tablename"];
+			$tablerename=$value["ntbname"];
+			$displayfield=$value["displayfield"];
+			$condition=$value["condition"];
+			$ismutillang=$value["fmutillang"];
+
+			$arrayvalue=$this->GetFKeyData($dbMgr,$displayfield,$tablename,$tablerename,$condition,$ismutillang);
+			
+			$Arr=Array();
+			$Arr["key"]=$value["key"];
+			$Arr["value"]=$arrayvalue;
+			$Array[]=$Arr;
+		}
+	}
+	
+	return $Array;
+	
+    //$smartyMgr->assign("FListArr",$Array);
+  }
 
   public function fixListSearchSql($sql)
   {
@@ -439,6 +471,8 @@ class XmlModel
 	$result=$this->ReloadFListData($dbMgr,$result);
 	$result=$this->ReloadFKeyData($dbMgr,$result);
 	$result=$this->ReloadSelectData($dbMgr,$result);
+	//print_r($result);
+	//exit;
 
 	$result=$this->fixListSearchResult($result);
 
@@ -450,7 +484,9 @@ class XmlModel
   
   private function SearchResultExport($dbMgr,$smartyMgr,$request){
 	
-	$sql=$this->GetSearchSql($request);
+	
+	$sql=$this->GetSearchSqlField($request,$request["exporttype"]==0);
+	$sql.=$this->GetSearchSqlCondition($request);
 	$sql=$this->fixListSearchSql($sql);
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query);
@@ -468,8 +504,8 @@ class XmlModel
 	  //echo $mgr->getCol(27);
 	  //exit;
 	  $mgr->setTitle($data["name"]."数据");
-	  
-	  $mgr->setResult($data["fields"]["field"],$result);
+	 // print_r($resu);
+	  $mgr->setResult($data["fields"]["field"],$result,$request["exporttype"]);
 
 	  $mgr->download($data["name"]."数据导出-".date("YmdHi"));
 	exit;
@@ -976,16 +1012,21 @@ class XmlModel
 					$query = $dbMgr->query($sql);
 				}
 			}
-			if($value["type"]=="grid"){
+			if($tempid>0&&$value["type"]=="grid"){
 				//print_r($value);
 				//exit;
-				$model=$value["model"];
-				$key=$value["modelkey"];
-				$xmlstr=$this->loadXmlFile($model);
-				$modelinfo=$this->xmlToArray($xmlstr);
-				 $tablename=$modelinfo["tablename"];
-				 $sql="update $tablename set $key=$id where $key=$tempid ";
-				$dbMgr->query($sql);
+				if($request["primary_id"]==""){
+					
+					$model=$value["model"];
+					$key=$value["modelkey"];
+					$xmlstr=$this->loadXmlFile($model);
+					$modelinfo=$this->xmlToArray($xmlstr);
+					 $tablename=$modelinfo["tablename"];
+					 
+					 $sql="update $tablename set $key=$id where $key=$tempid ";
+					
+					$dbMgr->query($sql);
+				}
 			}
 		}
 		
@@ -1082,7 +1123,8 @@ class XmlModel
 	}
 	$excelMgr=new ExcelMgr();
 	$excelarr=$excelMgr->read($file["tmp_name"]);
-
+	//print_r($excelarr);
+	//exit;
 	$importData=$this->ImportDataCheck($excelarr,$dbMgr);
 	$importData=$this->fixImportDataCheck($importData,$dbMgr);
     $smartyMgr->assign("ModelData",$this->XmlData);
@@ -1102,6 +1144,8 @@ class XmlModel
 	$ret=array();
 	foreach($dataarr as $row){
 		$r=array();
+		
+		$r["primary_id"]=$row["主键值"];
 		foreach($fields as $fk=>$field){
 			foreach($row as $key=>$col){
 				if($key==$field["name"]){
@@ -1143,8 +1187,8 @@ class XmlModel
 				$searchfield=explode(",",$field["displayfield"]);
 				$searchfield=$searchfield[0];
 				
-				$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'".trim($field["value"])."' ";
-				
+				 $sql=" select id from $tablename as $tname where $condition and `$searchfield` like'".trim($field["value"])."' ";
+				//exit;
 				$query = $dbMgr->query($sql);
 				$result = $dbMgr->fetch_array($query);
 				
@@ -1204,6 +1248,8 @@ class XmlModel
 		}
 		$ret[]=$r;
 	}
+	//print_r($ret);
+	//exit;
 	return $ret;
   }
 

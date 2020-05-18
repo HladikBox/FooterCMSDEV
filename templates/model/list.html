@@ -32,9 +32,11 @@
                                         <li><a href="{{$userpath}}template?model={{$ModelData.model}}" target="_blank">下载模板</a></li>
                                         <li><a href="#" onclick="$('#file_import').click();">导入数据</a></li>
                                         <input class="hide" name="file_import" id="file_import" onchange="importData('import', '{{$ModelData.model}}_import')" type="file" />
+                                        <li><a href="#" onclick="exportfile(0)">导出所有数据</a></li>
                                     </ul>
                                 </div>
                                 {{/if}}
+								
                             </div>
                         </div>
                     </div>
@@ -52,8 +54,9 @@
 						</div>
 					</div>
 					
-					<form name="action" value="print" type="hidden" >
-					<input name='action' value='export' class='hide' />
+					<form name="action" value="print" type="hidden" id="conditionform" >
+					<input name='action' value='export' class='hide' type="hidden" />
+					<input name='exporttype' id="exporttype" type="hidden" value='1' class='hide' />
                     <div class="row">
                         <div class="col-md-12">
 									<input type="password" style="position:absolute; top:-999px" />
@@ -142,7 +145,7 @@
 										{{/foreach}}   
 										
 										{{if $ModelData.export=='1'}}
-                                        <button class="btn btn-info" type="submit"><i class="glyphicon glyphicon-print glyphicon-white"></i>导出</button>
+                                        <button class="btn btn-info" type="button" onclick="exportfile(1)" ><i class="glyphicon glyphicon-print glyphicon-white"></i>导出</button>
 										{{/if}}
                                         <button class="btn btn-info" id="btnSearch" type="button"><i class="glyphicon glyphicon-refresh glyphicon-white"></i> {{$SysLang.model.search}}</button>
                                     </div>
@@ -372,6 +375,12 @@ var notusedatatable=false;
     flistarr{{$rs.key}}[{{$rsvalue.id}}] = "{{$rsvalue.name}}";
     {{/foreach}}
     {{/foreach}}
+	
+	function exportfile(exporttype){
+		$("#exporttype").val(exporttype);
+		$("#conditionform").submit();
+	}
+	
     function addNew(){
         self.location='{{$PageName}}?action=add';
     }
@@ -510,6 +519,7 @@ var notusedatatable=false;
                         $("#importList tr").each(function () {
                             if ($(this).find(".RowSelect").prop("checked")==true) {
                                 var json={action:"save"
+								,"primary_id":$(this).find(".kv_primary_id").val()
 			                    {{foreach from=$ModelData.fields.field item=rs}}
                                  {{if $rs.type!="grid"}}
                                     ,"{{$rs.key}}":$(this).find(".kv_{{$rs.key}}").val()

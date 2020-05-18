@@ -21,12 +21,29 @@ class ExcelMgr
 											->setSubject($title);
 	}
 	
-	public function setResult($fields,$result){
+	public function setResult($fields,$result,$exporttype=1){
 		$objPHPExcel=$this->objPHPExcel;
 		$this->objPHPExcel->setActiveSheetIndex(0);
 		$i=0;
+		if($exporttype==0){
+			$objRichText = new PHPExcel_RichText();
+				//$objRichText->createText($header[$i]["name"]);
+				$objPayable = $objRichText->createTextRun("主键值");
+				$objPayable->getFont()->setBold(true);
+				//$objPayable->getFont()->setItalic(true);
+				$objPayable->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_WHITE ) );
+				
+				$this->objPHPExcel->getActiveSheet()->setCellValue($this->getCol($i)."1",  $objRichText);
+
+				$this->objPHPExcel->getActiveSheet()->getStyle($this->getCol($i)."1")
+				->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+				->getStartColor()->setRGB(new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE ) );
+				$this->objPHPExcel->getActiveSheet()->getColumnDimension($this->getCol($i))->setWidth(20);
+				
+				$i++;
+		}
 		foreach($fields as $val){
-			if($val["displayinlist"]=="1"){
+			if($exporttype==0||$val["displayinlist"]=="1"){
 				$objRichText = new PHPExcel_RichText();
 				//$objRichText->createText($header[$i]["name"]);
 				$objPayable = $objRichText->createTextRun($val["name"]);
@@ -46,28 +63,42 @@ class ExcelMgr
 			}
 		}
 		
+		//print_r($result);
+		//exit;
+		
 		$j=2;
 		foreach($result as $r){
 			$i=0;
+			if($exporttype==0){
+				
+					$objRichText = new PHPExcel_RichText();
+					$objPayable = $objRichText->createTextRun($r["id"]);
+					$this->objPHPExcel->getActiveSheet()->setCellValue($this->getCol($i).$j,  $objRichText);
+					$i++;
+			}
 			foreach($fields as $val){
-				if($val["displayinlist"]=="1"){
+				if($exporttype==0||$val["displayinlist"]=="1"){
 					$key=$val["key"];
 					
 					$v=$r[$key];
 					$type=$val["type"];
-					if($type=='select'||$type=='fkey'){
-						$v=$v["value"];
-					}
-					if($type=='select'||$type=='fkey'){
-						$v=$v["value"];
+					if($type=='select'){
+						//print_r($v);
+						//exit;
+						$v=$v["name"];
+					}if($type=='fkey'){
+						//print_r($v);
+						//exit;
+						$v=$v["name"];
 					}
 					
 					$objRichText = new PHPExcel_RichText();
-					$objPayable = $objRichText->createTextRun($r[$key]);
+					$objPayable = $objRichText->createTextRun($v);
 					$this->objPHPExcel->getActiveSheet()->setCellValue($this->getCol($i).$j,  $objRichText);
 					$i++;
 				}
 			}
+			//exit;
 			$j++;
 		}
 		
@@ -77,8 +108,24 @@ class ExcelMgr
 
 		$objPHPExcel=$this->objPHPExcel;
 		$this->objPHPExcel->setActiveSheetIndex(0);
-
+		
 		$i=0;
+		
+		$objRichText = new PHPExcel_RichText();
+			//$objRichText->createText($header[$i]["name"]);
+			$objPayable = $objRichText->createTextRun("主键值");
+			$objPayable->getFont()->setBold(true);
+			//$objPayable->getFont()->setItalic(true);
+			$objPayable->getFont()->setColor( new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_WHITE ) );
+			
+			$this->objPHPExcel->getActiveSheet()->setCellValue($this->getCol($i)."1",  $objRichText);
+
+			$this->objPHPExcel->getActiveSheet()->getStyle($this->getCol($i)."1")
+			->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+			->getStartColor()->setRGB(new PHPExcel_Style_Color( PHPExcel_Style_Color::COLOR_DARKBLUE ) );
+			$this->objPHPExcel->getActiveSheet()->getColumnDimension($this->getCol($i))->setWidth(15);
+
+		$i=1;
 		foreach($header as $val){
 
 			if($val["type"]=="grid"){

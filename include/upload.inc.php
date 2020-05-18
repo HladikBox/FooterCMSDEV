@@ -18,6 +18,7 @@
  $module="default";
  $field="upload";
  }
+ //print_r($_FILES);
  
  if(isset($_REQUEST["base64"])){
 	$file=base64_image_content($_REQUEST["base64"],USER_ROOT."logs");
@@ -33,7 +34,12 @@
 	//exit;
  }
  //print_r($_FILES);
- $filename=md5($file["name"].rand())."_".date('ymdHis')."_".rand().".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
+ if($_REQUEST["notrename"]!="Y"){
+	 $filename=md5($file["name"].rand())."_".date('ymdHis')."_".rand().".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
+ }else{
+	 $filename=$_FILES[$field]["name"];
+ }
+ 
  $refilename=$_REQUEST["refilename"];
  if($refilename!=""){
 	 $filename=$refilename;
@@ -64,10 +70,15 @@
 	 }
 	 $file=new Upload($file,$filename,$folder,true);
  }
-
- echo $file->safetyUpload();
- echo "|~~|".$filename;
- exit;
+	if($_REQUEST["rettype"]=="json"){
+		outputJSON(outResult($file->safetyUpload(),$filename));
+	}else{
+		
+	 echo $file->safetyUpload();
+	 echo "|~~|".$filename;
+	 exit;
+		
+	}
 }
 
 if(MODULE=="upload"){
