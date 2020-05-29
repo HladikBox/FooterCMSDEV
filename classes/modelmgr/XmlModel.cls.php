@@ -423,7 +423,7 @@ class XmlModel
   }
   
   
-  public function GetFListDataValue($dbMgr){
+  public function GetFListDataValue($dbMgr,$id=0){
 	Global $CONFIG;
 
 	$Array=Array();
@@ -433,8 +433,12 @@ class XmlModel
 			//ismutillang
 			$tablename=$value["tablename"];
 			$tablerename=$value["ntbname"];
+			$relatetable=$value["relatetable"];
 			$displayfield=$value["displayfield"];
 			$condition=$value["condition"];
+			if($id>0){
+				$condition="  id in (Select fid from ".$relatetable." where pid=$id ) ";
+			}
 			$ismutillang=$value["fmutillang"];
 
 			$arrayvalue=$this->GetFKeyData($dbMgr,$displayfield,$tablename,$tablerename,$condition,$ismutillang);
@@ -797,7 +801,7 @@ class XmlModel
 		}
 	}
 	if($unionunique_sql!=""){
-		$unionunique_sql="id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])?" and ".$this->XmlData["searchcondition"]:"").$unionunique_sql;
+		 $unionunique_sql="id<>".($request["primary_id"]+0).(empty($this->XmlData["searchcondition"])==false?" and ".$this->XmlData["searchcondition"]:"").$unionunique_sql;
 		if($dbMgr->checkHave($this->XmlData["tablename"]." r_main",$unionunique_sql) ){
 				$error.= join(", ",$unionunique_keyname).$SysLang["model"]["keyunionunique"]."\r\n";
 		}

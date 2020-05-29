@@ -15,6 +15,9 @@
 .nmth th{
 	white-space:nowrap;
 }
+td{
+word-break:break-all;
+}
 </style>
                 <!-- content -->
                 <div class="col-md-12">
@@ -81,12 +84,19 @@
                                             </div>
 											</div>
                                             {{elseif $rs.type=="datetime"}}
-											<div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+											<div class="form-group col-md-8 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
                                             <label class="col-md-4 control-label" >{{$rs.name}}:</label>
                                             <div class="col-md-8">
-                                                <div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}" name="{{$rs.key}}_from"></div>
+												{{if $rs.onlydate=='1'}}
+												<div class="col-md-5" style="padding:0"><input type="date" class="form-control " id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}" name="{{$rs.key}}_from"></div>
+                                                <div class="col-md-2" style="padding:3px;text-align:center">-</div>
+                                                <div class="col-md-5" style="padding:0"><input type="date" class="form-control" id="condition_{{$rs.key}}_to" placeholder="{{$SysLang.model.to}}" name="{{$rs.key}}_to"></div>
+												{{else}}
+												<div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}" name="{{$rs.key}}_from"></div>
                                                 <div class="col-md-2" style="padding:3px;text-align:center">-</div>
                                                 <div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_to" placeholder="{{$SysLang.model.to}}" name="{{$rs.key}}_to"></div>
+												{{/if}}
+                                                
                                             </div>
 											</div>                                                     
                                             {{elseif $rs.type=="fkey"}}
@@ -222,8 +232,8 @@
 								{{/foreach}}
                                 <div class="bootstrap-admin-panel-content" id="searchTablerContenter">
 									<div class="row">
-									<div class="col-md-12">
-                                    <table class="datatable table table-striped table-bordered" id="searchResult" style="width:100%">
+									<div class="col-md-12" >
+                                    <table class="datatable table table-striped table-bordered" id="searchResult" >
                                         <thead>
                                             <tr>
                                                 <th></th>
@@ -423,7 +433,7 @@ var notusedatatable=false;
 					"aLengthMenu" : [100, 500, 1000],   
 					"iDisplayLength" : 500 ,
 					bSort:true,
-					responsive: true,
+					responsive: true,					
 					aaSorting:[]});
 			}
 			
