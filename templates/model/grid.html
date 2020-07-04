@@ -1,6 +1,6 @@
 <thead ><tr>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th>{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}{{if $candelete=='1'}}<th class='grid_opt'>操作</th>{{/if}}</tr></thead>
 <tbody class='gridResult'>{{foreach from=$result item=row}}
-<tr>
+<tr  id="rstr_{{$row.id}}" primary_id="{{$row.id}}">
 {{foreach from=$row item=col key=key}}
 {{if $key!="id"}}
 {{foreach from=$ModelData.fields.field item=rs}}

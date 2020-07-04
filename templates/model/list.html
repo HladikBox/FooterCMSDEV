@@ -85,8 +85,8 @@ word-break:break-all;
 											</div>
                                             {{elseif $rs.type=="datetime"}}
 											<div class="form-group col-md-8 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
-                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
-                                            <div class="col-md-8">
+                                            <label class="col-md-2 control-label" >{{$rs.name}}:</label>
+                                            <div class="col-md-10">
 												{{if $rs.onlydate=='1'}}
 												<div class="col-md-5" style="padding:0"><input type="date" class="form-control " id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}" name="{{$rs.key}}_from"></div>
                                                 <div class="col-md-2" style="padding:3px;text-align:center">-</div>
@@ -232,7 +232,7 @@ word-break:break-all;
 								{{/foreach}}
                                 <div class="bootstrap-admin-panel-content" id="searchTablerContenter">
 									<div class="row">
-									<div class="col-md-12" >
+									<div class="col-md-12"  >
                                     <table class="datatable table table-striped table-bordered" id="searchResult" >
                                         <thead>
                                             <tr>
@@ -432,10 +432,11 @@ var notusedatatable=false;
 	                    "oLanguage": dataOlanguage,
 					"aLengthMenu" : [100, 500, 1000],   
 					"iDisplayLength" : 500 ,
-					bSort:true,
-					responsive: true,					
+					bSort:true,				
 					aaSorting:[]});
-			}
+			};
+			$("#searchResult").parent().css("overflow","scroll");
+			//responsive: true,	
 			
         });
 	}

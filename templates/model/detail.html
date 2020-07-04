@@ -398,7 +398,9 @@ CKEDITOR.env.isCompatible = true;
 
     $(function () {
         // CKEditor Full
-		$('.color-picker').colorpicker();
+		$('.color-picker').colorpicker({
+        popover: false,
+        inline: true});
         $('textarea.ckeditor').ckeditor({
             height: '200px',
             allowedContent: true,
@@ -727,9 +729,12 @@ CKEDITOR.env.isCompatible = true;
             dataType: 'json',
             quietMillis: 250,
             data: function (term, page) {
-                return {
-                    q: term.term, // search term
-                };
+				var json={};
+				if (typeof(select2json) != "undefined") {
+					json=select2json();
+				}
+				json.q=term.term;
+                return json;
             },
 			processResults: function (data) {
 			  // Transforms the top-level key of the response object from 'items' to 'results'
