@@ -21,7 +21,11 @@ class ExcelMgr
 											->setSubject($title);
 	}
 	
-	public function setResult($fields,$result,$exporttype=1){
+	public function setResult($fields,$result,$exporttype,$flistdata){
+		
+		//print_r($result);
+		//exit;
+		
 		$objPHPExcel=$this->objPHPExcel;
 		$this->objPHPExcel->setActiveSheetIndex(0);
 		$i=0;
@@ -86,10 +90,25 @@ class ExcelMgr
 						//print_r($v);
 						//exit;
 						$v=$v["name"];
-					}if($type=='fkey'){
+					}
+					if($type=='fkey'){
 						//print_r($v);
 						//exit;
 						$v=$v["name"];
+					}
+					if($type=="flist"){
+						foreach($flistdata as $flist){
+							if($val["key"]==$flist["key"]){
+								$flistvalue=[];
+								$vid=explode(",",$v);
+								$flistmatch=$flist["match"];
+								foreach($vid as $kid){
+									$flistvalue[]=$flistmatch[$kid]["name"];
+								}
+								$v=join(",",$flistvalue);
+								break;
+							}
+						}
 					}
 					
 					$objRichText = new PHPExcel_RichText();

@@ -415,11 +415,21 @@ class XmlModel
 			$Arr=Array();
 			$Arr["key"]=$value["key"];
 			$Arr["value"]=$arrayvalue;
+			
+			$match=[];
+			foreach($arrayvalue as $kv){
+				$match[$kv["id"]]=$kv;
+				
+			}
+			$Arr["match"]=$match;
+			
+			
 			$Array[]=$Arr;
 		}
 	}
 	
     $smartyMgr->assign("FListArr",$Array);
+	return $Array;
   }
   
   
@@ -499,6 +509,8 @@ class XmlModel
 	$result=$this->ReloadFListData($dbMgr,$result);
 	$result=$this->ReloadFKeyData($dbMgr,$result);
 	$result=$this->ReloadSelectData($dbMgr,$result);
+	
+	$flistdata=$this->GetFListData($dbMgr,$smartyMgr);
 
 	$result=$this->fixListSearchResult($result);
 	
@@ -509,7 +521,7 @@ class XmlModel
 	  //exit;
 	  $mgr->setTitle($data["name"]."数据");
 	 // print_r($resu);
-	  $mgr->setResult($data["fields"]["field"],$result,$request["exporttype"]);
+	  $mgr->setResult($data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
 
 	  $mgr->download($data["name"]."数据导出-".date("YmdHi"));
 	exit;

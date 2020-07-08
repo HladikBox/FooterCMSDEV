@@ -13,7 +13,7 @@ function parameter_filter($param,$htmlchange=true)
 {
 	Global $dbmgr;
 	
-	$arr=array("'"=>"''");
+	$arr=array();
       $param = trim($param);
 	$param = strtr($param,$arr);
 	$param = mysqli_real_escape_string($dbmgr->conn,$param);
