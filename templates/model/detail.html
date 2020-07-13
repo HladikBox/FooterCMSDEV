@@ -28,9 +28,9 @@
                     <div class="row  {{if $viewonly=='Y'}}hide{{/if}}" id="detailHeader">
                         <div class="col-lg-12">
                             <div class="page-header bootstrap-admin-content-title">
-                                <h1 id="detailTitle">{{$ModelData.name}} {{if $action=="add"}}- {{if $incopy==1}}复制的{{/if}}{{$SysLang.model.add}}{{else}}{{/if}}</h1>                                
+                                <h1 id="detailTitle">{{$ModelData.name}} {{if $action=="add"}}- {{if $incopy==1}}{{$SysLang.model.copy}}{{/if}}{{$SysLang.model.add}}{{else}}{{/if}}</h1>                                
                                 
-                                        <button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> 后退</button>
+                                        <button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> {{$SysLang.model.backforward}}</button>
                                 {{foreach from=$ModelData.options.option item=rs}}                                
                                     {{if $rs.detail=="1"}}
                                         {{if $rs.type=="link"}}    
@@ -50,8 +50,8 @@
                     {{if $ModelData.recording==1}}
                     <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_1" data-toggle="tab">数据</a></li>
-                        <li><a href="#tab_2" data-toggle="tab">操作记录</a></li>
+                        <li class="active"><a href="#tab_1" data-toggle="tab">{{$SysLang.model.data}}</a></li>
+                        <li><a href="#tab_2" data-toggle="tab">{{$SysLang.model.operationrecord}}</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_1">
@@ -82,7 +82,7 @@
                                         <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
                                             <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
                                             <div class="col-md-8">
-                                                <input type="password" class="form-control" value="{{$rs.value}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="必填项" {{/if}} />
+                                                <input type="password" class="form-control" value="{{$rs.value}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
 												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
                                         </div>                
@@ -165,7 +165,7 @@
 											<div class="col-md-4"></div>
 											<div class="col-md-8">
 											
-											<a href="javascript:void();"; class="{{if $action=="add" or $rs.disableindetail=="1"}}hide{{/if}} deleteupload" name="{{$rs.key}}"  id="uploaddelete_{{$rs.key}}"  >删除</a>
+											<a href="javascript:void();"; class="{{if $action=="add" or $rs.disableindetail=="1"}}hide{{/if}} deleteupload" name="{{$rs.key}}"  id="uploaddelete_{{$rs.key}}"  >{{$SysLang.model.delete}}</a>
 											</div>
                                         </div>                                                             
                                         {{elseif $rs.type=="url"}}
@@ -203,7 +203,7 @@
 													<option value="{{$rs.value}}">{{$rs.datavalue.name}}</option>
 													{{/if}}
                                                 </select>
-												<a id="view_{{$rs.key}}" href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$rs.viewmodel}}?action=view&id={{$rs.value}}')" class='{{if $rs.showview!="1"}}hide{{/if}}' >查看详情</a>
+												<a id="view_{{$rs.key}}" href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$rs.viewmodel}}?action=view&id={{$rs.value}}')" class='{{if $rs.showview!="1"}}hide{{/if}}' >{{$SysLang.model.checkdetail}}</a>
 												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>
 											
@@ -273,15 +273,15 @@
                                         {{if $ModelData.nosave!="1"}}
                                         <button class="btn btn-primary btnSave" onclick='save(1)' id='btnSave' ><i class="glyphicon  glyphicon-save glyphicon-white"></i> {{$SysLang.model.save}}</button>
 											{{if $ModelData.nolist!='1'&&$parenturl==""}}
-											<button class="btn btn-primary btnSave"  id='btnSaveNew' onclick='save(2)'><i class="glyphicon  glyphicon-file-plus  glyphicon-white"></i> 保存并新增</button>
-											<button class="btn btn-primary btnSave"  id='btnSaveCopy' onclick='save(3)'><i class="glyphicon  glyphicon-clipboard  glyphicon-white"></i> 保存并复制</button>
-											<button class="btn btn-primary" onclick='copynew()' id='btnCopy' ><i class="glyphicon glyphicon-copy  glyphicon-white"></i> 复制</button>
+											<button class="btn btn-primary btnSave"  id='btnSaveNew' onclick='save(2)'><i class="glyphicon  glyphicon-file-plus  glyphicon-white"></i> {{$SysLang.model.saveandnew}}</button>
+											<button class="btn btn-primary btnSave"  id='btnSaveCopy' onclick='save(3)'><i class="glyphicon  glyphicon-clipboard  glyphicon-white"></i> {{$SysLang.model.saveandcopy}}</button>
+											<button class="btn btn-primary" onclick='copynew()' id='btnCopy' ><i class="glyphicon glyphicon-copy  glyphicon-white"></i> {{$SysLang.model.copy}}</button>
 											{{/if}}
                                         {{/if}}
                                         {{if $parenturl!=""}}
                                         <button class="btn btn-primary" onclick="window.location.href='{{$parenturl}}';"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.back}}</button>
                                         {{elseif $ModelData.nolist!="1"}}<button class="btn btn-primary" id="btnReturnToList"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.backtolist}}</button>
-                                        <button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> 后退</button>
+                                        <button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> {{$SysLang.model.backforward}}</button>
                                         {{/if}}
 										
 										{{foreach from=$ModelData.options.option item=rs}}                                
@@ -313,40 +313,40 @@
                                             <div class="row form-horizontal" >
 
                                             <div class="form-group col-md-6" >
-                                                <label class="col-md-4 control-label"  >创建人:</label>
+                                                <label class="col-md-4 control-label"  >{{$SysLang.model.creator}}:</label>
                                                 <div class="col-md-8">
                                                     <input type="text" readonly="readonly" class="form-control"  value="{{$operator.created_user_name}}"   />
                                                 </div>
                                             </div>         
                                             <div class="form-group col-md-6" >
-                                                <label class="col-md-4 control-label"  >创建时间:</label>
+                                                <label class="col-md-4 control-label"  >{{$SysLang.model.createtime}}:</label>
                                                 <div class="col-md-8">
                                                     <input type="text" readonly="readonly" class="form-control"   value="{{$operator.created_date}}"   />
                                                 </div>
                                             </div>         
                                             <div class="form-group col-md-6" >
-                                                <label class="col-md-4 control-label"  >最后修改人:</label>
+                                                <label class="col-md-4 control-label"  >{{$SysLang.model.lastchangeuser}}:</label>
                                                 <div class="col-md-8">
                                                     <input type="text" readonly="readonly" class="form-control"  value="{{$operator.updated_user_name}}"   />
                                                 </div>
                                             </div>         
                                             <div class="form-group col-md-6" >
-                                                <label class="col-md-4 control-label"  >最后修改时间:</label>
+                                                <label class="col-md-4 control-label"  >{{$SysLang.model.lastchangetime}}:</label>
                                                 <div class="col-md-8">
                                                     <input type="text" readonly="readonly" class="form-control" value="{{$operator.updated_date}}"  />
                                                 </div>
                                             </div>        
                                             <div class="form-group col-md-12 " >
-                                                <label class="col-md-2 control-label">操作历史</label>
+                                                <label class="col-md-2 control-label">{{$SysLang.model.operationhistory}}</label>
                                                 <div class="col-md-10">
                                                     <table class="table table-striped gridOperation">
                                                         
 
                                                     <thead >
                                                         <tr>
-                                                            <th>操作时间</th>
-                                                            <th>操作人</th>
-                                                            <th>修改方式</th>
+                                                            <th>{{$SysLang.model.operationtime}}</th>
+                                                            <th>{{$SysLang.model.operator}}</th>
+                                                            <th>{{$SysLang.model.operationtype}}</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
@@ -357,7 +357,7 @@
                                                             <td>{{$row.user_name}}</td>
                                                             <td>{{$row.kdesc}}</td>
                                                             <td >
-                                                            <a  href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$ModelData.model}}?action=viewlog&logid={{$row.id}}')"  >查看详情</a>
+                                                            <a  href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$ModelData.model}}?action=viewlog&logid={{$row.id}}')"  >{{$SysLang.model.checkdetail}}</a>
 
                                                             </td>
 {{/foreach}}
@@ -526,24 +526,24 @@ CKEDITOR.env.isCompatible = true;
 						{{if $parenturl!=""}}
 						self.location='{{$parenturl}}';
 						{{elseif $action=="add"}}
-						infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转到编辑。");
+						infoDialog("{{$SysLang.model.savesuccess}}, {{$SysLang.model.redirecin3second}}.");
 						setTimeout(function(){
 							self.location='{{$PageName}}?action=edit&id='+id;
 						},3000);
 						{{/if}}
 					}else if(backtype==2){
-						infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转。");
+						infoDialog("{{$SysLang.model.savesuccess}}, {{$SysLang.model.redirecin3second}}.");
 						setTimeout(function(){
 							self.location='{{$PageName}}?action=add';
 						},3000);
 					}else if(backtype==3){
-						infoDialog("{{$SysLang.model.savesuccess}}。将于3秒后跳转。");
+						infoDialog("{{$SysLang.model.savesuccess}}, {{$SysLang.model.redirecin3second}}.");
 						setTimeout(function(){
 							self.location='{{$PageName}}?action=add&copyid='+id;
 						},3000);
 					}
                 }else{
-                        errorDialog(data,"保存失败");
+                        errorDialog(data,"{{$SysLang.model.savefail}}");
                 }
         });
 
@@ -692,7 +692,7 @@ CKEDITOR.env.isCompatible = true;
                             }
                             else
                             {
-                                errorDialog(data,"保存失败");
+                                errorDialog(data,"{{$SysLang.model.savefail}}");
                             }
                 
                         });
@@ -722,7 +722,7 @@ CKEDITOR.env.isCompatible = true;
     $("#content_{{$rs.key}}").select2({
 	debug:true,
 		width:"100%",
-        placeholder: "输入搜索关键字",
+        placeholder: "{{$SysLang.model.inputkeyword}}",
         minimumInputLength: 1,
         ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
             url: '{{$PageName}}?action=fkeysearch&key={{$rs.key}}'  ,

@@ -7,8 +7,10 @@
     <incorrectpsw>Password incorrect</incorrectpsw>
     <submittips>Press enter key or click the Submit button</submittips>
     <systemlogin>CMS Login</systemlogin>
+    <welcometouse>Welcome to use FooterCMS</welcometouse>
   </index>
   <model>
+    <dashboard>Dashboard</dashboard>
     <list>List</list>
     <add>Add</add>
     <edit>Edit</edit>
@@ -36,12 +38,46 @@
     <lessminvalue> can not less than </lessminvalue>
     <greatermaxvalue> can not greater than </greatermaxvalue>
     <systempluginconfig>System Plugin Configuration</systempluginconfig>
+    <copyfrom>copy from</copyfrom>
+    <backforward>Backforward</backforward>
+    <data>Data</data>
+    <operationrecord>Operation Record</operationrecord>
+    <delete>Remove</delete>
+    <checkdetail>View Detail</checkdetail>
+    <saveandnew>Save and New</saveandnew>
+    <saveandcopy>Save and Copy</saveandcopy>
+    <copy>Copy</copy>
+    <creator>Creator</creator>
+    <createtime>Created time</createtime>
+    <lastchangeuser>Latest updated user</lastchangeuser>
+    <lastchangetime>Latest updated time</lastchangetime>
+    <operationhistory>Operation History</operationhistory>
+    <operationtime>Operation Time</operationtime>
+    <operator>Operator</operator>
+    <operationtype>Operation Type</operationtype>
+    <redirecin3second>it will refresh in 3 second</redirecin3second>
+    <savefail>Save Failed</savefail>
+    <inputkeyword>Input keyword</inputkeyword>
+    <operation>Operation</operation>
+    <download>Download</download>
+    <primarykey>Primary Key</primarykey>
+    <import>Import</import>
+    <downloadtemplate>Download Template</downloadtemplate>
+    <importdata>Import Data</importdata>
+    <exportalldata>Export Result</exportalldata>
+    <datastat>Statistics</datastat>
+    <export>Export</export>
+    <all>All</all>
+    <selectto>Select</selectto>
+    <detail>Detail</detail>
+    <changesuccess>Changesd</changesuccess>
 </model>
   <common>
     <systemmanage>System Management</systemmanage>
     <dashboard>Dashboard</dashboard>
     <aboutus>About us</aboutus>
     <user>User</user>
+    <userrole>User Role</userrole>
     <login>Login</login>
     <loginname>Login Name</loginname>
     <password>Password</password>

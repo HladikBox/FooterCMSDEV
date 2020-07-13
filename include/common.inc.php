@@ -115,7 +115,6 @@ include ROOT.'/classes/mgr/excel.cls.php';
 
 include ROOT.'/classes/modelmgr/XmlModel.cls.php';
 
-include ROOT.'/include/lang.inc.php';
 
 
 include ROOT.'/include/template.inc.php';
@@ -126,6 +125,9 @@ include ROOT.'/include/api.inc.php';
 
 
 session_start();
+
+
+include ROOT.'/include/lang.inc.php';
 
 header("Content-type:text/html;charset=utf-8");
 

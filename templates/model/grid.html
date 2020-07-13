@@ -1,4 +1,4 @@
-<thead ><tr>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th>{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}{{if $candelete=='1'}}<th class='grid_opt'>操作</th>{{/if}}</tr></thead>
+<thead ><tr>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th>{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}{{if $candelete=='1'}}<th class='grid_opt'>{{$SysLang.model.operation}}</th>{{/if}}</tr></thead>
 <tbody class='gridResult'>{{foreach from=$result item=row}}
 <tr  id="rstr_{{$row.id}}" primary_id="{{$row.id}}">
 {{foreach from=$row item=col key=key}}
@@ -6,12 +6,12 @@
 {{foreach from=$ModelData.fields.field item=rs}}
 {{if $key==$rs.key && $rs.displayinlist=="1"}}
 <td id="grid_{{$PageName}}_{{$row.id}}" class="result_{{$rs.key}} {{if $rs.type=='select' || $rs.type=='fkey'}}sval='{{$col.value}}'{{/if}}" style="max-width: 300px;word-break: break-all; word-wrap:break-word;">
-{{if 1==1||$rs.gotodetail=="1"}}<a href="{{$PageName}}?action=edit&id={{$row.id}}&parenturl={{$parenturl}}">{{/if}}{{if ($rs.type=="upload"  )  && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}?height=50" />{{elseif ( $rs.type=="url" )  && $rs.filetype=="image"}}<img src="{{$col}}" />{{elseif ( $rs.type=="url" ) && $rs.filetype=="file"}}<a target="__blank" href="{{$col}}"  alt="图片"  >下载</a>{{elseif $rs.type=='select' || $rs.type=='fkey'}}{{$col.name}}{{else}}{{$col}}{{/if}}{{if 1==1||$rs.gotodetail=="1"}}</a>{{/if}}</td>
+{{if 1==1||$rs.gotodetail=="1"}}<a href="{{$PageName}}?action=edit&id={{$row.id}}&parenturl={{$parenturl}}">{{/if}}{{if ($rs.type=="upload"  )  && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}?height=50" />{{elseif ( $rs.type=="url" )  && $rs.filetype=="image"}}<img src="{{$col}}" />{{elseif ( $rs.type=="url" ) && $rs.filetype=="file"}}<a target="__blank" href="{{$col}}"  alt="图片"  >{{$SysLang.model.download}}</a>{{elseif $rs.type=='select' || $rs.type=='fkey'}}{{$col.name}}{{else}}{{$col}}{{/if}}{{if 1==1||$rs.gotodetail=="1"}}</a>{{/if}}</td>
 {{/if}}
 {{/foreach}}
 {{/if}}
 {{/foreach}}
-{{if $candelete=='1'}}<td><a class='btn btn-primary btn-xs grid_opt_delete' onclick="deletegridrow('{{$PageName}}',{{$row.id}},this)">删除</a>{{/if}}</td>
+{{if $candelete=='1'}}<td><a class='btn btn-primary btn-xs grid_opt_delete' onclick="deletegridrow('{{$PageName}}',{{$row.id}},this)">{{$SysLang.model.delete}}</a>{{/if}}</td>
 </tr>
 {{/foreach}}
 </tbody>

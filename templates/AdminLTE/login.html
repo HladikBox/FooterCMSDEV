@@ -39,14 +39,24 @@
         <!-- /.col -->
         <div class="col-xs-12" style="text-align:center;">
                         <input type="hidden" name="action" value="login">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">{{$SysLang.common.login}}</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat" >{{$SysLang.common.login}}</button>
         </div>
         <!-- /.col -->
       </div>
     </form>
     <div class="m-t-25">
-      <p>欢迎使用云易创后台管理系统.</p>
+      <p>{{$SysLang.index.welcometouse}}.</p>
     </div>
+	{{if $SupportEnglish=='Y' && $SysLangCode=='zh-cn'}}
+    <div class="m-t-25" >
+      <a  class="login-box-msg"  style="color:#4a8cee" href='login?lang=en-us'>Switch to English</a>
+    </div>
+	{{/if}}
+	{{if $SupportEnglish=='Y' && $SysLangCode!='zh-cn'}}
+    <div class="m-t-25" >
+      <a  class="login-box-msg"  style="color:#4a8cee" href='login?lang=zh-cn'>切换到中文</a>
+    </div>
+	{{/if}}
   </div>
 </div>
 
@@ -74,6 +84,17 @@ $(document).ready(function(){
 
                 // Setting width of the alert box
 });
+
+function showeng(){
+
+}
+
+function showchn(){
+
+}
+
+
+
         </script>
 
 

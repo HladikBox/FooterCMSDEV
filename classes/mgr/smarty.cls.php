@@ -25,6 +25,7 @@ $smarty->right_delimiter="}}";
  $smarty->assign('charset',$CONFIG['charset']);
  $smarty->assign('Title',$CONFIG['Title']);
  $smarty->assign('Url',$CONFIG['URL']);
+ $smarty->assign('SupportEnglish',$CONFIG['SupportEnglish']);
  if($CONFIG['fileupload']['oss']==true){
 	 $smarty->assign('uploadpath',$CONFIG['fileupload']['upload_path'].USER_PATH3);
  }else{

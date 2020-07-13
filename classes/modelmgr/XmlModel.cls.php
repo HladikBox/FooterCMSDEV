@@ -1194,37 +1194,44 @@ class XmlModel
 				}
 			}
 			if($field["type"]=="fkey"){
-				$tablename=$field["tablename"];
-				$tname=$field["ntbname"];
-				$condition=$field["condition"];
-				if($condition==""){
-					$condition=" 1=1 ";
-				}
-				$searchfield=explode(",",$field["displayfield"]);
-				$searchfield=$searchfield[0];
-				
-				 $sql=" select id from $tablename as $tname where $condition and `$searchfield` like'".trim($field["value"])."' ";
-				//exit;
-				$query = $dbMgr->query($sql);
-				$result = $dbMgr->fetch_array($query);
-				
-				if(($result["id"]+0)==0){
-					$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".trim($field["value"])."%' ";
-					$query = $dbMgr->query($sql);
-					$result = $dbMgr->fetch_array($query); 
-				}
-				if(($result["id"]+0)==0){
-					if($field["notnull"]==1){
-						$field["error"]="1";
-						$field["display"]=$field["display"]." 没有值";
-						$field["value"]=0;
-					}else{
-						$field["display"]="-";
-						$field["value"]=0;
-					}
+				if(trim($field["value"])==""){
+					
+							$field["display"]="-";
+							$field["value"]=0;
 				}else{
-					$field["value"]=$result["id"];
+					$tablename=$field["tablename"];
+					$tname=$field["ntbname"];
+					$condition=$field["condition"];
+					if($condition==""){
+						$condition=" 1=1 ";
+					}
+					$searchfield=explode(",",$field["displayfield"]);
+					$searchfield=$searchfield[0];
+					
+					 $sql=" select id from $tablename as $tname where $condition and `$searchfield` like'".trim($field["value"])."' ";
+					//exit;
+					$query = $dbMgr->query($sql);
+					$result = $dbMgr->fetch_array($query);
+					
+					if(($result["id"]+0)==0){
+						$sql=" select id from $tablename as $tname where $condition and `$searchfield` like'%".trim($field["value"])."%' ";
+						$query = $dbMgr->query($sql);
+						$result = $dbMgr->fetch_array($query); 
+					}
+					if(($result["id"]+0)==0){
+						if($field["notnull"]==1){
+							$field["error"]="1";
+							$field["display"]=$field["display"]." 没有值";
+							$field["value"]=0;
+						}else{
+							$field["display"]="-";
+							$field["value"]=0;
+						}
+					}else{
+						$field["value"]=$result["id"];
+					}
 				}
+				
 			}
 			if($field["type"]=="flist"){
 				$tablename=$field["tablename"];

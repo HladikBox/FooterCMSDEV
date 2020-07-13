@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th></th>
-            <th>主键值</th>
+            <th>{{$SysLang.model.primarykey}}</th>
             {{foreach from=$ModelData.fields.field item=rs}}
             {{if $rs.type!="grid"}}
             <th>{{$rs.name}}</th>
@@ -14,7 +14,7 @@
         {{foreach from=$ImportData item=row }}
         <tr>
             <td class="checkdd"><input type="checkbox" class="RowSelect" checked="checked" /></td>
-            <td class="err{{$col.error}} kd_primary_id">{{if $row.primary_id>0}}更新{{else}}新增{{/if}}{{$row.primary_id}}</td>
+            <td class="err{{$col.error}} kd_primary_id">{{if $row.primary_id>0}}{{$SysLang.model.update}}{{else}}{{$SysLang.model.add}}{{/if}}{{$row.primary_id}}</td>
 			{{if $row.primary_id>0}}
             <input class="kv_primary_id" type="hidden" AUTOCOMPLETE="off" value="{{$row.primary_id}}"  />
 			{{/if}}

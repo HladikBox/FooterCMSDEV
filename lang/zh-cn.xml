@@ -7,8 +7,10 @@
     <incorrectpsw>密码不正确</incorrectpsw>
     <submittips>请输入回车键或者点击登录按钮进行登录</submittips>
     <systemlogin>数据管理中心</systemlogin>
+    <welcometouse>欢迎使用云易创后台管理系统</welcometouse>
   </index>
   <model>
+    <dashboard>总览</dashboard>
     <list>列表</list>
     <add>新增</add>
     <edit>修改</edit>
@@ -36,6 +38,39 @@
     <lessminvalue> 不能小于 </lessminvalue>
     <greatermaxvalue> 不能大于 </greatermaxvalue>
     <systempluginconfig>系统插件配置</systempluginconfig>
+    <copyfrom>复制的</copyfrom>
+    <backforward>后退</backforward>
+    <data>数据</data>
+    <operationrecord>操作记录</operationrecord>
+    <delete>删除</delete>
+    <checkdetail>查看详情</checkdetail>
+    <saveandnew>保存并新增</saveandnew>
+    <saveandcopy>保存并复制</saveandcopy>
+    <copy>复制</copy>
+    <creator>创建人</creator>
+    <createtime>创建时间</createtime>
+    <lastchangeuser>最后修改人</lastchangeuser>
+    <lastchangetime>最后修改时间</lastchangetime>
+    <operationhistory>操作历史</operationhistory>
+    <operationtime>操作时间</operationtime>
+    <operator>操作人</operator>
+    <operationtype>操作类型</operationtype>
+    <redirecin3second>将于3秒后跳转</redirecin3second>
+    <savefail>保存失败</savefail>
+    <inputkeyword>输入搜索关键字</inputkeyword>
+    <operation>操作</operation>
+    <download>下载</download>
+    <primarykey>主键</primarykey>
+    <import>导入</import>
+    <downloadtemplate>下载模板</downloadtemplate>
+    <importdata>导入数据</importdata>
+    <exportalldata>导出所有数据</exportalldata>
+    <datastat>数据统计</datastat>
+    <export>导出</export>
+    <all>全部</all>
+    <selectto>选中</selectto>
+    <detail>详情</detail>
+    <changesuccess>修改成功</changesuccess>
   </model>
   <common>
     <systemmanage>系统管理</systemmanage>
