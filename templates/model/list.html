@@ -9,8 +9,26 @@
 .th_select,.th_number,.th_upload,.th_url.th_datetime{
 	width:50px;
 }
-.th_text,.th_longtext{
-	
+.th_fkey{
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	width:100px;
+	height:30px;
+}
+.th_text{
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	width:100px;
+	height:30px;
+}
+.th_longtext{
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	width:100px;
+	height:30px;
 }
 .nmth th{
 	white-space:nowrap;
@@ -276,7 +294,7 @@ word-break:break-all;
 					  <span class="sr-only">40% Complete (success)</span>
 					</div>
 				</div>
-                <button type="button" id="import_boxBtnConfirm" class="btn btn-success">{{$SysLang.model.export}}</button>
+                <button type="button" id="import_boxBtnConfirm" class="btn btn-success">{{$SysLang.model.import}}</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
             </div>
         </div>

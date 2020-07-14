@@ -1165,7 +1165,7 @@ class XmlModel
 		foreach($fields as $fk=>$field){
 			foreach($row as $key=>$col){
 				if($key==$field["name"]){
-					$field["value"]=$col;
+					$field["value"]=htmlspecialchars( $col);
 					$field["display"]=$col;
 				}
 			}
