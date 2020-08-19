@@ -19,6 +19,7 @@
  $field="upload";
  }
  //print_r($_FILES);
+ //print_r($_REQUEST);
  
  if(isset($_REQUEST["base64"])){
 	$file=base64_image_content($_REQUEST["base64"],USER_ROOT."logs");
@@ -33,13 +34,17 @@
 	//echo "Fils is empty";
 	//exit;
  }
- //print_r($_FILES);
  if($_REQUEST["notrename"]!="Y"){
-	 $filename=md5($file["name"].rand())."_".date('ymdHis')."_".rand().".".substr($file["name"], strrpos($file["name"], '.')+1); //$file["name"];
+	 $filetype=substr($file["name"], strrpos($file["name"], '.')+1);
+	 if($_REQUEST["filetype"]!=''){
+		 $filetype=$_REQUEST["filetype"];
+	 }
+	 $filename=md5($file["name"].rand())."_".date('ymdHis')."_".rand().".".$filetype; //$file["name"];
  }else{
 	 $filename=$_FILES[$field]["name"];
  }
- 
+ //echo "??";
+ //print_r($_FILES);
  $refilename=$_REQUEST["refilename"];
  if($refilename!=""){
 	 $filename=$refilename;

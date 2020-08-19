@@ -48,6 +48,7 @@ class XmlModel
       $model["fields"]["field"]=array();
       $model["fields"]["field"][]=$temp;
     }
+	
 
     for ($i=0; $i < count($model["fields"]["field"]); $i++) { 
       $model["fields"]["field"][$i]["typename"]=$this->keytypename[$model["fields"]["field"][$i]["type"]];
@@ -67,6 +68,11 @@ class XmlModel
     for ($i=0; $i < count($model["charts"]["chart"]); $i++) { 
       $model["charts"]["chart"][$i]["json"]=json_encode($model["charts"]["chart"][$i]);
     }
+	if($model["groups"]["group"]==""){
+		$model["groups"]["group"]=[];
+	}
+	array_unshift($model["groups"]["group"],"");
+	//print_r($model);
 
     $model=setArrayNoNull($model);
     return $model;
@@ -112,7 +118,7 @@ class XmlModel
   }
   
   private function ShowList($dbMgr,$smartyMgr){
-  
+	Global $CmsStyle;
     //$searchField=$this->XmlData["fields"];
 	//print_r($this->XmlData);
 	$dataWithFKey=$this->loadFKeyValue($dbMgr,$this->XmlData);
@@ -121,7 +127,7 @@ class XmlModel
 	$dataWithFKey=$this->fixShowList($dataWithFKey);
     $smartyMgr->assign("ModelData",$dataWithFKey);
     $smartyMgr->assign("PageName",$this->PageName);
-    $smartyMgr->display(ROOT.'/templates/model/list.html');
+    $smartyMgr->display(ROOT.'/templates/'.$CmsStyle.'/list.html');
   }
 
   private function loadFKeyValue($dbMgr,$XmlDataEx){
@@ -606,6 +612,7 @@ class XmlModel
   }
   private function ShowGridResult($dbMgr,$smartyMgr,$request,$parenturl){
 	  
+	Global $CmsStyle;
 	$sql=$this->GetSearchSql($request);
 	$sql=$this->fixGridSearchSql($sql);
 
@@ -623,13 +630,14 @@ class XmlModel
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("parenturl",$parenturl);
     $smartyMgr->assign("result",$result);
-    $smartyMgr->display(ROOT.'/templates/model/grid.html');
+    $smartyMgr->display(ROOT.'/templates/'.$CmsStyle.'/grid.html');
 
   }
 
   
   public function Add($dbMgr,$smartyMgr,$request){
 	 
+	Global $CmsStyle;
 	$copyid=$request["copyid"]+0;
 	
 	$sql="select * from ".$this->XmlData["tablename"]." r_main where id=$copyid";
@@ -661,7 +669,8 @@ class XmlModel
     $smartyMgr->assign("ModelData",$dataWithFKey);
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("action","add");
-    $smartyMgr->display(ROOT.'/templates/model/detail.html');
+	
+    $smartyMgr->display(ROOT.'/templates/'.$CmsStyle.'/detail.html');
 	
 	
 	
@@ -680,6 +689,7 @@ class XmlModel
   
   public function Edit($dbMgr,$smartyMgr,$id,$logdata=null){
 
+	Global $CmsStyle;
     if($logdata!=null){
 		//print_r($logdata);
 		//exit;
@@ -744,7 +754,7 @@ class XmlModel
 
     $smartyMgr->assign("id",$id);
     $smartyMgr->assign("action","edit");
-    $smartyMgr->display(ROOT.'/templates/model/detail.html');
+    $smartyMgr->display(ROOT.'/templates/'.$CmsStyle.'/detail.html');
   }
 
   private function assignWithInfo($XmlDataEx,$info,$langresult){
@@ -1128,6 +1138,7 @@ class XmlModel
   }
 
   private function Import($dbMgr,$smartyMgr,$request,$sysuser){
+	Global $CmsStyle;
 	  set_time_limit(3000);
 	$file=$_FILES["file_import"];
 	if($file["error"]!="0"){
@@ -1146,7 +1157,7 @@ class XmlModel
     $smartyMgr->assign("ModelData",$this->XmlData);
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("ImportData",$importData);
-    $smartyMgr->display(ROOT.'/templates/model/import.html');
+    $smartyMgr->display(ROOT.'/templates/'.$CmsStyle.'/import.html');
 
   }
 
@@ -1315,6 +1326,7 @@ class XmlModel
 
   public function DefaultShow($smarty,$dbmgr,$action,$menuId,$request){
 	Global $SysUser;
+	Global $CmsStyle;
 	
 	  $request=$this->resetRequestData($dbmgr,$request);
 	
@@ -1324,7 +1336,7 @@ class XmlModel
 
 	  }else if($action=="search"){
 		$this->ShowSearchResult($dbmgr,$smarty,$request);
-		$smarty->display(ROOT.'/templates/model/result.html');
+		$smarty->display(ROOT.'/templates/'.$CmsStyle.'/result.html');
 	  }else if($action=="export"){
 		$this->SearchResultExport($dbmgr,$smarty,$request);
 		
@@ -1338,7 +1350,7 @@ class XmlModel
 		}
 		$smarty->assign("viewonly","Y");
 		$this->ShowSearchResult($dbmgr,$smarty,$request);
-		$smarty->display(ROOT.'/templates/model/print.html');
+		$smarty->display(ROOT.'/templates/'.$CmsStyle.'/print.html');
 	  }else if($action=="getgrid"){
 		
 		$smarty->assign("candelete",$request["candelete"]);

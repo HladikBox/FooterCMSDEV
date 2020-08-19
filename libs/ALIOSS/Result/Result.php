@@ -94,6 +94,7 @@ abstract class Result
                 'message' => $message,
                 'body' => $body
             );
+			print_r($details);
             throw new OssException($details);
         }
     }

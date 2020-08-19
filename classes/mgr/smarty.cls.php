@@ -42,6 +42,7 @@ $smarty->right_delimiter="}}";
  if($CONFIG["CmsStyle"]==""){
  	$CONFIG["CmsStyle"]="AdminLTE";
  }
+ $CmsStyle=$CONFIG["CmsStyle"];
  $smarty->assign('CmsStyle',$CONFIG["CmsStyle"]);
  $smarty->assign('now',date("Y-m-d H:i:s"));
 

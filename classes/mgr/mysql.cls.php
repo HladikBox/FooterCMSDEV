@@ -42,6 +42,7 @@ class DbMysql
 		
 		if(!$this->conn = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname))
 		{
+			//echo(mysqli_error());
 			$this->halt('service unavailable');
 		}
 		

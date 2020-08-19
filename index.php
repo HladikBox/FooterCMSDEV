@@ -25,13 +25,13 @@ if(file_exists(USER_ROOT."common/cms.inc.php")){
 	include USER_ROOT."common/cms.inc.php";
 }
 	 
-     $smarty->display(ROOT.'/templates/dashboard.html');
+     $smarty->display(ROOT.'/templates/'.$CmsStyle.'/dashboard.html');
      
 
   }elseif(strtolower(MODULE)=="admin"&&strtolower(MODEL)=="about"){
     $smarty->assign("MyModule","admin");
     $smarty->assign("MyMenuId","about");
-    $smarty->display(ROOT.'/templates/about.html');
+    $smarty->display(ROOT.'/templates/'.$CmsStyle.'/about.html');
   }else{
     $modelmgrpath=USER_ROOT."modelmgr/".MODEL.".model.php";
      
