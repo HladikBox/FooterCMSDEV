@@ -1,0 +1,883 @@
+{{include  file="$smarty_root/$CmsStyle/header.html" }}
+<style>
+.checkboxl,.dt{
+	width:40px;
+}
+.dt{
+	cursor:pointer;
+}
+.th_select,.th_number,.th_upload,.th_url.th_datetime{
+	width:50px;
+}
+.th_fkey{
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	width:100px;
+	height:30px;
+}
+.th_text{
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	width:100px;
+	height:30px;
+}
+.th_longtext{
+	text-overflow: ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	width:100px;
+	height:30px;
+}
+.nmth th{
+	white-space:nowrap;
+}
+td{
+word-break:break-all;
+}
+</style>
+<!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>{{$ModelData.name}} - {{$SysLang.model.list}}</h1>
+          </div>
+          <div class="col-sm-6">
+			<div class="float-sm-right">
+			{{if $ModelData.import=="1"}}
+				<div class="btn-group">
+                        <a type="button" class="btn btn-info" href="{{$userpath}}template?model={{$ModelData.model}}" target="_blank" >{{$SysLang.model.downloadtemplate}}</a>
+                        <a type="button" class="btn btn-info" href="#" onclick="$('#file_import').click();" >{{$SysLang.model.importdata}}</a>
+                        <a type="button" class="btn btn-info" href="#" onclick="exportfile(0)">{{$SysLang.model.exportalldata}}</a>
+                                        <input class="hide" name="file_import" id="file_import" onchange="importData('import', '{{$ModelData.model}}_import')" type="file" />
+                      
+                </div>
+            {{/if}}
+			</div>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+	
+		<div class="hide card" id="datasummaryHeader">
+			<div class="card-header">
+			  <h3 class="card-title" id="datasummaryHeadingHeader">{{$SysLang.model.datastat}}</h3>
+			</div>
+			  <div class="card-body">
+				<div class="row form-horizontal" id="datasummaryrowHeader"> </div>
+			  </div>
+		</div>
+		
+		<form name="action" value="print" type="hidden" id="conditionform" >
+					<input name='action' value='export' class='hide' type="hidden" />
+					<input name='exporttype' id="exporttype" type="hidden" value='1' class='hide' />
+					
+									<input type="password" style="position:absolute; top:-999px" />
+		<div class=" card" id="datasummaryHeader">
+			<div class="card-header">
+			  <h3 class="card-title" id="datasummaryHeadingHeader">{{$SysLang.model.condition}}</h3>
+			</div>
+			  <div class="card-body">
+				<div class="row form-horizontal">
+										<input type="password" style="position:absolute; top:-999px" />
+                                        {{foreach from=$ModelData.fields.field item=rs}}
+                                        {{if $rs.search=="1"}}
+                                            {{if $rs.type=="text" || $rs.type=="longtext" || $rs.type=="html"}}
+											<div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="condition_{{$rs.key}}" name="{{$rs.key}}"  autocomplete="off">
+                                            </div>
+											</div>
+                                            {{elseif $rs.type=="datetime"}}
+											<div class="form-group col-md-8 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-2 control-label" >{{$rs.name}}:</label>
+                                            <div class="col-md-10">
+												{{if $rs.onlydate=='1'}}
+												<div class="col-md-5" style="padding:0"><input type="date" class="form-control " id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}" name="{{$rs.key}}_from"></div>
+                                                <div class="col-md-2" style="padding:3px;text-align:center">-</div>
+                                                <div class="col-md-5" style="padding:0"><input type="date" class="form-control" id="condition_{{$rs.key}}_to" placeholder="{{$SysLang.model.to}}" name="{{$rs.key}}_to"></div>
+												{{else}}
+												<div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_from" placeholder="{{$SysLang.model.from}}" name="{{$rs.key}}_from"></div>
+                                                <div class="col-md-2" style="padding:3px;text-align:center">-</div>
+                                                <div class="col-md-5" style="padding:0"><input type="text" class="form-control datepicker" id="condition_{{$rs.key}}_to" placeholder="{{$SysLang.model.to}}" name="{{$rs.key}}_to"></div>
+												{{/if}}
+                                                
+                                            </div>
+											</div>                                                     
+                                            {{elseif $rs.type=="fkey"}}
+											<div class="form-group col-md-4  {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
+                                            <div class="col-md-8">
+                                                <select id="condition_{{$rs.key}}" class="form-control {{if $rs.ajax!='1'}}selectize-select{{/if}}"  name="{{$rs.key}}">
+                                                    {{if $rs.ajax!='1'}}
+														<option value="0">--{{$SysLang.model.select}}--</option>
+                                                        {{foreach from=$rs.options item=rsoption}}
+                                                        <option value="{{$rsoption.id}}">{{$rsoption.name}}</option>
+                                                        {{/foreach}}
+                                                    {{/if}}
+                                                </select>
+                                            </div>
+											</div>                                       
+                                            {{elseif $rs.type=="select"   }}
+											<div class="form-group col-md-4 {{if $rs.hidden==1||$rs.listfilter==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
+                                            <div class="col-md-8">
+                                                <select id="condition_{{$rs.key}}" class="form-control" name="{{$rs.key}}">
+                                                    <option value="no-value">--{{$SysLang.model.select}}--</option>
+                                                    {{foreach from=$rs.options.option item=rsoption}}
+                                                    <option {{if $rsoption.default=='1'&&$rs.listfilter==1 }}  selected{{/if}} value="{{$rsoption.value}}">{{$rsoption.name}}</option>
+                                                    {{/foreach}}
+                                                </select>
+												<!--  --> 
+												<!---->
+                                            </div>
+											</div>                                       
+                                            {{elseif 1==2&&$rs.type=="check" }}
+											<div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" id="searchblock_{{$rs.key}}">
+                                            <label class="col-md-4 control-label" >{{$rs.name}}:</label>
+                                            <div class="col-md-8 ">
+                                                <input id="condition_{{$rs.key}}"  name="{{$rs.key}}" type="checkbox" value="Y" {{if $rs.default=="1"}}checked="checked"{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
+                                            </div>
+											</div>
+                                            {{/if}}
+                                        {{/if}}
+                                        {{/foreach}}
+                                    </div>
+			</div>
+			<div class="card-footer">
+			  <div class="text-right">
+										{{foreach from=$ModelData.options.option item=rs}}
+											{{if $rs.search=="1"}}
+												{{if $rs.type=="link"}}    
+											<a href="{{$rs.link}}" class="action">
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success" type="button">{{$rs.name}}</button>
+											</a>
+												{{elseif $rs.type=="function"}}
+											<a href="javascript:{{$rs.function}}" class="action">
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success" type="button">{{$rs.name}}</button>
+											</a>
+												{{/if}}                                 
+											{{/if}} 
+										{{/foreach}}   
+										
+										{{if $ModelData.export=='1'}}
+                                        <button class="btn btn-info" type="button" onclick="exportfile(1)" ><i class="glyphicon glyphicon-print glyphicon-white"></i>{{$SysLang.model.export}}</button>
+										{{/if}}
+                                        <button class="btn btn-info" id="btnSearch" type="button"><i class="glyphicon glyphicon-refresh glyphicon-white"></i> {{$SysLang.model.search}}</button>
+                                    </div>
+			</div>
+		</div>
+		</form>
+		
+		{{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
+		<div class="card">
+              <div class="card-header">
+                <h3 class="card-title">{{$rs.name}}</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body " >
+				<div id="chart{{$chartindex}}"></div>
+                <div id="chart{{$chartindex}}_tables" class="row"></div>
+			  </div>
+		</div>
+		{{/foreach}}
+		
+		<div class="card">
+              <div class="card-header">
+                <h3 class="card-title" id="searchPanelHeading">{{$SysLang.model.result}}</h3>
+				<div class="card-tools">
+                  <style>
+									.btn-group .btn-primary{
+									color:white;
+									}
+								</style>
+								{{foreach from=$ModelData.fields.field item=rs}}
+								{{if $rs.type=="select" && $rs.listfilter=="1" }}
+								<div class="btn-group {{if $rs.hidden==1}}hidden{{/if}}" id="searchtoobar_{{$rs.key}}">
+									{{foreach from=$rs.options.option item=rsoption index=idx}}
+									<button type="button" class="btn btn-default  {{if $rsoption.default=='1'&&$rs.listfilter==1 }}  btn-primary{{/if}}" status="{{$rsoption.value}}">{{$rsoption.name}}</button>
+									{{/foreach}}
+									<button type="button" class="btn btn-default " status="no-value">{{$SysLang.model.all}}</button>
+								</div>
+								<script>
+									$("#searchtoobar_{{$rs.key}} button").click(function(){
+										$("#searchtoobar_{{$rs.key}} button").removeClass("btn-primary");
+										$(this).addClass("btn-primary");
+										$("#condition_{{$rs.key}}").val($(this).attr("status"));
+										
+										try{
+											search();
+										}catch(e){
+											
+										}
+									});
+																</script>
+								{{/if}}
+								{{/foreach}}
+                </div>
+              </div>
+              <!-- /.card-header -->
+			  
+			  
+			  
+              <div class="card-body  table-responsive p-0" style="height: 60vh;"  id="searchTablerContenter" >
+				<table class="table table-head-fixed text-nowrap"  id="searchResult" >
+                  <thead>
+                    <tr>
+                      <th></th>
+                                                {{foreach from=$ModelData.fields.field item=rs}}
+                                                    {{if $rs.displayinlist=="1"}}
+                                                    <th>{{$rs.name}}</th>
+                                                    {{/if}}
+                                                {{/foreach}}
+                    </tr>
+                  </thead>
+                                        <tbody>
+                                           
+                                        </tbody>
+				</table>
+			  </div>
+		</div>
+		
+    </section>
+    <!-- /.content -->
+
+
+<div id="import_box" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="import_boxtitle" aria-hidden="true">
+    <div class="modal-dialog  modal-xl" >
+        <div class="modal-content" >
+            <div class="modal-header">
+                <h4 id="import_boxtitle" class="modal-title">{{$SysLang.model.import}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body" >
+                <div id="import_boxmsg" style="height:60vh;overflow: auto;"></div>
+            </div>
+            <div class="modal-footer">
+				<div class="progress">
+					<div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%" id="inprogress">
+					  <span class="sr-only">40% Complete (success)</span>
+					</div>
+				</div>
+                <button type="button" id="import_boxBtnConfirm" class="btn btn-success">{{$SysLang.model.import}}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="dialog_gridtable" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="dialog_gridtable_title" class="modal-title">{{$SysLang.model.export}}</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped " id="listGridTable"></table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+var needlistopennew=false;
+            function resultload() {
+			
+                {{foreach from=$ModelData.fields.field item=rs}}
+                {{if $rs.type=="flist"}}
+                $(".result_{{$rs.key}}").each(function () {
+                    var str = $(this).text();
+                    var arr = str.split(",");
+                    var nstr = "";
+                    var isFirst = true;
+                    for (var i = 0; i < arr.length; i++) {
+                        if ($.trim(arr[i]) !="" ) {
+                            if (isFirst == false) {
+                                nstr = nstr + ",";
+                            }
+                            var id=Number(arr[i]);
+                            isFirst = false;
+                            nstr = nstr + flistarr{{$rs.key}}[id];
+                        }
+                    }
+                    $(this).text(nstr);
+                });
+                {{/if}}
+                {{/foreach}}
+				
+				$("#result_selectall").change(function(){
+					var val=$("#result_selectall").prop("checked");
+					console.log(val);
+					$(".result_id").prop("checked",val);
+				});
+            }
+			function listopennew(url){
+				if(needlistopennew==true){
+					window.open(url);
+				}else{
+					window.location.href=url;
+				}
+			}
+</script>
+<style>
+.rstr td{
+	max-width:200px;
+}
+.nmth th{
+	max-width:200px;
+}
+{{foreach from=$ModelData.fields.field item=rs}}
+	{{if $rs.type=='select'}}
+		{{foreach from=$rs.options.option item=option}}
+			{{if $option.color!=""}}
+			.{{$rs.key}}_{{$option.value}}{
+				background:{{$option.color}};
+				color:white;
+				padding:3px 6px 3px 6px;
+				border-radius:3px;
+				white-space: nowrap;
+			}
+			{{/if}}
+		{{/foreach}}
+	{{/if}}
+{{/foreach}}
+</style>
+<script>
+var notusedatatable=false;
+</script>
+<script type="text/javascript" src="/js/myjs.js"></script>
+<script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
+<link rel="stylesheet" type="text/css" href="{{$userpath}}myjs/{{$ModelData.model}}.css"></link>
+<script>
+    var ds=null;
+	var oldwidth=0;
+	var deleteTips="{{$SysLang.model.deletesure}}";
+    var searchincomming=true;
+    {{foreach from=$FListArr item=rs}}
+    flistarr{{$rs.key}} = new Array();
+    {{foreach from=$rs.value item=rsvalue}}
+    flistarr{{$rs.key}}[{{$rsvalue.id}}] = "{{$rsvalue.name}}";
+    {{/foreach}}
+    {{/foreach}}
+	
+	function exportfile(exporttype){
+		$("#exporttype").val(exporttype);
+		$("#conditionform").submit();
+	}
+	
+    function addNew(){
+        self.location='{{$PageName}}?action=add';
+    }
+	function search(){
+			
+			if(notusedatatable!=true){
+				$("#searchResult_wrapper").remove();
+				$("#searchTablerContenter").append($('<table class="datatable table table-striped table-bordered" id="searchResult" style="width:100%"></table>'));
+            }
+			$("#btnSearch").prop("disabled","disabled");
+            var json={
+                "action":"search"
+                {{foreach from=$ModelData.fields.field item=rs}}
+                    {{if $rs.search=="1"}}
+                        {{if $rs.type=="datetime" }}
+                        ,"{{$rs.key}}_from":$("#condition_{{$rs.key}}_from").val()
+                        ,"{{$rs.key}}_to":$("#condition_{{$rs.key}}_to").val()
+                        {{elseif 1==2&&$rs.type=="check"}}
+                        ,"{{$rs.key}}":$("#condition_{{$rs.key}}").prop("checked")?"Y":"N"
+                        {{elseif $rs.type=="text"||$rs.type=="longtext"||$rs.type=="html"||$rs.type=="select"||$rs.type=="fkey"}}
+                        ,"{{$rs.key}}":$("#condition_{{$rs.key}}").val()
+                        {{/if}}
+                    {{/if}}
+                {{/foreach}}
+                };
+                 json= myjs_searchClick(json);
+				 console.log(JSON.stringify(json));
+        $("#searchResult").load("{{$PageName}}",json,function(data){
+			resultload();
+            myjs_afterResultLoad();
+            
+            $("#btnSearch").prop("disabled","");
+            loadCharts();
+			//alert(notusedatatable);
+			
+			$("#searchResult").parent().css("overflow","scroll");
+			//responsive: true,	
+			
+        });
+	}
+    function btnDeleteInList(){
+       
+        var isGo=deleteValidate();
+        if(isGo==false){
+            return;
+        }
+        confirmDialog("{{$SysLang.common.notice}}",deleteTips,function(){
+                var idlist="0";
+                $("#searchResult input:checkbox:checked.RowSelect").each(function(){
+                    idlist+=","+$(this).val();
+                });
+                if(idlist!="0"){
+                    $.post("{{$PageName}}",{"action":"delete","idlist":idlist},function(data){
+                        
+                        if(myjs_afterdelete(data)==false){
+                            return;
+                        }
+                        if(data=="success")
+                        {
+                            $("#btnSearch").click();
+                        }
+                        else
+                        {
+                            errorDialog(data);
+                        }
+			
+                    });
+                }
+            });
+    }
+    function deleteValidate(){
+        var message="";
+        var idlist="0";
+        $("#searchResult input:checkbox:checked.RowSelect").each(function(){
+            idlist+=","+$(this).val();
+        });
+        if(idlist=="0"){
+            message+="<p>{{$SysLang.model.atleastselectone}}</p>";
+        }
+        message+myjs_delevalidate();
+        if(message!=""){
+            //infoDialog(message);
+            warningDialog(message);
+            return false;
+        }
+        return true;
+    }
+	function showTableModel(dataurl,title){
+		$("#listGridTable").html();
+        $("#dialog_gridtable_title").text(title);
+        $("#dialog_gridtable").modal('show');
+		$("#listGridTable").load(dataurl);
+		
+	}
+     
+    function importData(key,module) {
+	
+	
+	var input = document.getElementById("file_" + key);
+	var data = new FormData();
+      data.append("file_" + key, input.files[0]);
+ 
+      var request = new XMLHttpRequest();
+	  request.onreadystatechange=function () {
+	  console.log("uploadcallback",data);
+				  if (request.readyState==4 && request.status==200){
+					var data=request.responseText;
+					$("#file_import").val("");
+			        $("#import_boxmsg").html(data);
+			        myjs_afterimportdataload();
+						$("#inprogress").css("width","0%");
+			        $("#import_boxBtnConfirm").click(function () {
+					//aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+						var totlaimportrow=0;
+						$("#importList tr").each(function () {
+                            if ($(this).find(".RowSelect").prop("checked")==true) {
+							totlaimportrow++;
+							}
+						});
+					
+					
+						$("#inprogress").attr("aria-valuemax",totlaimportrow);
+						$("#inprogress").attr("aria-valuemin",0);
+						$("#inprogress").attr("aria-valuenow",0);
+						$("#inprogress").css("width","0%");
+						var currentimportrow=0;
+						$("#inprogress").attr("aria-valuenow",0);
+						$("#import_boxBtnConfirm").attr("disabled",true);
+						myjs_beforeImport(()=>{
+                        $("#importList tr").each(function () {
+                            if ($(this).find(".RowSelect").prop("checked")==true) {
+                                var json={action:"save"
+								,"primary_id":$(this).find(".kv_primary_id").val()
+			                    {{foreach from=$ModelData.fields.field item=rs}}
+                                 {{if $rs.type!="grid"}}
+                                    ,"{{$rs.key}}":$(this).find(".kv_{{$rs.key}}").val()
+                                     {{/if}}
+                                    {{/foreach}}
+                                    };
+                            var tcc=$(this);
+                            $.post("{{$PageName}}",json,function(data){
+								currentimportrow++;
+						$("#inprogress").attr("aria-valuenow",currentimportrow);
+						$("#inprogress").css("width",(currentimportrow*100.0/totlaimportrow)+"%");
+								
+								if(currentimportrow>=totlaimportrow){
+									$("#import_boxBtnConfirm").attr("disabled",false);
+									//window.location.reload();
+								}
+                                if(data.substring(0,5)=="right"){
+                                    tcc.find(".checkdd").html("<i class='text-success glyphicon glyphicon-ok'></i>");
+									tcc.remove();
+                                }else{
+                                    tcc.find(".checkdd").append("<i class='text-warning glyphicon glyphicon-exclamation-sign'></i><span>"+data+"</span>");
+                                }
+                            });
+                        }
+						
+						});
+                    });
+			        });
+                    
+			        $("#import_box").modal("show");			
+				  }
+					};
+      request.open('POST','{{$PageName}}?action=import&module=' + module+"&field=file_" + key);
+      request.send(data);
+	
+	
+        
+    }
+        function loadCharts()
+        {
+			var title="";
+			var subtitle="";
+			
+            {{foreach from=$ModelData.charts.chart item=rs key=chartindex}}
+			title="{{$rs.name}}";
+            subtitle = "{{$rs.description}}";
+            var seriesdata = new Array();
+			{{if $rs.type=="timeline" || $rs.type=="timecolumn"}}
+				var onlydate='0';
+				{{foreach from=$ModelData.fields.field item=prs}}
+					{{if $prs.key==$rs.datetimefield}}
+					onlydate='{{$prs.onlydate}}';
+					{{/if}}
+				{{/foreach}}
+				//alert(onlydate);
+				var xAxisName=$(".resulttitle_{{$rs.datetimefield}}").first().text();
+				var yAxisName = $(".resulttitle_{{$rs.numberfield}}").first().text();
+				var min = 0;
+				{{if $rs.statusfield==""}}
+				$(".rstr").each(function () {
+					var series = null;
+					if (seriesdata.length > 0) {
+						series = seriesdata[0];
+					} else {
+						series = { name: xAxisName, data: [], datetimename: xAxisName, numbername: yAxisName };
+					}
+					var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
+					var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+					if (nb < min) {
+						min = nb;
+					}
+					console.log(dt);
+					console.log(nb);
+					var dcourse = -1;
+					for (var i = 0; i < series.data.length; i++) {
+						var dtt = series.data[i];
+						if (dtt[0] == dt) {
+							dcourse = i;
+							break;
+						}
+					}
+					if (dcourse == -1) {
+						series.data.push([dt, nb,1]);
+					} else {
+						var dtt = series.data[i];
+						dtt[1] = dtt[1] + nb;
+						dtt[2] = dtt[2] + 1;
+						series.data[i] = dtt;
+					}
+					seriesdata[0] = series;
+				});
+				{{else}}
+				$(".rstr").each(function () {
+					var dt = stringToDate($(this).find(".result_{{$rs.datetimefield}}").text());
+					var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+					if (nb < min) {
+						min = nb;
+					}
+					var sv = $(this).find(".result_{{$rs.statusfield}}").attr("sval");
+					var svn = $(this).find(".result_{{$rs.statusfield}}").text();
+					var series = null;
+					var sindex = -1;
+					for (var i = 0; i < seriesdata.length; i++) {
+						if (seriesdata[i].val == sv) {
+							sindex = i;
+							break;;
+						}
+					}
+					if (sindex == -1) {
+						series = { name: svn, data: [], val: sv, datetimename: xAxisName, numbername: yAxisName };
+						seriesdata.push(series);
+						sindex = seriesdata.length - 1;
+					} else {
+						series = seriesdata[sindex];
+					}
+					console.log(dt);
+					console.log(nb);
+					var dcourse=-1;
+					for(var i=0;i<series.data.length;i++){
+						var dtt=series.data[i];
+						if(dtt[0]==dt){
+							dcourse=i;
+							break;
+						}
+					}
+					if(dcourse==-1){
+						series.data.push([dt,nb,1]);
+					}else{
+						var dtt=series.data[i];
+						dtt[1] = dtt[1] + nb;
+						dtt[2] = dtt[2] + 1;
+						series.data[i]=dtt;
+					}
+					seriesdata[sindex]=series;
+				});
+				{{/if}}
+					for (var i = 0; i < seriesdata.length; i++) {
+						var series = seriesdata[i];
+						var data = series.data;
+						data.sort(function (a, b) {
+							//alert(a[0]);
+							//alert(b[0]);
+							return a[0] > b[0];
+						});
+						
+						console.log("kvc",data);
+						series.data = data;
+						seriesdata[i] = series;
+					}
+					
+					var type="spline";
+					{{if $rs.type=="timecolumn"}}
+						type="column";
+						//alert(type);
+					{{/if}}
+					$('#chart{{$chartindex}}').highcharts({
+					chart: {
+						type: type
+					},
+					title: {
+						text: title
+					},
+					subtitle: {
+						text: subtitle
+					},
+					tooltip: {
+						headerFormat: '<b>{series.name}</b><br>',
+						pointFormat: onlydate=='1'?'{point.x:%Y-%m-%d}: {point.y} ':'{point.x:%Y-%m-%d %H:%M}: {point.y} '
+					},
+					xAxis: {
+						type: 'datetime',
+						title: {
+							text: xAxisName
+						},
+						labels: {
+							formatter:function(){
+								var datetime=new Date(this.value);
+								var year=datetime.getFullYear().toString();
+								var month=datetime.getMonth()+1;
+								month=month>9?month.toString():"0"+month.toString();
+								var date=datetime.getDate();
+								date=date>9?date.toString():"0"+date.toString();
+								
+								var hour=datetime.getHours();
+								hour=hour>9?hour.toString():"0"+hour.toString();
+								var second=datetime.getSeconds();
+								second=second>9?second.toString():"0"+second.toString();
+								var minute=datetime.getMinutes();
+								minute=minute>9?minute.toString():"0"+minute.toString();
+								var d="";
+								if(onlydate=='1'){
+									d=year+"-"+month+"-"+date;
+								}else{
+									d=year+"-"+month+"-"+date+" "+hour+":"+minute;
+								}
+								return d;
+							}
+						}
+					},
+					yAxis: {
+						title: {
+							text: yAxisName
+						},
+						min: min
+					},
+					series: seriesdata
+				});
+					var strs = "";
+					for (var i = 0; i < seriesdata.length; i++) {
+						var series = seriesdata[i];
+						var data = series.data;
+						var total = 0;
+						var totalrecord = 0;
+						strs += "<div class='col-md-12'><h3>" + series.name + "</h3>";
+						strs += "<table class='table table-condensed'>";
+						strs += "<tr><th>" + series.datetimename + "</th><th>数据条数</th><th>" + series.numbername + "</th></tr>";
+						for (var j = 0; j < data.length; j++) {
+							var utctime = new Date(data[j][0]);
+							strs += "<tr><td>" + utctime.format() + "</td><td>"+ data[j][2] +"</td><td>" + data[j][1] + "</td></tr>";
+							total += data[j][1];
+							totalrecord += data[j][2];
+						}
+						strs += "<tr><th style='text-align:right'>总计：</th><th>" + totalrecord + "</th><th>" + total.toFixed(2) + "</th></tr>";
+						
+						strs += "</table></div>";
+					}
+					$('#chart{{$chartindex}}_tables').empty().append(strs);
+			{{elseif $rs.type=="column"}}
+			
+				var xAxisName=$(".resulttitle_{{$rs.field}}").first().text();
+				var yAxisName = $(".resulttitle_{{$rs.numberfield}}").first().text();
+				
+			$(".rstr").each(function () {
+					var series = null;
+					if (seriesdata.length > 0) {
+						series = seriesdata[0];
+					} else {
+						series = { name: xAxisName, data: [], datetimename: xAxisName, numbername: yAxisName };
+					}
+					var dt = ($(this).find(".result_{{$rs.field}}").text());
+					var nb = Number($(this).find(".result_{{$rs.numberfield}}").text());
+					if (nb < min) {
+						min = nb;
+					}
+					console.log(dt);
+					console.log(nb);
+					series.data.push([dt, nb]);
+					seriesdata[0] = series;
+				});
+				console.log(seriesdata);
+			
+				var min = 0;
+			$('#chart{{$chartindex}}').highcharts({
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: title
+				},
+				subtitle: {
+					text: subtitle
+				},
+				xAxis: {
+					type: 'category',
+					labels: {
+						rotation: -45  // 设置轴标签旋转角度
+					},
+						title: {
+							text: xAxisName
+						}
+				},
+				yAxis: {
+					min: min,
+					title: {
+						text: yAxisName
+					}
+				},
+				legend: {
+					enabled: false
+				},
+				series: seriesdata
+			});
+			
+			{{/if}}
+			
+			{{/foreach}}
+        }
+   function stringToDate(fDate){  
+	var dateandtime=fDate.split(" ");
+	if(dateandtime.length>1){
+		var fullDate = dateandtime[0].split("-");  
+		var fulltime = dateandtime[1].split(":");  
+        console.log(new Date(fullDate[0], fullDate[1] - 1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]));
+        console.log(new Date(fullDate[0], fullDate[1] - 1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]) - 3600 * 1000 * 8);
+        return Date.UTC(fullDate[0], fullDate[1] - 1, fullDate[2], fulltime[0], fulltime[1], fulltime[2]) - 3600 * 1000 * 8;  
+	}else{
+		var fullDate = dateandtime[0].split("-");  
+        return Date.UTC(fullDate[0], fullDate[1] - 1, fullDate[2], 0, 0, 0) - 3600 * 1000 * 8;  
+	}
+  }
+  function quickUpdate(key,primary_id,type,obj){
+	var val=$("#kvc_"+key+"_"+primary_id).val();
+	if(type=='check'){
+		val=obj.checked?"Y":"N";
+	}
+	 $.post("{{$PageName}}",{"action":"editone","key":key,val:val,primary_id},function(ret){
+                        
+                        if(ret==""){
+							$("#kvc_"+key+"_"+primary_id).popover();
+						}else{
+						
+							warningDialog(ret);
+						}
+						
+			
+                    });
+	
+	
+  }
+
+  function setAjaxSelect2(){
+    {{foreach from=$ModelData.fields.field item=rs}}
+    {{if $rs.type=='fkey'&&$rs.ajax==1}}
+    $("#condition_{{$rs.key}}").select2({
+	debug:true,
+		width:"100%",
+        placeholder: "输入搜索关键字",
+        minimumInputLength: 1,
+        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+            url: '{{$PageName}}?action=fkeysearch&key={{$rs.key}}'  ,
+            dataType: 'json',
+            quietMillis: 250,
+            data: function (term, page) {
+                return {
+                    q: term.term, // search term
+                };
+            },
+			processResults: function (data) {
+			  // Transforms the top-level key of the response object from 'items' to 'results'
+			  for(var i=0;i<data.length;i++){
+				data[i].text=data[i].name;
+			  }
+			  return {
+				results: data
+			  };
+			},
+            cache: true
+        }
+    });
+    {{/if}}
+    {{/foreach}}
+  }
+
+
+    $(document).ready(function(){
+        setAjaxSelect2();
+		$("#btnSearch").click(search);
+        myjs_listPageLoad();
+		if(searchincomming){
+            search();
+		}
+		$("#btnPrint").click(function(){
+			window.print();
+		});
+    });
+</script>
+
+
+ {{include  file="$smarty_root/footerAdminLTE3.html" }}
+

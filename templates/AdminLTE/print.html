@@ -1,0 +1,46 @@
+{{include  file="$smarty_root/$CmsStyle/header.html" }}
+
+<table class="table table-hover">
+<tr>{{foreach from=$ModelData.fields.field item=rs}}{{if $rs.displayinlist=="1"}}<th class="resulttitle_{{$rs.key}}">{{$rs.name}}{{if $rs.type=='number'&&$rs.unit!=''}}({{$rs.unit}}){{/if}}</th>{{/if}}{{/foreach}}</tr>
+{{foreach from=$result item=row}}
+<tr class="rstr">
+	
+    {{foreach from=$row item=col key=key}}{{if $key!="id"}}{{foreach from=$ModelData.fields.field item=rs}}{{if $key==$rs.key && $rs.displayinlist=="1"}}<td class="result_{{$rs.key}}" {{if $rs.type=='select' || $rs.type=='fkey'}}sval='{{$col.value}}'{{/if}}>{{if ($rs.type=="upload"  ) && $rs.filetype=="image"}}<img src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$col}}" style="max-width:150px;" alt="图片"  />{{elseif ( $rs.type=="url" ) && $rs.filetype=="image"}}<img src="{{$col}}" style="max-width:150px;" alt="图片"  />{{elseif ( $rs.type=="url" ) && $rs.filetype=="file"}}<a target="__blank" href="{{$col}}"  alt="图片"  >{{$SysLang.model.download}}</a>{{elseif $rs.type=="fkey"&&$rs.showview=="1"}}<a href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$rs.viewmodel}}?action=view&id={{$col.value}}')">{{$col.name}}</a>
+	{{elseif $rs.type=="grid"}}<a href="javascript:showTableModel('{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&{{$rs.modelkey}}={{$row.id}}','{{$rs.name}}')">{{$col}}</a>{{elseif $rs.type=='select' || $rs.type=='fkey'}}{{$col.name}}{{else}}{{$col}}{{/if}}</td>{{/if}}{{/foreach}}{{/if}}{{/foreach}}
+	</tr>
+{{/foreach}}
+</table>
+<script>
+            $(function () {
+                {{foreach from=$ModelData.fields.field item=rs}}
+                {{if $rs.type=="flist"}}
+                $(".result_{{$rs.key}}").each(function () {
+                    var str = $(this).text();
+                    var arr = str.split(",");
+                    var nstr = "";
+                    var isFirst = true;
+                    for (var i = 0; i < arr.length; i++) {
+                        if ($.trim(arr[i]) !="" ) {
+                            if (isFirst == false) {
+                                nstr = nstr + ",";
+                            }
+                            var id=Number(arr[i]);
+                            isFirst = false;
+                            nstr = nstr + flistarr{{$rs.key}}[id];
+                        }
+                    }
+                    $(this).text(nstr);
+                });
+                {{/if}}
+                {{/foreach}}
+            });
+</script>
+
+
+{{include  file="$smarty_root/footer.html" }}
+
+<script>
+	$(document).ready(function(){
+		window.print();
+	});
+</script>

@@ -1,0 +1,36 @@
+<table class="table table-hover" id="importList">
+    <thead>
+        <tr>
+            <th></th>
+            <th>{{$SysLang.model.primarykey}}</th>
+            {{foreach from=$ModelData.fields.field item=rs}}
+            {{if $rs.type!="grid"}}
+            <th>{{$rs.name}}</th>
+            {{/if}}
+            {{/foreach}}
+        </tr>
+    </thead>
+    <tbody>
+        {{foreach from=$ImportData item=row }}
+        <tr>
+            <td class="checkdd"><input type="checkbox" class="RowSelect" checked="checked" /></td>
+            <td class="err{{$col.error}} kd_primary_id">{{if $row.primary_id>0}}{{$SysLang.model.update}}{{else}}{{$SysLang.model.add}}{{/if}}{{$row.primary_id}}</td>
+			{{if $row.primary_id>0}}
+            <input class="kv_primary_id" type="hidden" AUTOCOMPLETE="off" value="{{$row.primary_id}}"  />
+			{{/if}}
+            {{foreach from=$row key=k item=col }}
+            {{if $k!="primary_id"&&$col.type!="grid"}}
+            <td class="err{{$col.error}} kd_{{$col.key}}">
+                {{if $col.error==1}}
+                <span class="text-danger">{{$col.display}}</span>
+                {{else}}
+                {{$col.display}}
+                {{/if}}
+            </td>
+            <input type="hidden" AUTOCOMPLETE="off" value=" {{$col.value}} " class="kv_{{$col.key}}"  />
+            {{/if}}
+            {{/foreach}}
+        </tr>
+        {{/foreach}}
+    </tbody>
+</table>

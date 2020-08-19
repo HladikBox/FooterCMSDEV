@@ -1,0 +1,235 @@
+{{include  file="$smarty_root/$CmsStyle/footer.html" }}
+
+
+<div id="dialog_box" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog_boxtitle" aria-hidden="true" >
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog_boxtitle" class="modal-title">{{$SysLang.common.notice}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="dialog_boxmsg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="dialog_boxBtnConfirm" class="btn btn-success">{{$SysLang.common.ok}}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="info_box" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog_boxtitle" aria-hidden="true" >
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog_boxtitle" class="modal-title">数据详情</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe src="" id="infoboxurl" style="width:100%;height:500px;" border="0"  frameborder="no" ></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog_password" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog_passwordtitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog_passwordtitle" class="modal-title">{{$SysLang.common.changepassword}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">原密码</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="dialog_password_oldpassword" >
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding-top:40px;">
+                        <label for="inputPassword3" class="col-sm-2 control-label">新密码</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="dialog_password_newpassword" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <p id="dialog_boxBtnChangePassword_tips" style="color:red;"></p>
+                <button type="button" id="dialog_boxBtnChangePassword" class="btn btn-success">{{$SysLang.common.change}}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{$SysLang.common.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a id='dlink'  style='display:none;'></a>
+
+<script type="text/javascript">
+
+	
+
+    $(function () {
+        $('input[type="checkbox"],[type="radio"]').not('#create-switch').not('.multicheckbox').bootstrapSwitch();
+		$('.datepicker').datetimepicker({ format: "yyyy-mm-dd hh:ii", language: "zh-CN", autoclose: true, todayhightline: true });
+        $('.chzn-select').chosen();
+		try{
+		
+        $('.selectize-select').selectize();
+		}catch(e){
+		
+		}
+		try{
+		
+        //$('.selectize-select').select2();
+		}catch(e){
+		
+		}
+
+        $("#dialog_boxBtnChangePassword").click(function ()
+        {
+            var oldpassword = $("#dialog_password_oldpassword").val();
+            var newpassword = $("#dialog_password_newpassword").val();
+
+            var json = { oldpassword: oldpassword, newpassword: newpassword };
+            $.post(userpath + "changepassword", json, function (data)
+            {
+                if (data == "current_password_diff")
+                {
+                    $("#dialog_boxBtnChangePassword_tips").text("当前密码错误，请重新输入，注意大小写");
+                } else if (data == "success")
+                {
+                    $("#dialog_password").modal('hide');
+                } else
+                {
+                    $("#dialog_boxBtnChangePassword_tips").text("系统错误，请联系管理员" + data);
+                }
+
+            });
+        });
+       
+    });
+
+    function infoDialog(msg,title) {
+		if(title==undefined){
+			$("#dialog_boxtitle").text("{{$SysLang.common.notice}}");
+		}else{
+			$("#dialog_boxtitle").text(title);
+		}
+        showDialog(msg);
+    }
+
+    function warningDialog(msg,title) {
+		if(title==undefined){
+			$("#dialog_boxtitle").text("{{$SysLang.common.warning}}");
+		}else{
+			$("#dialog_boxtitle").text(title);
+		}
+        showDialog(msg);
+    }
+
+    function errorDialog(msg,title) {
+		if(title==undefined){
+			$("#dialog_boxtitle").text("{{$SysLang.common.error}}");
+		}else{
+			$("#dialog_boxtitle").text(title);
+		}
+        showDialog(msg);
+    }
+    function showDialog(msg) {
+        $("#dialog_boxBtnConfirm").hide();
+        $("#dialog_boxmsg").html(msg);
+        $("#dialog_box").modal('show');
+    }
+	
+	function InfoDataShow(url){
+		$("#info_box #infoboxurl").attr("src",url);
+        $("#info_box").modal('show');
+	}
+
+    function displayMutilLangPop(name, key) {
+        $("#dialog_boxtitle").text(name);
+        str = "<div class='row form-horizontal'>";
+        {{foreach from=$SysLangConfig.langs.lang item=rslang}}
+        str=str+"<div class='form-group col-md-12'>";
+        str=str+"<label class='col-md-2 control-label' >{{$rslang.name}}</label>";
+        str=str+"<div class='col-md-8'>";
+        str=str+"<textarea    class='form-control'  id='lang_"+key+"_{{$rslang.code}}' row='3' ></textarea>";
+        
+        str=str+"        </div>";
+        str=str+"    </div>    ";
+        {{/foreach}}
+            str = str+"</div>";
+
+        $("#dialog_boxmsg").html(str);
+            
+        {{foreach from=$SysLangConfig.langs.lang item=rslang}}
+        $("#lang_"+key+"_{{$rslang.code}}").val($("#content_"+key+"_{{$rslang.code}}").val());
+        {{/foreach}}
+
+            $("#dialog_boxBtnConfirm").unbind("click").click(function () {
+
+                {{foreach from=$SysLangConfig.langs.lang item=rslang}}
+                $("#content_"+key+"_{{$rslang.code}}").val($("#lang_"+key+"_{{$rslang.code}}").val());
+                {{/foreach}}
+
+                $("#dialog_box").modal('hide');
+                
+            });
+            $("#dialog_boxBtnConfirm").show();
+            $("#dialog_box").modal("show");
+
+    }
+
+    function confirmDialog(title, msg, confirmFunction) {
+
+        $("#dialog_boxtitle").text(title);
+        $("#dialog_boxmsg").html(msg);
+        $("#dialog_boxBtnConfirm").unbind("click").click(function () {
+
+            var v=confirmFunction();
+            if(v==undefined){
+                $("#dialog_box").modal('hide');
+            }
+        });
+        $("#dialog_boxBtnConfirm").show();
+        $("#dialog_box").modal("show").css({width:'auto'});
+                }
+    Date.prototype.format = function () { 
+        var fmt = "yyyy-MM-dd hh:mm:ss";
+     var o = { 
+        "M+" : this.getMonth()+1,                 //月份 
+        "d+" : this.getDate(),                    //日 
+        "h+" : this.getHours(),                   //小时 
+        "m+" : this.getMinutes(),                 //分 
+        "s+" : this.getSeconds(),                 //秒 
+        "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+        "S"  : this.getMilliseconds()             //毫秒 
+        };
+     if (this.getHours() == 0 && this.getMinutes() == 0 && this.getSeconds() == 0) {
+         fmt = "yyyy-MM-dd";
+     }
+    if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+    }
+     for(var k in o) {
+        if(new RegExp("("+ k +")").test(fmt)){
+             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+         }
+     }
+    return fmt; 
+} 
+           
+</script>
+
+    </body>
+</html>

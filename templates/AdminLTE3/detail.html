@@ -1,0 +1,729 @@
+{{include  file="$smarty_root/$CmsStyle/header.html" }}
+<style>
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: white;
+    opacity: 1;
+	cursor: not-allowed; 
+	border:0px;
+}
+.selectize-control .selectize-input.disabled{
+
+    opacity: 1;
+}
+.selectize-input.disabled, .selectize-input.disabled * {
+    opacity: 1;
+	cursor: not-allowed; 
+	border:0px;
+}
+.selectize-control.single .selectize-input.disabled:after {
+	border-color:transparent  !important;
+}
+.selectize-input.disabled input, .selectize-input.disabled * {
+	cursor: not-allowed; 
+	color:#000000;
+}
+.gridResult th{
+	width:120px;
+}
+.gridResult img{
+	width:100px;
+}
+</style>
+    <section class="content-header {{if $viewonly=='Y'}}hide{{/if}}" id="detailHeader" > 
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>{{$ModelData.name}} {{if $action=="add"}}- {{if $incopy==1}}{{$SysLang.model.copy}}{{/if}}{{$SysLang.model.add}}{{else}}{{/if}}</h1>
+          </div>
+          <div class="col-sm-6">
+			<div class="float-sm-right">
+			<button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> {{$SysLang.model.backforward}}</button>
+                                {{foreach from=$ModelData.options.option item=rs}}                                
+                                    {{if $rs.detail=="1"}}
+                                        {{if $rs.type=="link"}}    
+                                    <a href="{{$rs.function}}" class="action">
+                                        <button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+                                    </a>
+                                        {{elseif $rs.type=="function"}}
+                                    <a href="javascript:{{$rs.function}}" class="action btnfunc{{$rs.name}} " >
+                                        <button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+                                    </a>
+                                        {{/if}}                                 
+                                    {{/if}} 
+                                {{/foreach}}
+			</div>
+            
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+  			
+			
+    <!-- Main content -->
+    <section class="content">
+	
+		<div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+				  {{foreach from=$ModelData.groups.group item=rs}}
+                  <li class="nav-item">
+                    <a class="nav-link {{if $rs==''}}active{{/if}}" id="custom-tabs-{{$rs}}" data-toggle="pill" href="#tab{{$rs}}" role="tab" >
+					{{if $rs==''}}
+					{{$SysLang.model.data}}
+					{{else}}
+					{{$rs}}
+					{{/if}}
+					</a>
+                  </li>
+				  {{/foreach}}
+				  {{if $ModelData.recording==1}}
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#operationtab" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">{{$SysLang.model.operationrecord}}</a>
+                  </li>
+				  {{/if}}
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="detailContent">
+					{{foreach from=$ModelData.groups.group item=group}}
+					<div class="tab-pane fade  {{if $group==''}}show active{{/if}}" id="tab{{$group}}" role="tabpanel">
+						<div class="row form-horizontal" id="fieldContent">
+									<input type="password" style="position:absolute; top:-999px" />
+                                        {{foreach from=$ModelData.fields.field item=rs}}             
+										{{if $group==$rs.groupname}}
+                                        {{if $rs.type=="text"  }}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}" {{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+                                                {{if $rs.ismutillang=="1"}}
+                                                {{foreach from=$SysLangConfig.langs.lang item=rslang}}
+                                                <input type="{{if $rslang.code==$SysLangCode}}text{{else}}hidden{{/if}}" {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}} class="form-control" value="{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}" id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+                                                {{/foreach}}
+                                                <button {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
+                                                {{else}}
+                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}readonly="readonly"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+                                                {{/if}}
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                                            
+                                        {{elseif $rs.type=="password"}}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+                                                <input type="password" class="form-control" value="{{$rs.value}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                
+                                        {{elseif $rs.type=="longtext"}}
+                                        <div class="form-group col-md-6 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">                                                
+                                                {{if $rs.ismutillang=="1"}}
+                                                {{foreach from=$SysLangConfig.langs.lang item=rslang}}
+                                                <textarea maxlength="4000" rows="5" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} class="form-control {{if $rslang.code!=$SysLangCode}}hide{{/if}}"  id="content_{{$rs.key}}_{{$rslang.code}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{foreach from=$rs.value item=rsval}}{{if $rslang.code==$rsval.code}}{{$rsval.value}}{{/if}}{{/foreach}}</textarea>
+                                                {{/foreach}}
+                                                <button {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} onclick="displayMutilLangPop('{{$rs.name}}','{{$rs.key}}')" class="btn btn-xs btn-link">{{$SysLang.model.updateotherlang}}</button>
+                                                {{else}}
+                                                <textarea  maxlength="4000" rows="5" class="form-control" {{if $action!="add" and $rs.disableindetail=="1" }}readonly="readonly" {{/if}} id="content_{{$rs.key}}"  {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} >{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}</textarea>
+                                                {{/if}}
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                                            
+                                        {{elseif $rs.type=="html"}}
+										
+										
+                                        <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-2 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+                                                <textarea {{if $action!="add" and $rs.disableindetail=="1" }}disabled="disabled" {{/if}}  id="content_{{$rs.key}}" class="ckeditor">{{$rs.value}}</textarea>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                                            
+                                        {{elseif $rs.type=="datetime"}}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+												{{if $rs.onlydate=='1'}}
+                                                <input type="date" class="form-control" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} id="content_{{$rs.key}}" value="{{if $action=="add"}}{{if $rs.default=='now'}}{{$now}}{{else}}{{$rs.default}}{{/if}}{{else}}{{$rs.value}}{{/if}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												{{else}}
+                                                <input type="datetime" class="form-control " {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} id="content_{{$rs.key}}" value="{{if $action=="add"}}{{if $rs.default=='now'}}{{$now}}{{else}}{{$rs.default}}{{/if}}{{else}}{{$rs.value}}{{/if}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												{{/if}}
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                                            
+                                        {{elseif $rs.type=="number"}}
+                                        <div class="form-group  col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class=" col-md-12">
+												<div class="row">
+													<div class="col-md-9">
+													
+													<input type="number" class="form-control  text-right" {{if $action!="add" and $rs.disableindetail=="1"}} disabled="disabled" {{/if}} value="{{if $action=="add"}}{{if $rs.default==''}}{{$rs.minvalue+0}}{{else}}{{$rs.default+0}}{{/if}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+													</div>
+													<div style="margin-left:10px;margin-top:5px;" >{{$rs.unit}}</div>
+												</div>
+                                            </div>
+                                        </div>                                            
+                                        {{elseif $rs.type=="check"}}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+                                                <input id="content_{{$rs.key}}" type="checkbox" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  {{if $rs.value=="Y"||($action=="add"&&$rs.default=="1")}}checked{{/if}} data-on-label="<i class='glyphicon glyphicon-ok glyphicon-white'></i>" data-offlabel="<i class='glyphicon glyphicon-remove'></i>" />
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                                                      
+                                        {{elseif $rs.type=="upload"}}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+												{{if ($action!="add" and $rs.disableindetail=="1")==false}}
+												<div class="custom-file">
+												  <input name="file_{{$rs.key}}" id="file_{{$rs.key}}" onchange="upload('{{$rs.key}}', '{{$rs.uploadmodule}}')"  type="file"   class="custom-file-input">
+												  <label class="custom-file-label" for="file_{{$rs.key}}">选择文件</label>
+												</div>
+												{{/if}}
+                                                {{if $rs.filetype=="image"}}
+                                                <br />
+                                                <img id="view_{{$rs.key}}"  {{if $rs.value=="" }}style="display:none;height:100px;" {{else}}style="height:100px;" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}"  onclick="openImgMap('view_{{$rs.key}}')" {{/if}} />
+												{{elseif $rs.filetype=="audio"}}
+                                                <br />
+                                                <audio controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;" {{else}} src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
+												{{elseif $rs.filetype=="video"}}
+                                                <br />
+                                                <video controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;width:200px;" {{else}} style="width:200px" src="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}" {{/if}} />
+                                                {{else}}
+                                                <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$uploadpath}}/{{$rs.uploadmodule}}/{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
+                                                {{/if}}
+                                                <input class="uniform_on" type="hidden" id="content_{{$rs.key}}" value="{{$rs.value}}" />
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+											<div class="col-md-4"></div>
+											<div class="col-md-8">
+											
+											<a href="javascript:void();"; class="{{if $action=="add" or $rs.disableindetail=="1"}}hide{{/if}} deleteupload" name="{{$rs.key}}"  id="uploaddelete_{{$rs.key}}"  >{{$SysLang.model.delete}}</a>
+											</div>
+                                        </div>                                                             
+                                        {{elseif $rs.type=="url"}}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"   id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+                                                <input type="text" {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}} class="form-control" value="{{if $action=="add"}}{{$rs.defaultvalue}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" onchange="urlChange('{{$rs.key}}')" {{/if}} />
+                                                {{if $rs.filetype=="image"}}
+                                                <br />
+                                                <img id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;height:100px;" {{else}}style="height:100px;" src="{{$rs.value}}" {{/if}} />
+												{{elseif $rs.filetype=="audio"}}
+                                                <br />
+                                                <audio controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;" {{else}} src="{{$rs.value}}" {{/if}} />
+												{{elseif $rs.filetype=="video"}}
+                                                <br />
+                                                <video controls="controls" id="view_{{$rs.key}}" {{if $rs.value=="" }}style="display:none;width:100%;" {{else}} stype="width:100%" src="{{$rs.value}}" {{/if}} />
+                                                {{else}}
+                                                <a id="view_{{$rs.key}}" target="_blank" {{if $rs.value==""}}style="display:none;"{{else}}href="{{$rs.value}}"{{/if}} >{{$SysLang.model.viewupload}}</a>
+                                                {{/if}}
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                                             
+                                        {{elseif $rs.type=="fkey"}}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+                                                <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control {{if $rs.ajax!='1'}} selectize-select{{/if}}">
+                                                    
+													{{if $rs.ajax!='1'}}
+													<option value="0">--{{$SysLang.model.select}}--</option>
+                                                    {{foreach from=$rs.options item=rsoption}}
+                                                    <option {{if $rs.value==$rsoption.id}}selected{{/if}} value="{{$rsoption.id}}">{{$rsoption.name}}</option>
+                                                    {{/foreach}}
+													{{else}}
+													<option value="{{$rs.value}}">{{$rs.datavalue.name}}</option>
+													{{/if}}
+                                                </select>
+												<a id="view_{{$rs.key}}" href="javascript:InfoDataShow('{{$userpath}}nomodule/{{$rs.viewmodel}}?action=view&id={{$rs.value}}')" class='{{if $rs.showview!="1"}}hide{{/if}}' >{{$SysLang.model.checkdetail}}</a>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+											
+                                        </div>                                              
+                                        {{elseif $rs.type=="flist"}}
+                                        <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-2 control-label"  id="title_{{$rs.key}}">
+                                            {{$rs.name}}
+                                                <input class="uniform_on multicheckbox flist_all" type="checkbox" ref="flist_{{$rs.key}}" />全选
+                                            </label>
+                                            <div class="col-md-10 row">
+                                                {{foreach from=$FListArr item=flrs}}
+                                                {{if $rs.key==$flrs.key}}
+                                                {{foreach from=$flrs.value item=rsvalue}}
+                                                <div class="col-md-2 input_flist_{{$rs.key}}">
+                                                    <input class='uniform_on multicheckbox flist_{{$rs.key}}' type='checkbox' id='flist_{{$rs.key}}_{{$rsvalue.id}}' value='{{$rsvalue.id}}'> {{$rsvalue.name}}
+                                                </div>
+                                                {{/foreach}}
+                                                {{/if}}
+                                                {{/foreach}}
+                                                <input type="hidden" class="form-control"  id="content_{{$rs.key}}" value="{{$rs.value}}"  />
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                            
+                                        {{elseif $rs.type=="select"}}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}"{{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}" >{{$rs.name}}:</label>
+                                            <div class="col-md-12">
+                                                <select {{if $action!="add" and $rs.disableindetail=="1"}}disabled="disabled"{{/if}}  id="content_{{$rs.key}}" class="form-control selectize-select">
+                                                    <option value="no-value">--{{$SysLang.model.select}}--</option>
+                                                    {{foreach from=$rs.options.option item=rsoption}}
+                                                <option {{if $rs.value==$rsoption.value or ($action=="add" and $rsoption.default=='1' )}}selected{{/if}} value="{{$rsoption.value}}">{{$rsoption.name}}</option>
+                                                    {{/foreach}}
+                                                </select>
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>                                           
+                                        {{elseif  $rs.type=="grid"}}
+                                        <div class="form-group col-md-12 {{if $rs.hidden==1}}hidden{{/if}}"  id="block_{{$rs.key}}">
+                                            <label class="col-md-2 control-label"  id="title_{{$rs.key}}">{{$rs.name}}{{$SysLang.model.list}}</label>{{if $rs.cannotnew!="1" }}
+                                                <button class="btn btn-primary btnGridAdd" onclick="window.location.href='{{$userpath}}nomodule/{{$rs.model}}?action=add&key={{$rs.modelkey}}&id={{if $id==''}}{{$tempid}}{{else}}{{$id}}{{/if}}&parenturl={{$request_url_encode}}';"><i class="glyphicon glyphicon-plus  glyphicon-white"></i> {{$SysLang.model.add}}{{$rs.name}}{{($id+0)>0?'k':$id}}</button>
+												{{/if}}
+                                            <div class="col-md-12 table-responsive" style="overflow:scroll;height:50vh">
+												
+                                                <table class="table table-head-fixed gridResult"  style="width:max-content" id="content_{{$rs.key}}"></table>
+                                            </div>
+                                        </div>                                
+                                        {{elseif $rs.type=="color"  }}
+                                        <div class="form-group col-md-4 {{if $rs.hidden==1}}hidden{{/if}}" {{if $rs.description!=""}}data-toggle="tooltip" title="{{$rs.description}}" {{/if}} id="block_{{$rs.key}}">
+                                            <label class="col-md-4 control-label"  id="title_{{$rs.key}}">{{$rs.name}}:</label>
+                                            <div class="col-md-2">
+                                                <input type="color" {{if $action!="add" and $rs.disableindetail=="1"}}readonly="readonly"{{/if}} class="form-control " value="{{if $action=="add"}}{{$rs.default}}{{else}}{{$rs.value}}{{/if}}" id="content_{{$rs.key}}" {{if $rs.notnull=="1" }} placeholder="{{$SysLang.model.required}}" {{/if}} />
+												  
+												<span class='help-block'>&nbsp;{{$rs.description}}</span>
+                                            </div>
+                                        </div>           
+                                        {{/if}}      
+                                        {{/if}}
+                                        {{/foreach}}
+                                    </div>
+                                    <hr />
+                                    <div class="text-center" id="btnPanel" >
+                                        <input type="hidden" id="content_id" value="{{$id}}" />
+                                        {{if $ModelData.nosave!="1"}}
+                                        <button class="btn btn-primary btnSave" onclick='save(1)' id='btnSave' ><i class="glyphicon  glyphicon-save glyphicon-white"></i> {{$SysLang.model.save}}</button>
+											{{if $ModelData.nolist!='1'&&$parenturl==""}}
+											<button class="btn btn-primary btnSave"  id='btnSaveNew' onclick='save(2)'><i class="glyphicon  glyphicon-file-plus  glyphicon-white"></i> {{$SysLang.model.saveandnew}}</button>
+											<button class="btn btn-primary btnSave"  id='btnSaveCopy' onclick='save(3)'><i class="glyphicon  glyphicon-clipboard  glyphicon-white"></i> {{$SysLang.model.saveandcopy}}</button>
+											<button class="btn btn-primary" onclick='copynew()' id='btnCopy' ><i class="glyphicon glyphicon-copy  glyphicon-white"></i> {{$SysLang.model.copy}}</button>
+											{{/if}}
+                                        {{/if}}
+                                        {{if $parenturl!=""}}
+                                        <button class="btn btn-primary" onclick="window.location.href='{{$parenturl}}';"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.back}}</button>
+                                        {{elseif $ModelData.nolist!="1"}}<button class="btn btn-primary" id="btnReturnToList"><i class="glyphicon glyphicon-list  glyphicon-white"></i> {{$SysLang.model.backtolist}}</button>
+                                        <button class="btn btn-primary" onclick='history.go(-1)'  ><i class="glyphicon  glyphicon-arrow-left glyphicon-white"></i> {{$SysLang.model.backforward}}</button>
+                                        {{/if}}
+										
+										{{foreach from=$ModelData.options.option item=rs}}                                
+											{{if $rs.detail=="1"}}
+												{{if $rs.type=="link"}}    
+											<a href="{{$rs.function}}" class="action">
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+											</a>
+												{{elseif $rs.type=="function"}}
+											<a href="javascript:{{$rs.function}}" class="action btnfunc{{$rs.name}} " >
+												<button {{if $rs.id!=""}}id="{{$rs.id}}"{{/if}} class="btn btn-success">{{$rs.name}}</button>
+											</a>
+												{{/if}}                                 
+											{{/if}} 
+										{{/foreach}}
+                                    </div>
+					</div>
+					{{/foreach}}
+					
+				{{if $ModelData.recording==1}}
+				
+					<div class="tab-pane fade" id="operationtab" role="tabpanel" >
+					
+					</div>
+				{{/if}}
+				
+				</div>
+			  </div>
+		</div>
+
+
+    </section>    	
+				
+<link rel="stylesheet" type="text/css" href="{{$userpath}}myjs/{{$ModelData.model}}.css?now={{$now}}" />
+<script type="text/javascript" src="{{$rootpath}}js/myjs.js"></script>
+<script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
+<script>
+CKEDITOR.env.isCompatible = true;
+    {{foreach from=$FListArr item=rs}}
+    flistarr{{$rs.key}} = new Array();
+    {{foreach from=$rs.value item=rsvalue}}
+    flistarr{{$rs.key}}[{{$rsvalue.id}}] = "{{$rsvalue.name}}";
+    {{/foreach}}
+    {{/foreach}}
+
+    $(function () {
+        // CKEditor Full
+		$('.color-picker').colorpicker({
+        popover: false,
+        inline: true});
+		
+		
+		
+        $('textarea.ckeditor').ckeditor({
+            height: '200px',
+            allowedContent: true,
+            filebrowserBrowseUrl : '/vendors/ckeditor/ckfinder/ckfinder.html&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserImageBrowseUrl : '/vendors/ckeditor/ckfinder/ckfinder.html?Type=Images&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserFlashBrowseUrl : '/vendors/ckeditor/ckfinder/ckfinder.html?Type=Flash&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserUploadUrl : '/vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserImageUploadUrl : '/vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images&g={{$LOGIN}}&m={{$ALIAS}}',
+            filebrowserFlashUploadUrl : '/vendors/ckeditor/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash&g={{$LOGIN}}&m={{$ALIAS}}'
+        });
+        $(".flist_all").change(function(){
+            var check=$(this).prop("checked");
+            var fck=$(this).attr("ref");
+            $("."+fck).prop("checked",check);
+            if(check){
+                $("."+fck).parent().addClass("checked");
+            }else{
+                $("."+fck).parent().removeClass("checked");
+            }
+        });
+		
+		$(".deleteupload").click(function(){
+			var key=$(this).attr("name");
+			//alert(key);
+			$("#file_"+key).val("");
+			$("#content_"+key).val("");
+			$("#view_"+key).hide();
+			 $(this).addClass("hide");
+		});
+        
+        //$('#btnSave').click(save);
+        $("#btnReturnToList").click(function(){
+            self.location="{{$PageName}}";
+        });
+        {{foreach from=$ModelData.fields.field item=rs}}
+        {{if  $rs.type=="grid"}}
+		var tempid="{{$tempid}}";
+		
+        var json_{{$rs.key}}={"parenturl":"{{$request_url_encode}}"};
+		var {{$rs.key}}_modelkey={{$id+0}}==0?tempid:{{$id+0}};
+		var {{$rs.key}}_src="{{$userpath}}nomodule/{{$rs.model}}?action=getgrid&candelete={{$rs.candelete}}&{{$rs.modelkey}}="+{{$rs.key}}_modelkey;
+		console.log({{$rs.key}}_src,"{{$rs.key}}_src");
+        $("#content_{{$rs.key}}").load({{$rs.key}}_src,json_{{$rs.key}},function(data){
+			if(griddata_loaded!=undefined){
+			griddata_loaded("{{$rs.key}}",data);
+			}
+        });
+        {{elseif  $rs.type=="flist"}}
+        var fliststr{{$rs.key}} = $("#content_{{$rs.key}}").val();
+        var arr = fliststr{{$rs.key}}.split(",");
+        for (var i = 0; i < arr.length; i++) {
+            if ($.trim(arr[i]) != "") {
+                $("#flist_{{$rs.key}}_" + $.trim(arr[i])).prop("checked", "checked");
+            }
+        }
+        {{/if}}
+        {{/foreach}}
+
+            {{if $ParentKey!=""}}
+				
+				$("#block_{{$ParentKey}}").hide();
+				$("#content_{{$ParentKey}}").val({{$ParentId}});
+            {{/if}}
+
+		setAjaxSelect2();
+    });
+
+    function save(backtype){
+
+        {{foreach from=$ModelData.fields.field item=rs}}
+        {{if  $rs.type=="flist"}}
+        var isfirst = true;
+        var fliststr{{$rs.key}} ="";
+        $(".flist_{{$rs.key}}:checked").each(function () {
+            if (isfirst == false) {
+                fliststr{{$rs.key}} = fliststr{{$rs.key}} + ",";
+            }
+            isfirst = false;
+            fliststr{{$rs.key}} = fliststr{{$rs.key}} + $(this).val();
+        });
+        $("#content_{{$rs.key}}").val(fliststr{{$rs.key}});
+        {{/if}}
+        {{/foreach}}
+
+            myjs_beforeSave();
+
+        var isGo=saveValidate();
+        if(isGo==false){
+            return;
+        }
+        $(".btnSave").prop("disabled","disabled");
+        var json={action:"save"
+        ,"primary_id":"{{$id}}"
+		,"tempid":"{{$tempid}}"
+        {{foreach from=$ModelData.fields.field item=rs}}
+        {{if $rs.type!="grid"}}
+            {{if $rs.type=="check"}}
+            ,"{{$rs.key}}":$("#content_{{$rs.key}}").prop("checked")?"Y":"N"
+            {{elseif $rs.ismutillang=="1"}}
+            {{foreach from=$SysLangConfig.langs.lang item=rslang}}
+            ,"{{$rs.key}}_{{$rslang.code}}":$("#content_{{$rs.key}}_{{$rslang.code}}").val()
+            {{/foreach}}
+            {{elseif $rs.key==$ParentKey}}
+            ,"{{$rs.key}}":{{$ParentId}}
+            {{else}}
+            ,"{{$rs.key}}":$("#content_{{$rs.key}}").val()=="no-value"?"":$("#content_{{$rs.key}}").val()
+            {{/if}}
+        {{/if}}
+        {{/foreach}}
+        };
+            json=myjs_saveClick(json);
+
+            $.post("{{$PageName}}",json,function(data){
+                
+                $(".btnSave").prop("disabled","");
+                if(myjs_aftersave(data)==false){
+                    return;
+                }
+                if(data.substring(0,5)=="right"){
+                    id=data.substring(5,data.length);
+                    infoDialog("{{$SysLang.model.savesuccess}}");
+					if(backtype==1){
+						{{if $parenturl!=""}}
+						self.location='{{$parenturl}}';
+						{{elseif $action=="add"}}
+						infoDialog("{{$SysLang.model.savesuccess}}, {{$SysLang.model.redirecin3second}}.");
+						setTimeout(function(){
+							self.location='{{$PageName}}?action=edit&id='+id;
+						},3000);
+						{{/if}}
+					}else if(backtype==2){
+						infoDialog("{{$SysLang.model.savesuccess}}, {{$SysLang.model.redirecin3second}}.");
+						setTimeout(function(){
+							self.location='{{$PageName}}?action=add';
+						},3000);
+					}else if(backtype==3){
+						infoDialog("{{$SysLang.model.savesuccess}}, {{$SysLang.model.redirecin3second}}.");
+						setTimeout(function(){
+							self.location='{{$PageName}}?action=add&copyid='+id;
+						},3000);
+					}
+                }else{
+                        errorDialog(data,"{{$SysLang.model.savefail}}");
+                }
+        });
+
+            
+    }
+	
+	function deletegridrow(page,id,obj){
+	alert(page+id);
+		$.post(page,{action:"delete",idlist:id},function(){
+			console.log(obj);
+			$(obj).parent().parent().remove();
+		});
+	}
+
+    function urlChange(key){
+		var val=$("#content_"+key).val();
+		$("#view_"+key).attr("src",val).attr("href",val);
+		if(val==""){
+			$("#view_"+key).hide();
+		}else{
+			$("#view_"+key).show();
+		}
+		
+	}
+	
+	function openImgMap(id){
+		var src=$("#"+id).attr("src");
+		window.open(src);
+	}
+
+    function saveValidate() {
+
+        var message="";
+        {{foreach from=$ModelData.fields.field item=rs}}
+        {{if $rs.notnull=="1" }}
+            {{if $rs.type=="fkey"}}
+            if($("#content_{{$rs.key}}").val()=="0"){
+                message+="<p>{{$SysLang.model.pleaseenter}}<span style='color:red;'>{{$rs.name}}</span></p>";
+            }
+            {{elseif $rs.ismutillang=="1"}}
+            {{foreach from=$SysLangConfig.langs.lang item=rslang}}
+            if($("#content_{{$rs.key}}_{{$rslang.code}}").val()==""){
+                message+="<p>{{$SysLang.model.pleaseenter}}<span style='color:red;'>{{$rs.name}}（{{$rslang.name}}）</span></p>";
+            }    
+            {{/foreach}}
+            {{else}}
+            if($("#content_{{$rs.key}}").val()=="no-value"
+                ||$("#content_{{$rs.key}}").val()==""){
+                message+="<p>{{$SysLang.model.pleaseenter}}<span style='color:red;'>{{$rs.name}}</span></p>";
+            }
+            {{/if}}
+        {{/if}}
+        {{if $rs.type=="text"&&$rs.format!=""}}
+            format_check={{$rs.format}};
+            if(format_check.test($("#content_{{$rs.key}}").val())==false){
+                message+="<p><span style='color:red;'>{{$rs.name}}</span>{{$SysLang.model.formatincorrect}}</p>";
+            }
+        {{/if}}
+
+        {{if $rs.type=="number"&&$rs.minvalue!=""}}
+            if(Number($("#content_{{$rs.key}}").val())<Number("{{$rs.minvalue}}")){
+                message+="<p><span style='color:red;'>{{$rs.name}}</span>{{$SysLang.model.lessminvalue}}{{$rs.minvalue}}</p>";
+            }
+        {{/if}}
+        {{if $rs.type=="number"&&$rs.maxvalue!=""}}
+            if(Number($("#content_{{$rs.key}}").val())>Number("{{$rs.maxvalue}}")){
+                message+="<p><span style='color:red;'>{{$rs.name}}</span>{{$SysLang.model.greatermaxvalue}}{{$rs.maxvalue}}</p>";
+            }
+        {{/if}}
+        {{/foreach}}
+
+       message+=myjs_savevalidate();
+
+       if(message!=""){
+           //infoDialog(message);
+           infoDialog(message);
+           return false;
+       }
+       return true;
+    }
+
+    
+    function upload(key,module) {
+	
+	var input = document.getElementById("file_" + key);
+	var data = new FormData();
+      data.append("file_" + key, input.files[0]);
+ 
+      var request = new XMLHttpRequest();
+	  request.onreadystatechange=function () {
+	  console.log("uploadcallback",data);
+	  if (request.readyState==4 && request.status==200){
+		var data=request.responseText;
+			        if (data.substring(0, 7) == "success") {
+			            str = data.substring(7, data.length);
+			            $("#content_" + key).val(str.split('|~~|')[1]);
+
+			            $("#view_" + key).attr("href", "{{$uploadpath}}/"+module+"/" + str.split('|~~|')[1])
+                            .attr("src", "{{$uploadpath}}/"+module+"/" + str.split('|~~|')[1])
+                            .show();
+                        
+						$("#uploaddelete_" + key).removeClass("hide");
+						if(UploadedCallback!=undefined){
+							UploadedCallback(key,module,"{{$uploadpath}}/"+module+"/" + str.split('|~~|')[1]);
+						}
+			        } else {
+			            errorDialog("{{$SysLang.model.uploaderror}}");
+			        }
+	  }
+					};
+      request.open('POST', '{{$userpath}}fileupload?module=' + module+"&field=file_" + key);
+      request.send(data);
+        
+    }
+    function addNew(){
+        self.location='{{$PageName}}?action=add';
+    }
+	function copynew(){
+        self.location='{{$PageName}}?action=add&copyid='+primary_id;
+	}
+
+    function btnDeleteInList(){
+           
+            var isGo=deleteValidate();
+            if(isGo==false){
+                return;
+            }
+
+            confirmDialog("{{$SysLang.common.notice}}","{{$SysLang.model.deletesure}}",function(){
+                    var idlist="{{$id}}";
+                    if(idlist!="0"){
+                        $.post("{{$PageName}}",{"action":"delete","idlist":idlist},function(data){
+                            
+                            if(myjs_afterdelete(data)==false){
+                                return;
+                            }
+
+                            if(data=="success")
+                            {
+                                //
+								{{if $parenturl!=""}}
+								self.location='{{$parenturl}}';
+								{{else}}
+								window.location.href="{{$PageName}}";
+								{{/if}}
+                            }
+                            else
+                            {
+                                errorDialog(data,"{{$SysLang.model.savefail}}");
+                            }
+                
+                        });
+                    }
+                });
+        }
+    function deleteValidate(){
+        var message="";
+
+        message+myjs_delevalidate();
+
+        if(message!=""){
+            //infoDialog(message);
+            warningDialog(message);
+            return false;
+        }
+
+
+        return true;
+
+    }
+	
+	
+  function setAjaxSelect2(){
+    {{foreach from=$ModelData.fields.field item=rs}}
+    {{if $rs.type=='fkey'&&$rs.ajax==1}}
+    $("#content_{{$rs.key}}").select2({
+	debug:true,
+		width:"100%",
+        placeholder: "{{$SysLang.model.inputkeyword}}",
+        minimumInputLength: 1,
+        ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+            url: '{{$PageName}}?action=fkeysearch&key={{$rs.key}}'  ,
+            dataType: 'json',
+            quietMillis: 250,
+            data: function (term, page) {
+				var json={};
+				if (typeof(select2json) != "undefined") {
+					json=select2json();
+				}
+				json.q=term.term;
+                return json;
+            },
+			processResults: function (data) {
+			  // Transforms the top-level key of the response object from 'items' to 'results'
+			  for(var i=0;i<data.length;i++){
+				data[i].text=data[i].name;
+			  }
+			  return {
+				results: data
+			  };
+			},
+            cache: true
+        }
+    });
+    {{/if}}
+    {{/foreach}}
+  }
+	
+    $(document).ready(function(){
+        myjs_detailPageLoad();
+    });
+
+   
+	
+</script>
+
+ {{include  file="$smarty_root/footerAdminLTE3.html" }}
