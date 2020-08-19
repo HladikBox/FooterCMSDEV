@@ -483,6 +483,7 @@ class XmlModel
   private function ShowSearchResult($dbMgr,$smartyMgr,$request){
 	
 	$sql=$this->GetSearchSql($request);
+	
 	$sql=$this->fixListSearchSql($sql);
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query);
@@ -504,12 +505,15 @@ class XmlModel
   
   private function SearchResultExport($dbMgr,$smartyMgr,$request){
 	
-	
 	$sql=$this->GetSearchSqlField($request,$request["exporttype"]==0);
 	$sql.=$this->GetSearchSqlCondition($request);
 	$sql=$this->fixListSearchSql($sql);
+	
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query);
+	
+	//print_r($result);
+	//exit;
 	$result=$this->ClearData($result);
 
 	$result=$this->ReloadFListData($dbMgr,$result);
@@ -523,13 +527,15 @@ class XmlModel
 	$data=$this->XmlData;
 	
 	$mgr=new ExcelMgr();
+	
+	  $mgr->exportToExcel(USER_ROOT."logs/".$data["name"]."数据导出-".date("YmdHi").".csv",$data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
 	  //echo $mgr->getCol(27);
 	  //exit;
-	  $mgr->setTitle($data["name"]."数据");
+	  //$mgr->setTitle($data["name"]."数据");
 	 // print_r($resu);
-	  $mgr->setResult($data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
-
-	  $mgr->download($data["name"]."数据导出-".date("YmdHi"));
+	  //$mgr->setResult($data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
+	
+	  //$mgr->download($data["name"]."数据导出-".date("YmdHi"));
 	exit;
   }
 

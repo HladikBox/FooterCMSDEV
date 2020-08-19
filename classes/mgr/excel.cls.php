@@ -21,6 +21,90 @@ class ExcelMgr
 											->setSubject($title);
 	}
 	
+	public function exportToExcel($filename,$fields,$result,$exporttype,$flistdata){
+		$tileArray=[];
+		$dataArray=[];
+		
+		
+		if($exporttype==0){
+			$tileArray[]="主键值";
+		}
+		foreach($fields as $val){
+			if($exporttype==0||$val["displayinlist"]=="1"){
+				$tileArray[]=$val["name"];
+			}
+		}
+		
+		foreach($result as $r){
+			$i=0;
+			$item=[];
+			if($exporttype==0){
+				$item[]=$r["id"];
+			}
+			foreach($fields as $val){
+				if($exporttype==0||$val["displayinlist"]=="1"){
+					$key=$val["key"];
+					
+					$v=$r[$key];
+					$type=$val["type"];
+					if($type=='select'){
+						//print_r($v);
+						//exit;
+						$v=$v["name"];
+					}
+					if($type=='fkey'){
+						//print_r($v);
+						//exit;
+						$v=$v["name"];
+					}
+					if($type=="flist"){
+						foreach($flistdata as $flist){
+							if($val["key"]==$flist["key"]){
+								$flistvalue=[];
+								$vid=explode(",",$v);
+								$flistmatch=$flist["match"];
+								foreach($vid as $kid){
+									$flistvalue[]=$flistmatch[$kid]["name"];
+								}
+								$v=join(",",$flistvalue);
+								break;
+							}
+						}
+					}
+					
+					$item[]=$v;
+				}
+			}
+			$dataArray[]=$item;
+		}
+		
+		
+		header("Content-Type: text/csv");
+		header("Content-Disposition:filename=".basename($filename));
+		$fp=fopen($filename,'w');
+		fwrite($fp, chr(0xEF).chr(0xBB).chr(0xBF));//转码 防止乱码(比如微信昵称(乱七八糟的))
+		fputcsv($fp,$tileArray);
+		$index = 0;
+		foreach ($dataArray as $item) {
+			if($index==1000){
+				$index=0;
+				ob_flush();
+				flush();
+			}
+			$index++;
+			fputcsv($fp,$item);
+		}
+
+		ob_flush();
+		flush();
+		ob_end_clean();
+		fclose($filename);
+		
+		
+		echo file_get_contents($filename);
+		exit;
+	}
+	
 	public function setResult($fields,$result,$exporttype,$flistdata){
 		
 		//print_r($result);
