@@ -6,8 +6,8 @@
 .dt{
 	cursor:pointer;
 }
-.th_select,.th_number,.th_upload,.th_url.th_datetime{
-	width:50px;
+.th_select,.th_number,.th_upload,.th_url,.th_datetime{
+	width:200px;
 }
 .th_fkey{
 	text-overflow: ellipsis;
@@ -77,6 +77,7 @@ word-break:break-all;
 					
 					<form name="action" value="print" type="hidden" id="conditionform" >
 					<input name='action' value='export' class='hide' type="hidden" />
+					<input id="listpagenum" name='listpagenum' value='0'  type="hidden" />
 					<input name='exporttype' id="exporttype" type="hidden" value='1' class='hide' />
                     <div class="row">
                         <div class="col-md-12">
@@ -269,6 +270,15 @@ word-break:break-all;
 									</div>
 									</div>
                                 </div>
+								
+								<!-- /.box-body -->
+								<div class="box-footer clearfix hide" id="pagedibu" >
+								  <div id="pagetotal"></div>
+								  <ul class="pagination pagination-sm no-margin pull-right">
+									<li id="lastpage" onclick="reloadpageresult(this)"><a href="#" >&laquo;</a></li>
+									<li id="nextpage" onclick="reloadpageresult(this)"><a href="#">&raquo;</a></li>
+								  </ul>
+								</div>
                             </div>
                         </div>
                     </div>
@@ -325,6 +335,11 @@ word-break:break-all;
 
 <script>
 var needlistopennew=false;
+	function reloadpageresult(obj){
+		var pg=$(obj).attr("pgval");
+		$("#listpagenum").val(pg);
+		search();
+	}
             function resultload() {
 			
                 {{foreach from=$ModelData.fields.field item=rs}}
@@ -388,6 +403,7 @@ var needlistopennew=false;
 </style>
 <script>
 var notusedatatable=false;
+//{{$needpagesplit}}
 </script>
 <script type="text/javascript" src="/js/myjs.js"></script>
 <script type="text/javascript" src="{{$userpath}}myjs/{{$ModelData.model}}.js"></script>
@@ -420,7 +436,8 @@ var notusedatatable=false;
             }
 			$("#btnSearch").prop("disabled","disabled");
             var json={
-                "action":"search"
+                "action":"search",
+				"listpagenum":$("#listpagenum").val()
                 {{foreach from=$ModelData.fields.field item=rs}}
                     {{if $rs.search=="1"}}
                         {{if $rs.type=="datetime" }}
@@ -544,7 +561,7 @@ var notusedatatable=false;
 						var currentimportrow=0;
 						$("#inprogress").attr("aria-valuenow",0);
 						$("#import_boxBtnConfirm").attr("disabled",true);
-						myjs_beforeImport(()=>{
+						myjs_beforeImport(function(){
                         $("#importList tr").each(function () {
                             if ($(this).find(".RowSelect").prop("checked")==true) {
                                 var json={action:"save"
@@ -854,7 +871,7 @@ var notusedatatable=false;
 	if(type=='check'){
 		val=obj.checked?"Y":"N";
 	}
-	 $.post("{{$PageName}}",{"action":"editone","key":key,val:val,primary_id},function(ret){
+	 $.post("{{$PageName}}",{"action":"editone","key":key,val:val,primary_id:primary_id},function(ret){
                         
                         if(ret==""){
 							$("#kvc_"+key+"_"+primary_id).popover();

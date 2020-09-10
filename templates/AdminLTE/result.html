@@ -5,3 +5,34 @@
 </tr>
 {{/foreach}}
 </tbody>
+
+
+
+
+<script>
+{{if $needpagesplit=='Y'}}
+notusedatatable=true;
+$("#pagetotal").text("搜索结果一共{{$totalrownum}}条数据，超过1000条记录将自动启动数据分页功能，每页显示{{$listpagecount}}条记录");
+$("#pagedibu").removeClass("hide");
+$(".ilpage").remove();
+var str="";
+for(i={{$listpagenum}};i<{{$totalpagenum}}&&i<{{$listpagenum+5}};i++){
+	str+='<li class="ilpage '+({{$listpagenum}}==i?"active":"")+'" pgval="'+i+'" onclick="reloadpageresult(this)"><a href="#">'+(i+1)+'</a></li>';
+}
+{{if $listpagenum==0}}
+$("#lastpage").hide();
+{{else}}
+$("#lastpage").show();
+$("#lastpage").attr("pgval",{{$listpagenum}}-1);
+{{/if}}
+{{if $listpagenum+1==$totalpagenum}}
+$("#nextpage").hide();
+{{else}}
+$("#nextpage").show();
+$("#nextpage").attr("pgval",{{$listpagenum}}+1);
+{{/if}}
+$("#lastpage").after(str);
+{{else}}
+$("#pagedibu").addClass("hide");
+{{/if}}
+</script>

@@ -76,7 +76,7 @@
 	 $file=new Upload($file,$filename,$folder,true);
  }
 	if($_REQUEST["rettype"]=="json"){
-		outputJSON(outResult($file->safetyUpload(),$filename));
+		outputJSON(outResult($file->safetyUpload(),$filename,$field));
 	}else{
 		
 	 echo $file->safetyUpload();

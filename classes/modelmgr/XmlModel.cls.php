@@ -192,6 +192,41 @@ class XmlModel
 	//exit;
 	return $sql;
   }
+  public function GetSelectTotalCount($request){
+	 
+	Global $CONFIG;
+	//echo "a";
+	//print_r($request);
+	$selectfield=parameter_filter($request["selectfield"]);
+	$sql="select count(1) totalrownum ";
+	
+	$fields=$this->XmlData["fields"]["field"];
+	
+	//$sql=$sql." from ".$this->XmlData["tablename"]." as r_main ";
+	if($this->XmlData["ismutillang"]=="1"){
+		$subsql=$this->GetLangTableSql($this->XmlData["tablename"],"r_main");
+		$sql=$sql." from $subsql ";
+	}else{
+		$sql=$sql." from ".$this->XmlData["tablename"]." as r_main ";
+	}
+
+	foreach ($fields as $value){
+		if($value["displayinlist"]=="1"){
+			if($value["type"]=="fkey"){
+				if($value["fmutillang"]=="1"){
+					$subsql=$this->GetLangTableSql($value["tablename"],$value["ntbname"]);
+					$sql=$sql." left join $subsql on r_main.".$value["key"]."=".$value["ntbname"].".id ";
+				}else{
+				
+					$sql=$sql." left join ".$value["tablename"]." `".$value["ntbname"]."` on r_main.".$value["key"]."=".$value["ntbname"].".id ";
+				}
+			}
+		}
+	}
+	//$sql;
+	//exit;
+	return $sql; 
+  }
   public function GetSearchSqlField($request,$allfieldshow=false){
 	  
 	Global $CONFIG;
@@ -282,7 +317,7 @@ class XmlModel
 	//exit;
 	return $sql;
   }
-  public function GetSearchSqlCondition($request){
+  public function GetSearchSqlCondition($request,$istototal=false){
 	  $fields=$this->XmlData["fields"]["field"];
 	$sql="  where  ".(empty($this->XmlData["searchcondition"])?" 1=1 ":$this->XmlData["searchcondition"]);
 	foreach ($fields as $value){
@@ -367,7 +402,9 @@ class XmlModel
 		}
 
 	}
-
+	if($istototal==true){
+		return $sql;
+	}
 	$lastupdatecalltime=parameter_filter($request["lastupdatecalltime"]);
 	if($lastupdatecalltime!=""){
 		$sql=$sql." and r_main.updated_date > '$lastupdatecalltime' ";
@@ -481,6 +518,24 @@ class XmlModel
   }
 
   private function ShowSearchResult($dbMgr,$smartyMgr,$request){
+	$sql=$this->GetSelectTotalCount($request);
+	$sql.=$this->GetSearchSqlCondition($request,true);
+	$sql=$this->fixListSearchSql($sql);
+	$query = $dbMgr->query($sql);
+	$result = $dbMgr->fetch_array($query);
+	
+	$totalrownum=$result["totalrownum"];
+	$listpagenum=$request["listpagenum"]+0;
+	$listpagecount=50;
+	if($totalrownum>1000){
+		$request["limit"]=($listpagenum*$listpagecount).",".(($listpagenum+1)*$listpagecount);
+		$smartyMgr->assign("listpagenum",$listpagenum);
+		$smartyMgr->assign("totalrownum",$totalrownum);
+		$smartyMgr->assign("totalpagenum",intval( $totalrownum/$listpagecount));
+		$smartyMgr->assign("needpagesplit","Y");
+		$smartyMgr->assign("listpagecount",$listpagecount);
+	}
+	
 	
 	$sql=$this->GetSearchSql($request);
 	
@@ -500,7 +555,7 @@ class XmlModel
     $smartyMgr->assign("ModelData",$this->XmlData);
     $smartyMgr->assign("PageName",$this->PageName);
     $smartyMgr->assign("result",$result);
-
+	
   }
   
   private function SearchResultExport($dbMgr,$smartyMgr,$request){
@@ -952,7 +1007,8 @@ class XmlModel
 		//print_r($request);
 		 $sql=$this->fixInsertSql($sql);
 		if($this->XmlData["nolist"]=="1"){
-			$id=$this->GetNoListId();
+			 $id=$this->GetNoListId();
+			
 		}else{
 			//$id="ifnull(max(id),0)+1";
 			$id=$dbMgr->getNewId($this->XmlData["tablename"]);

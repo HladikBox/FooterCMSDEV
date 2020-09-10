@@ -122,9 +122,11 @@ class DbMysql
 	
 	function getNewId($tablename){
 		$sql="select ifnull(max(id),0)+1 id from ".$tablename;
+		//echo($sql);
 		$query = $this->query($sql);
 		$result = $this->fetch_array($query); 
 		$id=$result["id"];
+		//echo($id);
 		return $id;
 	}
 	

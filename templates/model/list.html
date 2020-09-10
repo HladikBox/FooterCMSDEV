@@ -544,7 +544,7 @@ var notusedatatable=false;
 						var currentimportrow=0;
 						$("#inprogress").attr("aria-valuenow",0);
 						$("#import_boxBtnConfirm").attr("disabled",true);
-						myjs_beforeImport(()=>{
+						myjs_beforeImport(function(){
                         $("#importList tr").each(function () {
                             if ($(this).find(".RowSelect").prop("checked")==true) {
                                 var json={action:"save"
@@ -854,7 +854,7 @@ var notusedatatable=false;
 	if(type=='check'){
 		val=obj.checked?"Y":"N";
 	}
-	 $.post("{{$PageName}}",{"action":"editone","key":key,val:val,primary_id},function(ret){
+	 $.post("{{$PageName}}",{"action":"editone","key":key,val:val,primary_id:primary_id},function(ret){
                         
                         if(ret==""){
 							$("#kvc_"+key+"_"+primary_id).popover();
