@@ -470,8 +470,10 @@ class XmlModel
 			$Array[]=$Arr;
 		}
 	}
-	
-    $smartyMgr->assign("FListArr",$Array);
+	if($smartyMgr!=null){
+		
+		$smartyMgr->assign("FListArr",$Array);
+	}
 	return $Array;
   }
   
@@ -558,7 +560,7 @@ class XmlModel
 	
   }
   
-  private function SearchResultExport($dbMgr,$smartyMgr,$request){
+  public function SearchResultExport($dbMgr,$smartyMgr,$request){
 	
 	$sql=$this->GetSearchSqlField($request,$request["exporttype"]==0);
 	$sql.=$this->GetSearchSqlCondition($request);
