@@ -164,11 +164,11 @@ class XmlModel
     }
 	if($ismutillang=="1"){
 		$subsql=$this->GetLangTableSql($tablename,$tablerename);
-		$sql="select oid id,$displayfield as name from $subsql where ".(empty($condition)?"1=1":$condition)." $q";
+		$sql="select oid id, trim($displayfield) as name from $subsql where ".(empty($condition)?"1=1":$condition)." $q";
 	}else{
 		$displayfield=explode(",",$displayfield);
 		$displayfield=$displayfield[0];
-		$sql="select id,$displayfield as name from $tablename as `$tablerename`  where ".(empty($condition)?"1=1":$condition)." $q";
+		$sql="select id,REPLACE(REPLACE(trim($displayfield), CHAR(10), ''), CHAR(13),'') as name from $tablename as `$tablerename`  where ".(empty($condition)?"1=1":$condition)." $q";
 	}
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query); 
@@ -439,7 +439,7 @@ class XmlModel
 	return $sql;
   }
 
-  private function GetFListData($dbMgr,$smartyMgr){
+  private function GetFListData($dbMgr,$smartyMgr,$key=""){
 	Global $CONFIG;
 
 	$Array=Array();
@@ -447,6 +447,17 @@ class XmlModel
 	foreach ($fields as $value){
 		if($value["type"]=="flist"){
 			//ismutillang
+			
+			if($key!=""){
+				if($key!=$value["key"]){
+					continue;
+				}
+			}else{
+				if($value["async"]=="1"){
+					continue;
+				}
+			}
+			
 			$tablename=$value["tablename"];
 			$tablerename=$value["ntbname"];
 			$displayfield=$value["displayfield"];
@@ -478,7 +489,7 @@ class XmlModel
   }
   
   
-  public function GetFListDataValue($dbMgr,$id=0){
+  public function GetFListDataValue($dbMgr,$id=0,$key=""){
 	Global $CONFIG;
 
 	$Array=Array();
@@ -486,6 +497,11 @@ class XmlModel
 	foreach ($fields as $value){
 		if($value["type"]=="flist"){
 			//ismutillang
+			if($key!=""){
+				if($key!=$value["key"]){
+					continue;
+				}
+			}
 			$tablename=$value["tablename"];
 			$tablerename=$value["ntbname"];
 			$relatetable=$value["relatetable"];
@@ -564,7 +580,7 @@ class XmlModel
 	
 	$sql=$this->GetSearchSqlField($request,$request["exporttype"]==0);
 	$sql.=$this->GetSearchSqlCondition($request);
-	$sql=$this->fixListSearchSql($sql);
+	 $sql=$this->fixListSearchSql($sql);
 	
 	$query = $dbMgr->query($sql);
 	$result = $dbMgr->fetch_array_all($query);
@@ -584,7 +600,9 @@ class XmlModel
 	$data=$this->XmlData;
 	
 	$mgr=new ExcelMgr();
-	
+	mkdir (USER_ROOT."logs/",0777,true);
+	//print_r($result);
+	//exit;
 	  $mgr->exportToExcel(USER_ROOT."logs/".$data["name"]."数据导出-".date("YmdHi").".csv",$data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
 	  //echo $mgr->getCol(27);
 	  //exit;
@@ -1486,6 +1504,11 @@ class XmlModel
 	  }else if($action=="editone"){
 		$result=$this->editone($dbmgr,$request,$SysUser["id"]);
 		echo $result;
+	  }else if($action=="flist"){
+		$result=$this->GetFListData($dbmgr,$smarty,$request["key"]);
+		$smarty->assign("key",$request["key"]);
+		$smarty->display(ROOT.'/templates/'.$CmsStyle.'/flist.html');
+		exit;
 	  }else if($action=="fkeysearch"){
         $key=$request["key"];
         $q=$request["q"];

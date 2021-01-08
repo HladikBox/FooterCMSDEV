@@ -215,15 +215,36 @@
                                                 <input class="uniform_on multicheckbox flist_all" type="checkbox" ref="flist_{{$rs.key}}" />
                                             </label>
                                             <div class="col-md-10">
-                                                {{foreach from=$FListArr item=flrs}}
-                                                {{if $rs.key==$flrs.key}}
-                                                {{foreach from=$flrs.value item=rsvalue}}
-                                                <div class="col-md-3 input_flist_{{$rs.key}}">
-                                                    <input class='uniform_on multicheckbox flist_{{$rs.key}}' type='checkbox' id='flist_{{$rs.key}}_{{$rsvalue.id}}' value='{{$rsvalue.id}}'> {{$rsvalue.name}}
-                                                </div>
-                                                {{/foreach}}
-                                                {{/if}}
-                                                {{/foreach}}
+												{{if $rs.async=='1'}}
+												<div id="flist_async_{{$rs.key}}">
+												</div>
+												<script>
+												var json={
+												action:"flist",
+												"key":"{{$rs.key}}"
+												};
+												$("#flist_async_{{$rs.key}}").load("{{$PageName}}",json,function(data){
+													var fliststr{{$rs.key}} = $("#content_{{$rs.key}}").val();
+													var arr = fliststr{{$rs.key}}.split(",");
+													for (var i = 0; i < arr.length; i++) {
+														if ($.trim(arr[i]) != "") {
+															$("#flist_{{$rs.key}}_" + $.trim(arr[i])).prop("checked", "checked");
+														}
+													}
+												});
+												</script>
+												{{else}}
+												 {{foreach from=$FListArr item=flrs}}
+													{{if $rs.key==$flrs.key}}
+													{{foreach from=$flrs.value item=rsvalue}}
+													<div class="col-md-3 input_flist_{{$rs.key}}">
+														<input class='uniform_on multicheckbox flist_{{$rs.key}}' type='checkbox' id='flist_{{$rs.key}}_{{$rsvalue.id}}' value='{{$rsvalue.id}}'> {{$rsvalue.name}}
+													</div>
+													{{/foreach}}
+													{{/if}}
+													{{/foreach}}
+												{{/if}}
+                                               
                                                 <input type="hidden" class="form-control"  id="content_{{$rs.key}}" value="{{$rs.value}}"  />
 												<span class='help-block'>&nbsp;{{$rs.description}}</span>
                                             </div>

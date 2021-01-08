@@ -251,13 +251,13 @@ word-break:break-all;
 								{{/foreach}}
                                 <div class="bootstrap-admin-panel-content" id="searchTablerContenter">
 									<div class="row">
-									<div class="col-md-12"  >
+									<div class="col-md-12" style="overflow:scroll"  >
                                     <table class="datatable table table-striped table-bordered" id="searchResult" >
                                         <thead>
                                             <tr>
                                                 <th></th>
                                                 {{foreach from=$ModelData.fields.field item=rs}}
-                                                    {{if $rs.displayinlist=="1"}}
+                                                    {{if $rs.displayinlist=="1" && $rs.type!='grid'}}
                                                     <th>{{$rs.name}}</th>
                                                     {{/if}}
                                                 {{/foreach}}
@@ -429,7 +429,6 @@ var notusedatatable=false;
         self.location='{{$PageName}}?action=add';
     }
 	function search(){
-			
 			if(notusedatatable!=true){
 				$("#searchResult_wrapper").remove();
 				$("#searchTablerContenter").append($('<table class="datatable table table-striped table-bordered" id="searchResult" style="width:100%"></table>'));
@@ -460,15 +459,16 @@ var notusedatatable=false;
             $("#btnSearch").prop("disabled","");
             loadCharts();
 			//alert(notusedatatable);
+			//alert($("#searchResult").text());
 			if(notusedatatable!=true){
-			$('#searchResult').DataTable({
-			"searching":true,
-						"bRetrieve": true,
-	                    "oLanguage": dataOlanguage,
-					"aLengthMenu" : [100, 500, 1000],   
-					"iDisplayLength" : 500 ,
-					bSort:true,				
-					aaSorting:[]});
+				$('#searchResult').DataTable({
+				"searching":true,
+							"bRetrieve": true,
+							"oLanguage": dataOlanguage,
+						"aLengthMenu" : [100, 500, 1000],   
+						"iDisplayLength" : 500 ,
+						bSort:true,				
+						aaSorting:[]});
 			};
 			$("#searchResult").parent().css("overflow","scroll");
 			//responsive: true,	

@@ -112,7 +112,7 @@ class DbMysql
 			{
 				$this->rollback_trans();
 			}
-			$this->halt($sql.'Sqlsrv Query Error', $sql);
+			$this->halt($sql.'Sqlsrv Query Error'.mysqli_error($this->conn), $sql);
 		}
 		logger_mgr::logDebug("sql :$sql");
 		$this->querynum++;
