@@ -1,0 +1,7 @@
+{{foreach from=$FListArr item=flrs}}
+{{if $key==$flrs.key}}
+{{foreach from=$flrs.value item=rsvalue}}
+<div class="col-md-3 input_flist_{{$rs.key}}"><input class='uniform_on multicheckbox flist_{{$key}}' type='checkbox' id='flist_{{$key}}_{{$rsvalue.id}}' value='{{$rsvalue.id}}'> {{$rsvalue.name}}</div>
+{{/foreach}}
+{{/if}}
+{{/foreach}}
