@@ -603,7 +603,13 @@ class XmlModel
 	mkdir (USER_ROOT."logs/",0777,true);
 	//print_r($result);
 	//exit;
-	  $mgr->exportToExcel(USER_ROOT."logs/".$data["name"]."数据导出-".date("YmdHi").".csv",$data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
+	if($this->XmlData["exportfile"]==''||$this->XmlData["exportfile"]=='csv'){
+	  $mgr->exportToCSV(USER_ROOT."logs/".$data["name"]."数据导出-".date("YmdHi").".csv",$data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
+	}else{
+		$mgr->setTitle($data["name"]."数据");
+		$mgr->setResult($data["fields"]["field"],$result,$request["exporttype"]+0,$flistdata);
+		$mgr->download($data["name"]."数据导出-".date("YmdHi"));
+	}
 	  //echo $mgr->getCol(27);
 	  //exit;
 	  //$mgr->setTitle($data["name"]."数据");

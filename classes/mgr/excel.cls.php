@@ -105,8 +105,91 @@ class ExcelMgr
 		exit;
 	}
 	
-	public function setResult($fields,$result,$exporttype,$flistdata){
+	public function exportToCSV($filename,$fields,$result,$exporttype,$flistdata){
+		$tileArray=[];
+		$dataArray=[];
 		
+		
+		if($exporttype==0){
+			$tileArray[]="主键值";
+		}
+		foreach($fields as $val){
+			if($exporttype==0||$val["displayinlist"]=="1"){
+				$tileArray[]=$val["name"];
+			}
+		}
+		
+		foreach($result as $r){
+			$i=0;
+			$item=[];
+			if($exporttype==0){
+				$item[]=$r["id"];
+			}
+			foreach($fields as $val){
+				if($exporttype==0||$val["displayinlist"]=="1"){
+					$key=$val["key"];
+					
+					$v=$r[$key];
+					$type=$val["type"];
+					if($type=='select'){
+						//print_r($v);
+						//exit;
+						$v=$v["name"];
+					}
+					if($type=='fkey'){
+						//print_r($v);
+						//exit;
+						$v=$v["name"];
+					}
+					if($type=="flist"){
+						foreach($flistdata as $flist){
+							if($val["key"]==$flist["key"]){
+								$flistvalue=[];
+								$vid=explode(",",$v);
+								$flistmatch=$flist["match"];
+								foreach($vid as $kid){
+									$flistvalue[]=$flistmatch[$kid]["name"];
+								}
+								$v=join(",",$flistvalue);
+								break;
+							}
+						}
+					}
+					
+					$item[]=$v;
+				}
+			}
+			$dataArray[]=$item;
+		}
+		
+		
+		header("Content-Type: text/csv");
+		header("Content-Disposition:filename=".basename($filename));
+		$fp=fopen($filename,'w');
+		fwrite($fp, chr(0xEF).chr(0xBB).chr(0xBF));//转码 防止乱码(比如微信昵称(乱七八糟的))
+		fputcsv($fp,$tileArray);
+		$index = 0;
+		foreach ($dataArray as $item) {
+			if($index==1000){
+				$index=0;
+				ob_flush();
+				flush();
+			}
+			$index++;
+			fputcsv($fp,$item);
+		}
+
+		ob_flush();
+		flush();
+		ob_end_clean();
+		fclose($filename);
+		
+		
+		echo file_get_contents($filename);
+		exit;
+	}
+	public function setResult($fields,$result,$exporttype,$flistdata){
+		global $CONFIG;
 		//print_r($result);
 		//exit;
 		
@@ -194,10 +277,26 @@ class ExcelMgr
 							}
 						}
 					}
-					
-					$objRichText = new PHPExcel_RichText();
-					$objPayable = $objRichText->createTextRun($v);
-					$this->objPHPExcel->getActiveSheet()->setCellValue($this->getCol($i).$j,  $objRichText);
+					if($exporttype==1&&$type=="upload"&&$val["filetype"]=='image'){
+						if($v!=""){
+							
+							$uploadfile= $CONFIG['fileupload']['upload_path'].USER_PATH3."/".$val["uploadmodule"]."/".$v;
+							//exit;
+							$objDrawing = new PHPExcel_Worksheet_Drawing();
+							$localfile=downloadFile($uploadfile);
+							$objDrawing->setPath($localfile);
+							$objDrawing->setHeight(200);
+							$objDrawing->setCoordinates($this->getCol($i).$j);
+							$objDrawing->setWorksheet($this->objPHPExcel->getActiveSheet());
+							$this->objPHPExcel->getActiveSheet()->getRowDimension($j)->setRowHeight(200);
+						
+						}
+					}else{
+						
+						$objRichText = new PHPExcel_RichText();
+						$objPayable = $objRichText->createTextRun($v);
+						$this->objPHPExcel->getActiveSheet()->setCellValue($this->getCol($i).$j,  $objRichText);
+					}
 					$i++;
 				}
 			}

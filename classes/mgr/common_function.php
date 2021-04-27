@@ -445,4 +445,24 @@ function request_json($url,$postdata) {
     }
     return $filename;
 }
+
+function downloadResource($module,$resourcename){
+	global $CONFIG;
+	
+	$url=$CONFIG['fileupload']['upload_path']."/".USER_PATH2.$CONFIG['fileupload']['bucket_path'].$module."/".$resourcename;
+	
+    $ext=explode(".",$url);
+    $ext=$ext[count($ext)-1];
+    $ext=explode("?",$ext);
+    $ext=$ext[0];
+    $d="ymdhis";
+    $filename=USER_ROOT.'/logs/'.md5($url).".".$ext;
+    //检查检查文件是否存在
+    if(!file_exists($filename)){
+        $image = file_get_contents($url); 
+        file_put_contents($filename, $image);
+    }
+    
+    return $filename;
+}
 ?>
